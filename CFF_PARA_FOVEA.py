@@ -8,10 +8,10 @@ from globalvar import pageDisctonary
 from globalvar import globaladc
 import RPi.GPIO as GPIO
 from globalvar import currentPatientInfo
+from globalvar import CustomLabel,CustomListbox
+from header import HeaderComponent
+
 switch = 20
-from globalvar import CustomLabel
-
-
 Font = ("Arial",15)
 Font1 = ("Arial",15)
 Font2 = ("Arial",20)
@@ -34,11 +34,20 @@ class CffParaFovea :
         self.min_apr = 0
         self.max_apr = 0 
         self.response_array = [0,0,0,0,0]
-        self.trialList = tk.Listbox (frame,font=Font1,width=6)
-        self.patentActionflabel = tk.Label (frame, text='Patient\'s side Button \n Begins Traial',font=Font1,bg='white')
-        self.patentActionflabel_2 = tk.Label (frame, text='Increment Patient in\n Parafoveal Viewing.\n\n Press RESUME when done',font=Font1,bg='white')
-        self.cffValue_min = tk.Label (frame, text='    ', font=Font,bg='white')
-        self.cffValue_max = tk.Label (frame, text='    ', font=Font,bg='white') 
+        self.trialList = CustomListbox(self.content_frame)
+        self.patentActionflabel = tk.Label (self.freques_frame, text='Patient\'s side Button \n Begins Traial',font=Font1,bg='white')
+        self.patentActionflabel_2 = tk.Label (self.freques_frame, text='Increment Patient in\n Parafoveal Viewing.\n\n Press RESUME when done',font=Font1,bg='white')
+
+               
+        self.cff_label =tk.Label(self.freques_frame, text="CFF Fovea",
+                                font=('Helvetica Neue', 22),
+                                bg='black', fg='white')
+        self.cffValue_min =tk.Label(self.freques_frame, text="23.5",
+                                 font=('Helvetica Neue', 28),
+                                 bg='black', fg='white')
+        self.cffValue_max = tk.Label(self.freques_frame, text="23.5",
+                                 font=('Helvetica Neue', 28),
+                                 bg='black', fg='white')
         self.cffValue_frq = CustomLabel(self.content_frame, text='    ')   
     
     def handleuserButton(self,switch):
@@ -135,14 +144,22 @@ class CffParaFovea :
         self.response_array = [0,0,0,0,0]
         self.cfflabel = tk.Label (self.frame, text='CFF PARA FOVEA :',font=Font)
         self.cfflabel.place (x=400, y=10)
-        self.cffValue_min.place (x=430, y=40)
-        self.cffValue_max.place (x=500, y=40)
-        self.cffValue_frq.place (x=600, y=35)        
+        # self.cffValue_min.place (x=430, y=40)
+        # self.cffValue_max.place (x=500, y=40)
+        # self.cffValue_frq.place (x=600, y=35)        
         self.patentActionflabel.place (x=380, y=100)
-        self.trialList.place (x=800, y=60)
+        # self.trialList.place (x=800, y=60)
         self.content_frame.place(x=280, y=110, width=711, height=441)
         self.freques_frame.place(relx=0.3, rely=0.1, width=291, height=126)
-
+        self.trialList.place (x=604, y=100)
+        self.header = HeaderComponent(
+            self.frame,
+            "Macular Densitometer                                                          CFF Fovea Test"
+        )
+        self.header.set_wifi_callback(lambda _ : globaladc.buzzer_3())
+        self.cff_label.pack(pady=10)
+        self.cffValue_min.pack(side='left',pady=10 ,padx=10)
+        self.cffValue_max.pack(side='right',pady=10 ,padx=10)
 
 
         def handleReStart():
