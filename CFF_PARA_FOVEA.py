@@ -27,6 +27,8 @@ class CffParaFovea :
         self.skip_event =True
         self.threadCreated =False
         self.worker_cff = PerodicThread.PeriodicThread(intervel,self)
+        self.content_frame = tk.Frame(self.frame, bg='#1f2836')
+        self.freques_frame = tk.Frame(self.content_frame,bg="black")
         self.freq_val_start = 35
         self.freq_val = self.freq_val_start
         self.min_apr = 0
@@ -38,8 +40,6 @@ class CffParaFovea :
         self.cffValue_min = tk.Label (frame, text='    ', font=Font,bg='white')
         self.cffValue_max = tk.Label (frame, text='    ', font=Font,bg='white') 
         self.cffValue_frq = CustomLabel(self.content_frame, text='    ')   
-        self.content_frame = tk.Frame(self.frame, bg='#1f2836')
-        self.freques_frame = tk.Frame(self.content_frame,bg="black")
     
     def handleuserButton(self,switch):
         globaladc.get_print('handle to be implemented')
