@@ -401,12 +401,12 @@ class mup4728:
 
         def red_led_control(self,data_in):
             if(0<=data_in<=20):
-                #dac_val=int(4.80519*data_in-0.4329) # 0 to 20
- 		dac_val = int(204.75 * data_in)  # For data_in=20, dac_val=4095
-                str_data = 'RED_LED_DAC = ' + str(dac_val)
-                self.get_print(str_data)
-                self.RED_LED(dac_val)
-            else :
+                    #dac_val=int(4.80519*data_in-0.4329) # 0 to 20
+                    dac_val = int(204.75 * data_in)  # For data_in=20, dac_val=4095
+                    str_data = 'RED_LED_DAC = ' + str(dac_val)
+                    self.get_print(str_data)
+                    self.RED_LED(dac_val)
+            else:
                 str_data = 'RED_LED_DAC must be 0 to 20 ' + str(dac_val)
                 self.get_print(str_data)
 
