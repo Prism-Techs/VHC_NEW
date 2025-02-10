@@ -371,7 +371,8 @@ class CffFovea :
             "Macular Densitometer                                                          CFF Fovea Test"
         )
         
-        self.header.set_wifi_callback(lambda _ : globaladc.buzzer_3())
+        self.header.set_wifi_callback(lambda: globaladc.buzzer_3())
+
         self.create_side_buttons()
 
         self.content_frame.place(x=280, y=110, width=711, height=441)
