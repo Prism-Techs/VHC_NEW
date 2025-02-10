@@ -13,7 +13,7 @@ class HeaderComponent:
             self.images = {}
             
             # Get current directory and construct absolute paths
-            current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            current_dir = os.path.dirname(os.path.realpath(__file__))
             logo_path = os.path.join(current_dir, "logo.png")
             wifi_path = os.path.join(current_dir, "wifi_logo.png")
             
