@@ -9,7 +9,7 @@ from globalvar import globaladc
 import RPi.GPIO as GPIO
 from globalvar import currentPatientInfo
 switch = 20
-
+from globalvar import CustomLabel
 
 
 Font = ("Arial",15)
@@ -37,7 +37,9 @@ class CffParaFovea :
         self.patentActionflabel_2 = tk.Label (frame, text='Increment Patient in\n Parafoveal Viewing.\n\n Press RESUME when done',font=Font1,bg='white')
         self.cffValue_min = tk.Label (frame, text='    ', font=Font,bg='white')
         self.cffValue_max = tk.Label (frame, text='    ', font=Font,bg='white') 
-        self.cffValue_frq = tk.Label (frame, text='    ', font=Font,bg='#F7F442')  
+        self.cffValue_frq = CustomLabel(self.content_frame, text='    ')   
+        self.content_frame = tk.Frame(self.frame, bg='#1f2836')
+        self.freques_frame = tk.Frame(self.content_frame,bg="black")
     
     def handleuserButton(self,switch):
         globaladc.get_print('handle to be implemented')
@@ -135,10 +137,14 @@ class CffParaFovea :
         self.cfflabel.place (x=400, y=10)
         self.cffValue_min.place (x=430, y=40)
         self.cffValue_max.place (x=500, y=40)
-        self.cffValue_frq.place (x=810, y=30)        
+        self.cffValue_frq.place (x=600, y=35)        
         self.patentActionflabel.place (x=380, y=100)
         self.trialList.place (x=800, y=60)
-        
+        self.content_frame.place(x=280, y=110, width=711, height=441)
+        self.freques_frame.place(relx=0.3, rely=0.1, width=291, height=126)
+
+
+
         def handleReStart():
             #userButten.place (x=375, y=440)  
             self.patentActionflabel.place(x=400,y=200)
