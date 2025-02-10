@@ -7,6 +7,8 @@ from globalvar import currentPatientInfo
 import PerodicThread
 import RPi.GPIO as GPIO
 import time
+from header import HeaderComponent
+
 
 switch = 20
 Font = ("Arial",15)
@@ -35,10 +37,10 @@ class BrkFovea_1 :
            globaladc.get_print('increment call back') 
 
         self.frame = frame
+        self.frame.configure(background='black')
         self.trialList_min = tk.Listbox (frame,font=Font1,width=5, bg='white',justify='center')
         self.trialList_mid = tk.Listbox (frame,font=Font1,width=5, bg='white',justify='center')
         self.trialList_max = tk.Listbox (frame,font=Font1,width=5, bg='white',justify='center')
-        self.frame = frame
         self.depthVal = tk.IntVar()
         self.brk_min = tk.IntVar()
         self.brk_max = tk.IntVar()
@@ -82,9 +84,12 @@ class BrkFovea_1 :
                     globaladc.put_cff_fovea_frq(round((cff_fovea_frq+0.5)+0.00555555,1))
 
 
-        self.UPButton = tk.Button (self.frame,
-                                  text="^", bg="#a0f291", font=12,  
-                                  width=10, command=UpButtonClicked)
+        self.UPButton =tk.Button(self.content_frame, text="+",
+                                 font=('Helvetica', 30, 'bold'),
+                                 width=2, height=1,
+                                 bg='black', fg='white',
+                                 command=UpButtonClicked,
+                                 relief='solid', borderwidth=1)
 
         def DownButtonClicked():
             globaladc.buzzer_1()
@@ -112,9 +117,34 @@ class BrkFovea_1 :
                     self.depthVal_2.set(x)
                     globaladc.put_cff_fovea_frq(round((cff_fovea_frq-0.5)+0.00555555,1))
                     
-        self.DownButton = tk.Button (self.frame,
-                                  text="v", bg="#a0f291",font=12,  
-                                  width=10, command=DownButtonClicked)        
+        self.DownButton = tk.Button(self.content_frame, text="-",
+                                   font=('Helvetica', 30, 'bold'),
+                                   width=2, height=1,
+                                   bg='black', fg='white',
+                                   command=DownButtonClicked,
+                                   relief='solid', borderwidth=1)   
+
+
+
+    def create_side_buttons(self):
+        """Create side navigation buttons."""
+        buttons = [
+            ("Flicker Demo", 150, 'black'),
+            ("CFF Fovea", 210, 'black'),
+            ("BRK Fovea", 270, 'white'),
+            ("CFF Para-Fovea", 330, 'black'),
+            ("BRK Para-Fovea", 390, 'black'),
+            ("Test Result", 450, 'black')
+        ]
+
+        for text, y, bg_color in buttons:
+            btn = tk.Button(self.frame, text=text, font=Font,
+                          width=20, bg=bg_color,
+                          fg='white' if bg_color == 'black' else 'black',
+                          relief='solid', bd=2)
+            btn.place(x=10, y=y)
+
+
     def handleuser(self,switch):
         #globaladc.get_print('to be implemented')
         self.patient_switch_desable()
@@ -256,26 +286,41 @@ class BrkFovea_1 :
         self.patient_switch_enable()       
         
         
+                
     def Load(self):
         self.patentActionflabel = tk.Label (self.frame, text='Increment Null Setting untill \nPatient Reports no fliker,\nPress resume when done',font=Font1,bg='white')
         self.patentActionflabel_3 = tk.Label (self.frame, text='IF Require\nVary NULL settings until\npatient reports on flicker',font=Font1,bg='white')
-        self.brk_parf_label = tk.Label(self.frame,text='BRK FOVEA',bg="yellow", font= Font, width=12)  
-        self.null_box = tk.Label(self.frame,text='NULL',bg="white", font= Font, width=12)        
+        self.brk_parf_label = tk.Label(self.content_frame,text='BRK FOVEA',bg="yellow", font= Font, width=12)  
+        self.null_box =tk.Label(self.content_frame, text="NULL",
+                                 font=('Helvetica', 24, 'bold'),
+                                 bg='black', fg='#1210FF')
+        self.content_frame.place(x=280, y=110, width=711, height=441)
         self.patentActionflabel_2 = tk.Label (self.frame, text='Patient\'s side Button \n Begins Traial',font=Font1,bg='white')
-        self.trialList_min.place (x=750, y=40)
         self.null_box.place (x=100,y=20)
-        self.brk_parf_label.place (x=750,y=10)
-        self.trialList_mid.place (x=800, y=40)
-        self.trialList_max.place (x=850, y=40)
+        self.trialList_min.place (x=450, y=60)
+        self.brk_parf_label.place (x=500,y=10)
+        self.trialList_mid.place (x=520, y=60)
+        self.trialList_max.place (x=590, y=60)
         self.patentActionflabel.place(x=350, y=20)    
         self.trialList_mid.insert(0,160)
+        self.create_side_buttons()
+
+        self.header = HeaderComponent(
+            self.frame,
+            "Macular Densitometer                                                          BRK-Para Fovea Test"
+        )
         
+
         self.inc_dec_1 = False 
         self.inc_dec_2 = False  
         self.process_chainge = 0       
 
-        self.DepthVal = tk.Label(self.frame,textvariable=str(self.depthVal),justify="center", font=Font, bg='white') 
-        self.DepthVal.place(x=120,y=130)
+        self.DepthVal = tk.Label(self.content_frame, text="15",
+                                   font=('Helvetica Rounded', 28, 'bold'),
+                                   width=3, height=1,
+                                   bg='#1f2836', fg='white',
+                                   textvariable=str(self.depthVal))
+        self.DepthVal.place(x=110,y=142)
         self.UPButton.place (x=110,  y=75)   
         self.DownButton.place (x=110,  y=200)
         self.saveButton.place_forget()
@@ -323,6 +368,110 @@ class BrkFovea_1 :
         # bwButton.place(x=420, y=500)
 
 
+
+#     def Load(self):
+#         self.patentActionflabel = tk.Label (self.frame, text='Increment Null Setting untill \nPatient Reports no fliker,\nPress resume when done',font=Font1,bg='white')
+#         self.patentActionflabel_3 = tk.Label (self.frame, text='IF Require\nVary NULL settings until\npatient reports on flicker',font=Font1,bg='white')
+#         self.brk_parf_label = tk.Label(self.frame,text='BRK FOVEA',bg="yellow", font= Font, width=12)  
+#         self.null_box = tk.Label(self.frame,text='NULL',bg="white", font= Font, width=12)        
+#         self.patentActionflabel_2 = tk.Label (self.frame, text='Patient\'s side Button \n Begins Traial',font=Font1,bg='white')
+#         self.trialList_min.place (x=750, y=40)
+#         self.null_box.place (x=100,y=20)
+#         self.brk_parf_label.place (x=750,y=10)
+#         self.trialList_mid.place (x=800, y=40)
+#         self.trialList_max.place (x=850, y=40)
+#         self.patentActionflabel.place(x=350, y=20)    
+#         self.trialList_mid.insert(0,160)
+        
+#         self.inc_dec_1 = False 
+#         self.inc_dec_2 = False  
+#         self.process_chainge = 0       
+
+#         self.DepthVal = tk.Label(self.frame,textvariable=str(self.depthVal),justify="center", font=Font, bg='white') 
+#         self.DepthVal.place(x=120,y=130)
+#         self.UPButton.place (x=110,  y=75)   
+#         self.DownButton.place (x=110,  y=200)
+#         self.saveButton.place_forget()
+#         #saveButton.place (x=100, y=340)
+      
+#         #self.saveButton['state'] = tk.enable
+                   
+
+#         self.resumeButton = tk.Button(self.frame,
+#                                  text="Resume",
+#                                  command=self.handleResume, font=Font, bg='Orange',
+#                                  width=10)
+
+#         self.resumeButton.place(x=resume_spot_x,y=resume_spot_y)
+
+
+# #         self.userButton = tk.Button(self.frame,
+# #                                  text="USER",
+# #                                  command=handleuser, font=Font, bg='Orange',
+# #                                  width=10)       
+
+        
+#         def onfw():
+#             pageDisctonary['BrkFovea_1'].hide()
+#             pageDisctonary['CffParaFovea'].show()
+#             globaladc.get_print("no fw screen")
+
+#         def onbw():
+#             pageDisctonary['BrkFovea_1'].hide()
+#             pageDisctonary['MainScreen'].show()
+
+
+
+#         fwButton = tk.Button (self.frame,
+#                                  text=">>", font=Font2,
+#                                  command=onfw, bg='Green',
+#                                  width=10)
+       
+#         bwButton = tk.Button (self.frame,
+#                                  text="<<", font=Font2,
+#                                  command=onbw, bg='Green',
+#                                  width=10)
+  
+#         # fwButton.place(x=620,y=500)
+#         # bwButton.place(x=420, y=500)
+
+
+    # def show(self):
+    #     self.frame.place(width=1024,height=600)
+    #     globaladc.brk_Fovea_Prepair()
+    #     # globaladc.brk_fovea_1_screen_initialize() 			# run this while loding brk fovea 1st screen
+    #     self.skip_event = True
+    #     self.threadCreated=False
+    #     self.run_therad()        
+    #     self.process = 0
+    #     self.value = 160
+    #     self.pre_brk_mid = 160
+    #     self.locate =0
+    #     self.inc_dec_2 = False
+    #     self.threadCreated =False
+    #     leng = self.trialList_max.size()
+    #     self.trialList_max.delete(0,leng-1)
+    #     leng = self.trialList_min.size()
+    #     self.trialList_min.delete(0,leng-1)
+    #     leng = self.trialList_mid.size()
+    #     self.trialList_mid.delete(0,leng-1)
+    #     self.trialList_mid.insert(0,160)
+    #     self.DepthVal.config(textvariable=str(self.depthVal))
+    #     self.DepthVal.place(x=120,y=130)
+    #     self.resumeButton.place(x=resume_spot_x,y=resume_spot_y)
+    #     #self.userButton.place_forget()
+    #     self.patentActionflabel.place(x=350, y=20)
+    #     self.patentActionflabel_3.place_forget()
+    #     self.patentActionflabel_2.place_forget ()
+    #     self.UPButton.place(x=110, y=75)   
+    #     self.DownButton.place(x=110, y=200)
+    #     self.inc_dec_1 = False
+    #     self.null_box.place (x=100,y=20)
+    #     self.depthVal.set(1)
+  
+
+
+
     def show(self):
         self.frame.place(width=1024,height=600)
         globaladc.brk_Fovea_Prepair()
@@ -344,7 +493,8 @@ class BrkFovea_1 :
         self.trialList_mid.delete(0,leng-1)
         self.trialList_mid.insert(0,160)
         self.DepthVal.config(textvariable=str(self.depthVal))
-        self.DepthVal.place(x=120,y=130)
+        self.DepthVal.place(x=110,y=142)
+
         self.resumeButton.place(x=resume_spot_x,y=resume_spot_y)
         #self.userButton.place_forget()
         self.patentActionflabel.place(x=350, y=20)
@@ -356,6 +506,9 @@ class BrkFovea_1 :
         self.null_box.place (x=100,y=20)
         self.depthVal.set(1)
   
+
+
+
     def hide(self):
         self.stop_therad()
         self.frame.place_forget()
