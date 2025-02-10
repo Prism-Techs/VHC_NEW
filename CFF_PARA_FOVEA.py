@@ -9,8 +9,7 @@ from globalvar import globaladc
 import RPi.GPIO as GPIO
 from globalvar import currentPatientInfo
 switch = 20
-from header import HeaderComponent
-from globalvar import CustomLabel,CustomListbox
+
 
 
 Font = ("Arial",15)
@@ -33,65 +32,12 @@ class CffParaFovea :
         self.min_apr = 0
         self.max_apr = 0 
         self.response_array = [0,0,0,0,0]
-        self.content_frame = tk.Frame(self.frame, bg='#1f2836')
-        self.trialList = CustomListbox(self.content_frame)
-
+        self.trialList = tk.Listbox (frame,font=Font1,width=6)
         self.patentActionflabel = tk.Label (frame, text='Patient\'s side Button \n Begins Traial',font=Font1,bg='white')
         self.patentActionflabel_2 = tk.Label (frame, text='Increment Patient in\n Parafoveal Viewing.\n\n Press RESUME when done',font=Font1,bg='white')
-
-        self.freques_frame = tk.Frame(self.content_frame,bg="black")
-        self.cffpara_label =tk.Label(self.freques_frame, text="CFF Fovea",
-                                font=('Helvetica Neue', 22),
-                                bg='black', fg='white')
-
-
-        self.cffValue_min = tk.Label(self.freques_frame, text="23.5",
-                                 font=('Helvetica Neue', 28),
-                                 bg='black', fg='white')
-        self.cffValue_max = tk.Label(self.freques_frame, text="23.5",
-                                 font=('Helvetica Neue', 28),
-                                 bg='black', fg='white') 
-
-        self.cffValue_frq = CustomLabel(self.content_frame, text='    ')  
-
-
-        self.status_frame = tk.Frame(self.content_frame, bg='#1f2836')
-        
-        
-        self.status_label = tk.Label(self.status_frame, text="Test Status",
-                                   font=('Helvetica Neue', 18),
-                                   bg='#1f2836', fg='white')
-        
-
-
-        
-        
-        self.btn_ready = tk.Button(self.status_frame, text="Machine Ready",
-                          font=('Arial', 14, 'bold'),
-                          bg="#1a472a", fg='#4CAF50',
-                          width=15, height=1,
-                          relief='raised')
-        
-        self.btn_flicker_start = tk.Button(self.status_frame, text="Flicker Start",
-                          font=('Arial', 14, 'bold'),
-                          bg="#4d3319", fg='#FFA500',
-                          width=15, height=1,
-                          relief='raised')
-        
-        self.btn_flicker_visible = tk.Button(self.status_frame, text="Flicker Visible",
-                          font=('Arial', 14, 'bold'),
-                          bg="#4d1f1f", fg='#ff4444',
-                          width=15, height=1,
-                          relief='raised')
-
-        self.blinking_buttons = {}
-        self.is_blinking = False
-
-
-
-
-
-
+        self.cffValue_min = tk.Label (frame, text='    ', font=Font,bg='white')
+        self.cffValue_max = tk.Label (frame, text='    ', font=Font,bg='white') 
+        self.cffValue_frq = tk.Label (frame, text='    ', font=Font,bg='#F7F442')  
     
     def handleuserButton(self,switch):
         globaladc.get_print('handle to be implemented')
@@ -175,110 +121,6 @@ class CffParaFovea :
             globaladc.get_print('patient_switch_desable')
             GPIO.remove_event_detect(switch) 
         
-
-
-    def create_side_buttons(self):
-        """Create side navigation buttons."""
-        buttons = [
-            ("Flicker Demo", 150, 'black'),
-            ("CFF Fovea", 210, 'black'),
-            ("BRK Fovea", 270, 'black'),
-            ("CFF Para-Fovea", 330, 'white'),
-            ("BRK Para-Fovea", 390, 'black'),
-            ("Test Result", 450, 'black')
-        ]
-
-        for text, y, bg_color in buttons:
-            btn = tk.Button(self.frame, text=text, font=Font,
-                          width=20, bg=bg_color,
-                          fg='white' if bg_color == 'black' else 'black',
-                          relief='solid', bd=2)
-            btn.place(x=10, y=y)
-
-
-    def blink_button(self, button, interval=500):
-        """
-        Fixed button blinking implementation
-        """
-        button_id = str(id(button))
-        
-        # If button is already blinking, don't start a new blink
-        if button_id in self.blinking_buttons:
-            return
-            
-        # Store initial colors immediately
-        initial_bg = button.cget('bg')
-        initial_fg = button.cget('fg')
-        
-        # Initialize blinking state for this button with original colors
-        self.blinking_buttons[button_id] = {
-            'button': button,
-            'after_id': None,
-            'original_colors': (initial_bg, initial_fg),
-            'is_original': True  # Track whether showing original colors
-        }
-        
-        def toggle_colors():
-            if button_id not in self.blinking_buttons:
-                return
-                
-            if self.blinking_buttons[button_id]['is_original']:
-                # Switch to alternate colors
-                button.configure(
-                    bg=self.blinking_buttons[button_id]['original_colors'][1],
-                    fg=self.blinking_buttons[button_id]['original_colors'][0]
-                )
-            else:
-                # Switch back to original colors
-                button.configure(
-                    bg=self.blinking_buttons[button_id]['original_colors'][0],
-                    fg=self.blinking_buttons[button_id]['original_colors'][1]
-                )
-            
-            # Toggle the state
-            self.blinking_buttons[button_id]['is_original'] = not self.blinking_buttons[button_id]['is_original']
-            
-            # Schedule next blink
-            self.blinking_buttons[button_id]['after_id'] = self.frame.after(interval, toggle_colors)
-        
-        # Start the blinking
-        toggle_colors()
-
-
-    def stop_specific_blink(self, button):
-        """
-        Improved method to stop specific button blinking
-        """
-        button_id = str(id(button))
-        
-        if button_id in self.blinking_buttons:
-            # Cancel the scheduled after event
-            if self.blinking_buttons[button_id]['after_id']:
-                self.frame.after_cancel(self.blinking_buttons[button_id]['after_id'])
-            
-            # Restore original colors
-            if self.blinking_buttons[button_id]['original_colors']:
-                orig_bg, orig_fg = self.blinking_buttons[button_id]['original_colors']
-                button.configure(bg=orig_bg, fg=orig_fg)
-            
-            # Remove button from blinking dictionary
-            del self.blinking_buttons[button_id]
-
-    def stop_all_blinking(self):
-        """
-        Stop all buttons from blinking
-        """
-        button_ids = list(self.blinking_buttons.keys())
-        for button_id in button_ids:
-            button = self.blinking_buttons[button_id]['button']
-            self.stop_specific_blink(button)
-
-
-
-
-
-
-
     def Load(self):
         self.response_count = 0  
         self.skip_event =True
@@ -289,39 +131,14 @@ class CffParaFovea :
         self.min_apr = 0
         self.max_apr = 0 
         self.response_array = [0,0,0,0,0]
-        # self.cfflabel = tk.Label (self.frame, text='CFF PARA FOVEA :',font=Font)
-        # self.cfflabel.place (x=400, y=10)
+        self.cfflabel = tk.Label (self.frame, text='CFF PARA FOVEA :',font=Font)
+        self.cfflabel.place (x=400, y=10)
         self.cffValue_min.place (x=430, y=40)
         self.cffValue_max.place (x=500, y=40)
         self.cffValue_frq.place (x=810, y=30)        
         self.patentActionflabel.place (x=380, y=100)
         self.trialList.place (x=800, y=60)
-
-        self.header = HeaderComponent(
-        self.frame,
-            "Macular Densitometer                                                          CFF-Para Fovea Test"
-        )
-
-        self.create_side_buttons()
         
-
-        self.content_frame.place(x=280, y=110, width=711, height=441)
-        self.freques_frame.place(relx=0.3, rely=0.1, width=291, height=126)
-        self.cffpara_label.pack(pady=10)
-        # self.cfflabel.place(x=400, y=10)
-        self.cffValue_min.pack(side='left',pady=10 ,padx=10)
-        self.cffValue_max.pack(side='right',pady=10 ,padx=10)
-        self.cffValue_frq.place (x=600, y=35)        
-        
-        # self.patentActionflabel.place (x=380, y=100)
-        self.trialList.place (x=604, y=100)
-
-        self.btn_ready.pack(pady=5)
-        self.btn_flicker_start.pack(pady=5)
-        self.btn_flicker_visible.pack(pady=5)
-        self.blink_button(self.btn_ready)
-
-
         def handleReStart():
             #userButten.place (x=375, y=440)  
             self.patentActionflabel.place(x=400,y=200)
