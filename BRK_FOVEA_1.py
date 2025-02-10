@@ -38,16 +38,18 @@ class BrkFovea_1 :
 
         self.frame = frame
         self.frame.configure(background='black')
-        self.trialList_min = tk.Listbox (frame,font=Font1,width=5, bg='white',justify='center')
-        self.trialList_mid = tk.Listbox (frame,font=Font1,width=5, bg='white',justify='center')
-        self.trialList_max = tk.Listbox (frame,font=Font1,width=5, bg='white',justify='center')
+        self.content_frame = tk.Frame(frame, bg='#1f2836')
+        self.trialList_min = tk.Listbox (self.content_frame,font=Font1,width=5, bg='black',fg='red',justify='center')
+        self.trialList_mid = tk.Listbox (self.content_frame,font=Font1,width=5, bg='black',fg='red',justify='center')
+        self.trialList_max = tk.Listbox (self.content_frame,font=Font1,width=5, bg='black',fg='red',justify='center')
+        self.frame = frame
         self.depthVal = tk.IntVar()
         self.brk_min = tk.IntVar()
         self.brk_max = tk.IntVar()
         self.depthVal_2 = tk.DoubleVar()        
         self.depthVal.set(defaultdepth)  
         self.threadCreated =False
-        self.save_enable_text = tk.Label (frame,font=Font1,bg='white')
+        self.save_enable_text = tk.Label (self.content_frame,font=Font1,bg='white')
         self.process = 0 
             # with open('textfile.txt','a') as s:
             #   for i in range(self.listView.model().rowCount()):
