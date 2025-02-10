@@ -1,5 +1,7 @@
 import PatientInfo 
 from dac_lib_soft import mup4728
+import tkinter as tk
+from tkinter import font
 
 
 global pageDisctonary 
