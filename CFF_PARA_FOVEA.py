@@ -24,9 +24,6 @@ cffValue_frq_y = 40
 class CffParaFovea :
     def __init__(self, frame):
         self.frame = frame
-        self.frame.config(bg='black')
-        self.content_frame = tk.Frame(self.frame, bg='#1f2836')
-
         self.response_count = 0  
         self.skip_event =True
         self.threadCreated =False
@@ -36,24 +33,26 @@ class CffParaFovea :
         self.min_apr = 0
         self.max_apr = 0 
         self.response_array = [0,0,0,0,0]
+        self.content_frame = tk.Frame(self.frame, bg='#1f2836')
         self.trialList = CustomListbox(self.content_frame)
+
         self.patentActionflabel = tk.Label (frame, text='Patient\'s side Button \n Begins Traial',font=Font1,bg='white')
         self.patentActionflabel_2 = tk.Label (frame, text='Increment Patient in\n Parafoveal Viewing.\n\n Press RESUME when done',font=Font1,bg='white')
 
         self.freques_frame = tk.Frame(self.content_frame,bg="black")
-
-
         self.cffpara_label =tk.Label(self.freques_frame, text="CFF Fovea",
                                 font=('Helvetica Neue', 22),
                                 bg='black', fg='white')
-        self.cffValue_min =tk.Label(self.freques_frame, text="23.5",
+
+
+        self.cffValue_min = tk.Label(self.freques_frame, text="23.5",
                                  font=('Helvetica Neue', 28),
                                  bg='black', fg='white')
         self.cffValue_max = tk.Label(self.freques_frame, text="23.5",
                                  font=('Helvetica Neue', 28),
-                                 bg='black', fg='white')
+                                 bg='black', fg='white') 
+
         self.cffValue_frq = CustomLabel(self.content_frame, text='    ')  
-  
 
 
         self.status_frame = tk.Frame(self.content_frame, bg='#1f2836')
@@ -88,6 +87,11 @@ class CffParaFovea :
         self.blinking_buttons = {}
         self.is_blinking = False
 
+
+
+
+
+
     
     def handleuserButton(self,switch):
         globaladc.get_print('handle to be implemented')
@@ -97,8 +101,6 @@ class CffParaFovea :
         if self.skip_event:
             self.patentActionflabel.place_forget()
             self.threadCreated=True
-            self.stop_all_blinking()  # Clear any existing blinks
-            self.blink_button(self.btn_flicker_start)  # Start blinking flicker start button
 #             if self.response_count != 0:
 #                 self.freq_val_start = self.min_apr + 6.5
 #             else :
@@ -134,8 +136,6 @@ class CffParaFovea :
                 self.min_apr = globaladc.get_cff_p_min_cal(self.response_count, self.freq_val)    
                 self.cffValue_min.config(text = self.min_apr)           
                 self.response_count = self.response_count + 1 
-                self.blink_button(self.btn_flicker_visible)
-                time.sleep(0.5)
                 if self.response_count == 5 :
                     self.max_apr =  globaladc.get_cff_p_max_cal()                     
                     self.cffValue_max.config(text = self.max_apr)
@@ -155,12 +155,7 @@ class CffParaFovea :
                     pageDisctonary['CffParaFovea'].hide()
                     pageDisctonary['BrkparaFovea'].show()
                     self.patient_switch_desable()
-                    jmp = True            
-                else:
-                    # Prepare for next trial
-                    time.sleep(0.3)
-                    self.stop_all_blinking()
-                    self.blink_button(self.btn_ready)  # Show machine ready for next trial       
+                    jmp = True                
                 self.cffValue_frq.config(text = self.freq_val)
                 #globaladc.buzzer_3()        
         if not jmp:                        
@@ -180,6 +175,8 @@ class CffParaFovea :
             globaladc.get_print('patient_switch_desable')
             GPIO.remove_event_detect(switch) 
         
+
+
     def create_side_buttons(self):
         """Create side navigation buttons."""
         buttons = [
@@ -278,65 +275,9 @@ class CffParaFovea :
 
 
 
-#     def Load(self):
-#         self.response_count = 0  
-#         self.skip_event =True
-#         self.threadCreated =False
-#         self.worker_cff = PerodicThread.PeriodicThread(intervel,self)
-#         self.freq_val_start = 35
-#         self.freq_val = self.freq_val_start
-#         self.min_apr = 0
-#         self.max_apr = 0 
-#         self.response_array = [0,0,0,0,0]
-#         self.cfflabel = tk.Label (self.frame, text='CFF PARA FOVEA :',font=Font)
-#         self.cfflabel.place (x=400, y=10)
-#         self.cffValue_min.place (x=430, y=40)
-#         self.cffValue_max.place (x=500, y=40)
-#         self.cffValue_frq.place (x=810, y=30)        
-#         self.patentActionflabel.place (x=380, y=100)
-#         self.trialList.place (x=800, y=60)
-        
-#         def handleReStart():
-#             #userButten.place (x=375, y=440)  
-#             self.patentActionflabel.place(x=400,y=200)
-#             self.patentActionflabel_2.place_forget()
-#             self.reStartButton.place_forget()
-#             self.patient_switch_enable()
-#             globaladc.buzzer_3() 
 
-# #         userButten = tk.Button (self.frame,
-# #                                  text="userButten",
-# #                                  command=userButten_handle, font=Font,
-# #                                  width=10)   
 
-#         self.reStartButton = tk.Button (self.frame,
-#                                  text="RESUME",
-#                                  command=handleReStart, font=Font,
-#                                  width=10,bg='#a0f291')
 
-#         self.reStartButton.place (x=300, y=400)
-
-#         def onfw():
-#             pageDisctonary['CffParaFovea'].hide()
-#             pageDisctonary['BrkparaFovea'].show()
-
-#         def onbw():
-#             pageDisctonary['CffParaFovea'].hide()
-#             pageDisctonary['BrkFovea_1'].show()
-
-#         fwButton = tk.Button (self.frame,
-#                                  text=">>", font=Font2,
-#                                  command=onfw, bg='Green',
-#                                  width=10)
-       
-#         bwButton = tk.Button (self.frame,
-#                                  text="<<", font=Font2,
-#                                  command=onbw, bg='Green',
-#                                  width=10)
-  
-#         # fwButton.place(x=420, y=500)
-#         # bwButton.place(x=620,y=500)  
-       
 
     def Load(self):
         self.response_count = 0  
@@ -348,17 +289,22 @@ class CffParaFovea :
         self.min_apr = 0
         self.max_apr = 0 
         self.response_array = [0,0,0,0,0]
-        self.status_frame.place(relx=0.1, rely=0.5)
-        self.status_label.pack(pady=10)
+        # self.cfflabel = tk.Label (self.frame, text='CFF PARA FOVEA :',font=Font)
+        # self.cfflabel.place (x=400, y=10)
+        self.cffValue_min.place (x=430, y=40)
+        self.cffValue_max.place (x=500, y=40)
+        self.cffValue_frq.place (x=810, y=30)        
+        self.patentActionflabel.place (x=380, y=100)
+        self.trialList.place (x=800, y=60)
+
         self.header = HeaderComponent(
-            self.frame,
+        self.frame,
             "Macular Densitometer                                                          CFF-Para Fovea Test"
         )
 
         self.create_side_buttons()
+        
 
-
-        # self.cfflabel = tk.Label (self.frame, text='CFF PARA FOVEA :',font=Font)
         self.content_frame.place(x=280, y=110, width=711, height=441)
         self.freques_frame.place(relx=0.3, rely=0.1, width=291, height=126)
         self.cffpara_label.pack(pady=10)
@@ -374,11 +320,12 @@ class CffParaFovea :
         self.btn_flicker_start.pack(pady=5)
         self.btn_flicker_visible.pack(pady=5)
         self.blink_button(self.btn_ready)
-        
+
+
         def handleReStart():
             #userButten.place (x=375, y=440)  
-            # self.patentActionflabel.place(x=400,y=200)
-            # self.patentActionflabel_2.place_forget()
+            self.patentActionflabel.place(x=400,y=200)
+            self.patentActionflabel_2.place_forget()
             self.reStartButton.place_forget()
             self.patient_switch_enable()
             globaladc.buzzer_3() 
@@ -388,12 +335,12 @@ class CffParaFovea :
 #                                  command=userButten_handle, font=Font,
 #                                  width=10)   
 
-        self.reStartButton = tk.Button (self.content_frame,
+        self.reStartButton = tk.Button (self.frame,
                                  text="RESUME",
                                  command=handleReStart, font=Font,
                                  width=10,bg='#a0f291')
 
-        self.reStartButton.place (x=285, y=200)
+        self.reStartButton.place (x=300, y=400)
 
         def onfw():
             pageDisctonary['CffParaFovea'].hide()
@@ -416,9 +363,6 @@ class CffParaFovea :
         # fwButton.place(x=420, y=500)
         # bwButton.place(x=620,y=500)  
        
-
-
-
     def show(self):
         self.cffValue_min.config(text = '     ')
         self.cffValue_max.config(text = '     ')
