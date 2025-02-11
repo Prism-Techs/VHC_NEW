@@ -282,8 +282,11 @@ class BrkparaFovea :
         self.patentActionflabel = tk.Label (self.frame, text='Increment Null Setting untill \nPatient Reports no fliker,\nPress resume when done',font=Font1,bg='white')
         self.patentActionflabel_3 = tk.Label (self.frame, text='IF Require\nVary NULL settings until\npatient reports on flicker',font=Font1,bg='white')
         self.brk_parf_label = tk.Label(self.content_frame,text='BRK PARA FOVEA',bg="yellow", font= Font, width=18)  
-        self.null_box = tk.Label(self.content_frame,text='NULL',bg="white", font= Font, width=12)      
+        self.null_box = tk.Label(self.content_frame, text="NULL",
+                                 font=('Helvetica', 24, 'bold'),
+                                 bg='black', fg='#1210FF')
         self.content_frame.place(x=280, y=110, width=711, height=441)
+        self.null_box.place (x=100,y=20)
 
         self.patentActionflabel_2 = tk.Label (self.frame, text='Patient\'s side Button \n Begins Traial',font=Font1,bg='white')
         self.trialList_min.place (x=750, y=40)
@@ -312,7 +315,7 @@ class BrkparaFovea :
                                    width=3, height=1,
                                    bg='#1f2836', fg='white',
                                    textvariable=str(self.depthVal))
-        self.DepthVal.place(x=100,y=130)
+        self.DepthVal.place(x=105,y=120)
         self.UPButton.place (x=110,  y=75)   
         self.DownButton.place (x=110,  y=200)
         self.saveButton.place_forget()
@@ -391,7 +394,7 @@ class BrkparaFovea :
         self.trialList_mid.delete(0,leng-1)
         self.trialList_mid.insert(0,defaultdepth)
         self.DepthVal.config(textvariable=str(self.depthVal))
-        self.DepthVal.place(x=100,y=130)
+        self.DepthVal.place(x=105,y=120)
         self.resumeButton.place(x=resume_spot_x,y=resume_spot_y)
         #self.userButton.place_forget()
         self.patient_switch_desable()
