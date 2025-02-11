@@ -327,12 +327,12 @@ class CffParaFovea :
 #                                  command=userButten_handle, font=Font,
 #                                  width=10)   
 
-        self.reStartButton = tk.Button (self.frame,
+        self.reStartButton = tk.Button (self.content_frame,
                                  text="RESUME",
                                  command=handleReStart, font=Font,
                                  width=10,bg='#a0f291')
 
-        self.reStartButton.place (x=285, y=100)
+        self.reStartButton.place(x=285, y=200)
 
 
         def onfw():
