@@ -371,10 +371,11 @@ class CffParaFovea :
         self.max_apr = 0 
         self.skip_event = True
         self.threadCreated=False
-        self.patentActionflabel.place_forget()
+        # self.patentActionflabel.place_forget()
         # self.patentActionflabel_2.place(x=380,y=200)
         self.cfflabel.place (x=400, y=10) 
         self.trialList.place(x=604, y=100)
+        self.patentActionflabel.place(x=380, y=100)
 
         self.run_therad()
         self.reStartButton.place (x=300, y=400)
