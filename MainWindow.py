@@ -14,8 +14,8 @@ import tkinter.font as tkfont
 from header import HeaderComponent
 import os,json
 from tkinter import messagebox
-
-
+from datetime import datetime
+import pytz
 
 
 FONT_SIZE = 10
@@ -458,6 +458,31 @@ class mainWindow:
     def getName():
         return "MainScreen"    
     
+    def age_calculator(self):
+        dob_str = self.get_entry_value('dob', '_entry')  # Assuming this returns DOB as a string (e.g., "1998-06-15")
+
+        if not dob_str:
+             messagebox.showerror("Input error","Please enter a vali Date of Birth")
+             return
+        
+        try:
+                dob = datetime.strptime(dob_str,"%d/%m/%y")
+
+
+                # Get current time in Indian time zone (IST)
+                indian_timezone = pytz.timezone("Asia/Kolkata")
+                today = datetime.now(indian_timezone).date()  # Get today's date in IST
+
+                # Calculate age
+                age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+
+                return age
+
+    
+        except ValueError:
+            messagebox.showerror("Format Error", "Please enter DOB in dd/mm/yy format")
+
+
     def loadValues(self):
         currentPatientInfo.Name = f"{self.get_entry_value('1st', '_name_entry')} {self.get_entry_value('mid', '_name_entry')} {self.get_entry_value('surname', '_entry')}"
         currentPatientInfo.Age = self.get_entry_value('dob', '_entry')  # Using DOB field for age
@@ -473,7 +498,7 @@ class mainWindow:
         
         # Check required fields
         if not self.get_entry_value('1st', '_name_entry'): valid = False  # First name
-        if not self.get_entry_value('dob', '_entry'): valid = False      # DOB/Age
+        # if not self.get_entry_value('dob', '_entry'): valid = False      # DOB/Age
         if not self.eye_side_var.get(): valid = False                    # Eye side
         if not self.gender_var.get(): valid = False                      # Gender
         
