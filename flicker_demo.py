@@ -145,6 +145,18 @@ class FlickerDemo(QtWidgets.QWidget):
         self.numberLabel.setAlignment(Qt.AlignCenter)
         self.numberLabel.setText(str(self.depth_value))
         
+
+                # Depth label
+        self.depth_label = QtWidgets.QLabel(self.main_frame)
+        self.depth_label.setGeometry(QtCore.QRect(100, 40, 131, 61))
+        font = QtGui.QFont("Helvetica Rounded", 18)
+        font.setBold(True)
+        self.depth_label.setFont(font)
+        self.depth_label.setStyleSheet("color:white;")
+        self.depth_label.setText("Depth")
+        self.depth_label.setAlignment(Qt.AlignCenter)
+
+
         # Down button
         self.downButton = QtWidgets.QPushButton(self.main_frame)
         self.downButton.setGeometry(QtCore.QRect(120, 280, 60, 60))
