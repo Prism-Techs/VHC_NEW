@@ -4,8 +4,35 @@ import time
 from globalvar import globaladc
 from flicker_demo import Ui_Form
 import sys
-from PerodicThread import PeriodicThread
 
+class PeriodicThread(threading.Thread):
+    def __init__(self, interval, callback):
+        super().__init__()
+        self.interval = interval
+        self.callback = callback
+        self.stopped = threading.Event()
+        self.paused = threading.Event()
+        self.isStarted = False
+
+    def run(self):
+        self.isStarted = True
+        while not self.stopped.is_set():
+            if not self.paused.is_set():
+                self.callback()
+                time.sleep(self.interval)
+
+    def stop(self):
+        self.stopped.set()
+        self.paused.set()
+
+    def pause(self):
+        self.paused.set()
+
+    def resume(self):
+        self.paused.clear()
+
+    def kill(self):
+        self.stopped.set()
 
 class FlickerController(QtWidgets.QWidget):
     def __init__(self, parent=None):
@@ -21,6 +48,7 @@ class FlickerController(QtWidgets.QWidget):
         self.flickerOn = False
         self.flicker_bool = True
         self.threadCreated = False
+        globaladc.blue_led_on()
         
         # Connect signals
         self.ui.upButton.clicked.connect(self.upButtonClicked)
