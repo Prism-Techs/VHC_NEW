@@ -47,47 +47,49 @@ INTERVAL = globaladc.get_flicker_delay()
 class FlickerDemo(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
-        self.setupUi()
+        # Initialize variables first
         self.flicker_bool = True
         self.threadCreated = False
         self.depth_value = DEFAULT_DEPTH
         self._prepared = False
+        # Then setup UI
+        self.setupUi()
         
     def setupUi(self):
-        # Main window setup
-        self.setObjectName("FlickerDemo")
-        self.resize(1024, 600)
-        self.setStyleSheet("background-color:#000000;")
-        
-        # Set up main components
-        self.setupHeader()
-        self.setupMainContent()
-        self.setupSideMenu()
-        
-        # Initialize button states
-        self.upButton.setEnabled(False)
-        self.downButton.setEnabled(False)
+            # Main window setup
+            self.setObjectName("FlickerDemo")
+            self.resize(1024, 600)
+            self.setStyleSheet("background-color:#000000;")
+            
+            # Set up main components
+            self.setupHeader()
+            self.setupMainContent()
+            self.setupSideMenu()
+            
+            # Initialize button states
+            self.upButton.setEnabled(False)
+            self.downButton.setEnabled(False)
         
     def setupHeader(self):
-        # Header frame
-        self.header_frame = QtWidgets.QFrame(self)
-        self.header_frame.setGeometry(QtCore.QRect(0, 0, 1024, 40))
-        self.header_frame.setStyleSheet("background-color:#1f2836;")
-        
-        # Title label
-        self.title_label = QtWidgets.QLabel(self.header_frame)
-        self.title_label.setGeometry(QtCore.QRect(60, 0, 900, 41))
-        font = QtGui.QFont("Helvetica Neue", 16)
-        font.setBold(True)
-        self.title_label.setFont(font)
-        self.title_label.setStyleSheet("color:white;")
-        self.title_label.setText("Macular Densitometer                                                          Flicker Demo")
-        
-        # Version label
-        self.version_label = QtWidgets.QLabel(self.header_frame)
-        self.version_label.setGeometry(QtCore.QRect(930, 0, 71, 41))
-        self.version_label.setStyleSheet("color:white;")
-        self.version_label.setText("V1.0")
+            # Header frame
+            self.header_frame = QtWidgets.QFrame(self)
+            self.header_frame.setGeometry(QtCore.QRect(0, 0, 1024, 40))
+            self.header_frame.setStyleSheet("background-color:#1f2836;")
+            
+            # Title label
+            self.title_label = QtWidgets.QLabel(self.header_frame)
+            self.title_label.setGeometry(QtCore.QRect(60, 0, 900, 41))
+            font = QtGui.QFont("Helvetica Neue", 16)
+            font.setBold(True)
+            self.title_label.setFont(font)
+            self.title_label.setStyleSheet("color:white;")
+            self.title_label.setText("Macular Densitometer                                                          Flicker Demo")
+            
+            # Version label
+            self.version_label = QtWidgets.QLabel(self.header_frame)
+            self.version_label.setGeometry(QtCore.QRect(930, 0, 71, 41))
+            self.version_label.setStyleSheet("color:white;")
+            self.version_label.setText("V1.0")
         
     def setupMainContent(self):
         # Main content frame
@@ -109,6 +111,10 @@ class FlickerDemo(QtWidgets.QWidget):
         self.depth_label.setStyleSheet("color:white;")
         self.depth_label.setText("Depth")
         self.depth_label.setAlignment(Qt.AlignCenter)
+        
+        # Control frame
+        self.control_frame = QtWidgets.QFrame(self.main_frame)
+        self.control_frame.setGeometry(QtCore.QRect(50, 120, 191, 221))
         
         # Up button
         self.upButton = QtWidgets.QPushButton(self.main_frame)
@@ -145,18 +151,6 @@ class FlickerDemo(QtWidgets.QWidget):
         self.numberLabel.setAlignment(Qt.AlignCenter)
         self.numberLabel.setText(str(self.depth_value))
         
-
-                # Depth label
-        self.depth_label = QtWidgets.QLabel(self.main_frame)
-        self.depth_label.setGeometry(QtCore.QRect(100, 40, 131, 61))
-        font = QtGui.QFont("Helvetica Rounded", 18)
-        font.setBold(True)
-        self.depth_label.setFont(font)
-        self.depth_label.setStyleSheet("color:white;")
-        self.depth_label.setText("Depth")
-        self.depth_label.setAlignment(Qt.AlignCenter)
-
-
         # Down button
         self.downButton = QtWidgets.QPushButton(self.main_frame)
         self.downButton.setGeometry(QtCore.QRect(120, 280, 60, 60))
