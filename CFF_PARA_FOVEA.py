@@ -23,6 +23,7 @@ cffValue_frq_y = 40
 class CffParaFovea :
     def __init__(self, frame):
         self.frame = frame
+        self.frame.config(bg='black')
         self.response_count = 0  
         self.skip_event =True
         self.threadCreated =False
