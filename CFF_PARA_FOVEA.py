@@ -36,8 +36,8 @@ class CffParaFovea :
         self.max_apr = 0 
         self.response_array = [0,0,0,0,0]
         self.trialList = CustomListbox(self.content_frame)
-        self.patentActionflabel = tk.Label (self.freques_frame, text='Patient\'s side Button \n Begins Traial',font=Font1,bg='white')
-        self.patentActionflabel_2 = tk.Label (self.freques_frame, text='Increment Patient in\n Parafoveal Viewing.\n\n Press RESUME when done',font=Font1,bg='white')
+        self.patentActionflabel = tk.Label (self.content_frame, text='Patient\'s side Button \n Begins Traial',font=Font1,bg='white')
+        self.patentActionflabel_2 = tk.Label (self.content_frame, text='Increment Patient in\n Parafoveal Viewing.\n\n Press RESUME when done',font=Font1,bg='white')
 
                
         self.cffpara_label =tk.Label(self.freques_frame, text="CFF-Para Fovea",
@@ -332,7 +332,8 @@ class CffParaFovea :
                                  command=handleReStart, font=Font,
                                  width=10,bg='#a0f291')
 
-        self.reStartButton.place (x=300, y=400)
+        self.reStartButton.place (x=285, y=200)
+
 
         def onfw():
             pageDisctonary['CffParaFovea'].hide()
@@ -356,8 +357,8 @@ class CffParaFovea :
         # bwButton.place(x=620,y=500)  
        
     def show(self):
-        self.cffValue_min.config(text = '23.5')
-        self.cffValue_max.config(text = '23.6')
+        self.cffValue_min.config(text = '    ')
+        self.cffValue_max.config(text = '    ')
         self.cffValue_frq.config(text = '     ')
         self.trialList.delete(0,tk.END)
         self.frame.place(width=1024,height=600)              
