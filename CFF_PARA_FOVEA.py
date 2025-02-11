@@ -375,7 +375,7 @@ class CffParaFovea :
         # self.patentActionflabel_2.place(x=380,y=200)
         self.cfflabel.place (x=400, y=10) 
         self.trialList.place(x=604, y=100)
-        self.patentActionflabel.place(x=380, y=100)
+        self.patentActionflabel.place(x=380, y=200)
 
         self.run_therad()
         self.reStartButton.place (x=300, y=400)
