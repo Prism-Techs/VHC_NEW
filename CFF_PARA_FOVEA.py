@@ -50,6 +50,43 @@ class CffParaFovea :
                                  font=('Helvetica Neue', 28),
                                  bg='black', fg='white')
         self.cffValue_frq = CustomLabel(self.content_frame, text='    ')   
+
+
+
+
+        self.status_frame = tk.Frame(self.content_frame, bg='#1f2836')
+        
+        
+        self.status_label = tk.Label(self.status_frame, text="Test Status",
+                                   font=('Helvetica Neue', 18),
+                                   bg='#1f2836', fg='white')
+        
+
+
+        
+        
+        self.btn_ready = tk.Button(self.status_frame, text="Machine Ready",
+                          font=('Arial', 14, 'bold'),
+                          bg="#1a472a", fg='#4CAF50',
+                          width=15, height=1,
+                          relief='raised')
+        
+        self.btn_flicker_start = tk.Button(self.status_frame, text="Flicker Start",
+                          font=('Arial', 14, 'bold'),
+                          bg="#4d3319", fg='#FFA500',
+                          width=15, height=1,
+                          relief='raised')
+        
+        self.btn_flicker_visible = tk.Button(self.status_frame, text="Flicker Visible",
+                          font=('Arial', 14, 'bold'),
+                          bg="#4d1f1f", fg='#ff4444',
+                          width=15, height=1,
+                          relief='raised')
+
+        self.blinking_buttons = {}
+        self.is_blinking = False
+
+
     
     def handleuserButton(self,switch):
         globaladc.get_print('handle to be implemented')
