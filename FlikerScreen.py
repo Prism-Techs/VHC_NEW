@@ -9,6 +9,7 @@ import threading
 #import schedule
 from globalvar import pageDisctonary
 from globalvar import globaladc
+from header import HeaderComponent
 
 Font = ("Arial",20)
 
@@ -29,6 +30,9 @@ class flikerWindow:
     def __init__(self, frame):
         self.fliker_bool = True               
         self.frame = frame
+        self.frame.config(bg='black')
+        self.content_frame = tk.Frame(frame, bg='#1f2836')
+
         self.label_frame = tk.LabelFrame(self.frame, text = 'Depth',height=250, width=200, bg='white')
         self.label_frame.place(x="40", y="40")
         self.depthVal = tk.IntVar()
@@ -48,15 +52,19 @@ class flikerWindow:
                 self.depthVal.set(x)
             globaladc.buzzer_1()
              
-        self.UPButton = tk.Button (self.label_frame,
-                                  text="^", bg="#f56c87", font=12,  
-                                  width=10, command=UpButtonClicked)
+        self.UPButton = tk.Button (self.content_frame, text="+",
+                                 font=('Helvetica', 30, 'bold'),
+                                 width=2, height=1,
+                                 bg='black', fg='white',command=UpButtonClicked,relief='solid', borderwidth=1)
 
         
 
-        self.DownButton = tk.Button (self.label_frame,
-                                  text="v", bg="#f56c87",font=12,  
-                                  width=10, command=DownButtonClicked)
+        self.DownButton = tk.Button (self.content_frame, text="-",
+                                   font=('Helvetica', 30, 'bold'),
+                                   width=2, height=1,
+                                   bg='black', fg='white',
+                                   command=DownButtonClicked,
+                                   relief='solid', borderwidth=1)
     
     #load method
     def Load(self):
@@ -66,6 +74,16 @@ class flikerWindow:
         DepthVal = tk.Label(self.label_frame,textvariable=str(self.depthVal),justify="center", font=Font, bg='#a0f291')
         DepthVal.place(x=70,y=90)
         self.DownButton.place (x=20,  y=140)
+        self.content_frame.place(x=280, y=110, width=711, height=441)
+
+
+
+        self.header = HeaderComponent(
+            self.frame,
+            "Macular Densitometer                                                          BRK-Para Fovea Test"
+        )
+        
+
 
         def clickFlikerButton():
             HandleFliker (ManageButton['text'])
