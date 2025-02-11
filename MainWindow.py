@@ -92,7 +92,7 @@ class mainWindow:
 
             # Save patient data
             filename = f"patient_latest.json"
-            filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+            filepath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 
                                 "patient_data", filename)
             
 

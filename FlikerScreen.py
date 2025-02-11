@@ -164,3 +164,16 @@ class flikerWindow:
     def getName():
         return "FlikerScreen"    
             
+
+def main():
+    root = tk.Tk()
+    fw = flikerWindow(root)
+
+    fw.Load()
+    fw.show()
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    
+    main()
