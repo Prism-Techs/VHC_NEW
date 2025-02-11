@@ -353,8 +353,8 @@ class CffParaFovea :
         # bwButton.place(x=620,y=500)  
        
     def show(self):
-        self.cffValue_min.config(text = '     ')
-        self.cffValue_max.config(text = '     ')
+        self.cffValue_min.config(text = '23.5')
+        self.cffValue_max.config(text = '23.6')
         self.cffValue_frq.config(text = '     ')
         self.trialList.delete(0,tk.END)
         self.frame.place(width=1024,height=600)              
