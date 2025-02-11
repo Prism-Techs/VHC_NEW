@@ -284,7 +284,7 @@ class CffParaFovea :
         # self.cffValue_min.place (x=430, y=40)
         # self.cffValue_max.place (x=500, y=40)
         # self.cffValue_frq.place (x=600, y=35)        
-        self.patentActionflabel.place (x=380, y=100)
+        self.patentActionflabel.place(x=380, y=100)
         # self.trialList.place (x=800, y=60)
         self.content_frame.place(x=280, y=110, width=711, height=441)
         self.freques_frame.place(relx=0.3, rely=0.1, width=291, height=126)
@@ -372,7 +372,7 @@ class CffParaFovea :
         self.skip_event = True
         self.threadCreated=False
         self.patentActionflabel.place_forget()
-        self.patentActionflabel_2.place(x=380,y=200)
+        # self.patentActionflabel_2.place(x=380,y=200)
         self.cfflabel.place (x=400, y=10) 
         self.trialList.place(x=604, y=100)
 
