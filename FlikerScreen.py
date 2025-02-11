@@ -167,12 +167,24 @@ class flikerWindow:
 
 def main():
     root = tk.Tk()
-    fw = flikerWindow(root)
+    root.title("Flicker Control")
+    root.geometry("1024x600")  # Set window size
 
-    fw.Load()
-    fw.show()
+    # Create the main frame
+    main_frame = tk.Frame(root, bg="white")
+    main_frame.pack(fill="both", expand=True)
+
+    # Create an instance of flikerWindow
+    flicker_screen = flikerWindow(main_frame)
+    
+    # Load UI components
+    flicker_screen.Load()
+
+    # Show the flicker screen
+    flicker_screen.show()
+
+    # Start the Tkinter main loop
     root.mainloop()
-
 
 if __name__ == "__main__":
     
