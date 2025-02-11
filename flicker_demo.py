@@ -361,17 +361,60 @@ class Ui_FlickerDemo(object):
         if 'MainScreen' in pageDisctonary:
             pageDisctonary['MainScreen'].show()
 
+
+    def showEvent(self, event):
+            """Handle show event"""
+            try:
+                if not self._prepared:
+                    globaladc.flicker_Prepair()
+                    globaladc.all_led_off()
+                    globaladc.blue_led_on()
+                    self._prepared = True
+                    
+                # Reset UI state
+                self.depth_value = 0
+                self.numberLabel.setText(str(self.depth_value))
+                self.upButton.setEnabled(False)
+                self.downButton.setEnabled(False)
+                self.flickerButton.setText("Flicker On")
+            except Exception as e:
+                print(f"Error in showEvent: {str(e)}")
+            super().showEvent(event)
+
+    def hideEvent(self, event):
+        """Handle hide event"""
+        try:
+            if self.threadCreated:
+                self.worker_flik.stop()
+                self.worker_flik.kill()
+                self.threadCreated = False
+            self._prepared = False
+            globaladc.all_led_off()
+        except Exception as e:
+            print(f"Error in hideEvent: {str(e)}")
+        super().hideEvent(event)
+
+
+
 class FlickerDemo(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.ui = Ui_FlickerDemo()
         self.ui.setupUi(self)
         
-    def show(self):
-        self.ui.show()
+    def showEvent(self, event):
+        """Override show event"""
+        try:
+            super().showEvent(event)
+        except Exception as e:
+            print(f"Error in FlickerDemo showEvent: {str(e)}")
         
-    def hide(self):
-        self.ui.hide()
+    def hideEvent(self, event):
+        """Override hide event"""
+        try:
+            super().hideEvent(event)
+        except Exception as e:
+            print(f"Error in FlickerDemo hideEvent: {str(e)}")
 
 def main():
     import sys
