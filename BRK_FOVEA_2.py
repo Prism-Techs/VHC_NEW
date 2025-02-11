@@ -18,7 +18,7 @@ defaultdepth = 11
 maxdepth_1 = 225
 maxdepth_2 = 2.00
 intervel = globaladc.get_brk_delay()   #0.128
-resume_spot_x = 450
+resume_spot_x = 250
 resume_spot_y = 240
 
 class BrkparaFovea :
