@@ -1,16 +1,20 @@
-from PyQt5.QtCore import QThread, pyqtSignal
-import time
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import QThread, pyqtSignal, Qt
+import time
 from globalvar import pageDisctonary, globaladc
 
-
+# Constants 
+Text_Fliker_OFF = "Fliker is Off Press to Change"
+Text_Fliker_ON = "Fliker is On Press to Change"
+DEFAULT_DEPTH = 7
+MAX_DEPTH = 15
+INTERVAL = globaladc.get_flicker_delay()
 
 class FlickerThread(QThread):
     trigger = pyqtSignal()
     
-    def __init__(self, interval):
-        super().__init__()
+    def __init__(self, interval, parent=None):
+        super().__init__(parent)
         self.interval = interval
         self.isRunning = False
         self.isStarted = False
@@ -19,6 +23,8 @@ class FlickerThread(QThread):
         self.isRunning = True
         self.isStarted = True
         while self.isRunning:
+            if not self.isRunning:
+                break
             self.trigger.emit()
             time.sleep(self.interval)
     
@@ -36,63 +42,48 @@ class FlickerThread(QThread):
             if not self.isStarted:
                 self.start()
 
-
-
-
-# Constants
-DEFAULT_DEPTH = 7
-MAX_DEPTH = 15
-INTERVAL = globaladc.get_flicker_delay()
-
 class FlickerDemo(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
-        # Initialize variables first
+        # Initialize variables
         self.flicker_bool = True
         self.threadCreated = False
         self.depth_value = DEFAULT_DEPTH
         self._prepared = False
-        # Then setup UI
+        self.worker_flik = None
+        self.flicker_on = False
+        
+        # Setup UI
         self.setupUi()
         
     def setupUi(self):
-            # Main window setup
-            self.setObjectName("FlickerDemo")
-            self.resize(1024, 600)
-            self.setStyleSheet("background-color:#000000;")
-            
-            # Set up main components
-            self.setupHeader()
-            self.setupMainContent()
-            self.setupSideMenu()
-            
-            # Initialize button states
-            self.upButton.setEnabled(False)
-            self.downButton.setEnabled(False)
+        self.setObjectName("FlickerDemo")
+        self.resize(1024, 600)
+        self.setStyleSheet("background-color:#000000;")
+        
+        # Setup components
+        self.setupHeader()
+        self.setupMainContent()
+        self.setupSideMenu()
+        
+        # Initialize states
+        self.upButton.setEnabled(False)
+        self.downButton.setEnabled(False)
         
     def setupHeader(self):
-            # Header frame
-            self.header_frame = QtWidgets.QFrame(self)
-            self.header_frame.setGeometry(QtCore.QRect(0, 0, 1024, 40))
-            self.header_frame.setStyleSheet("background-color:#1f2836;")
-            
-            # Title label
-            self.title_label = QtWidgets.QLabel(self.header_frame)
-            self.title_label.setGeometry(QtCore.QRect(60, 0, 900, 41))
-            font = QtGui.QFont("Helvetica Neue", 16)
-            font.setBold(True)
-            self.title_label.setFont(font)
-            self.title_label.setStyleSheet("color:white;")
-            self.title_label.setText("Macular Densitometer                                                          Flicker Demo")
-            
-            # Version label
-            self.version_label = QtWidgets.QLabel(self.header_frame)
-            self.version_label.setGeometry(QtCore.QRect(930, 0, 71, 41))
-            self.version_label.setStyleSheet("color:white;")
-            self.version_label.setText("V1.0")
+        self.header_frame = QtWidgets.QFrame(self)
+        self.header_frame.setGeometry(QtCore.QRect(0, 0, 1024, 40))
+        self.header_frame.setStyleSheet("background-color:#1f2836;")
+        
+        self.title_label = QtWidgets.QLabel(self.header_frame)
+        self.title_label.setGeometry(QtCore.QRect(60, 0, 900, 41))
+        font = QtGui.QFont("Helvetica Neue", 16)
+        font.setBold(True)
+        self.title_label.setFont(font)
+        self.title_label.setStyleSheet("color:white;")
+        self.title_label.setText("Macular Densitometer                                                          Flicker Demo")
         
     def setupMainContent(self):
-        # Main content frame
         self.main_frame = QtWidgets.QFrame(self)
         self.main_frame.setGeometry(QtCore.QRect(280, 100, 711, 441))
         self.main_frame.setStyleSheet("""
@@ -112,10 +103,6 @@ class FlickerDemo(QtWidgets.QWidget):
         self.depth_label.setText("Depth")
         self.depth_label.setAlignment(Qt.AlignCenter)
         
-        # Control frame
-        self.control_frame = QtWidgets.QFrame(self.main_frame)
-        self.control_frame.setGeometry(QtCore.QRect(50, 120, 191, 221))
-        
         # Up button
         self.upButton = QtWidgets.QPushButton(self.main_frame)
         self.upButton.setGeometry(QtCore.QRect(120, 130, 60, 60))
@@ -133,7 +120,6 @@ class FlickerDemo(QtWidgets.QWidget):
             }
         """)
         self.upButton.setText("+")
-        self.upButton.clicked.connect(self.up_button_clicked)
         
         # Depth display
         self.numberLabel = QtWidgets.QLabel(self.main_frame)
@@ -167,63 +153,26 @@ class FlickerDemo(QtWidgets.QWidget):
             }
         """)
         self.downButton.setText("-")
-        self.downButton.clicked.connect(self.down_button_clicked)
         
-        # Flicker button
+        # Flicker control button
         self.flickerButton = QtWidgets.QPushButton(self.main_frame)
-        self.flickerButton.setGeometry(QtCore.QRect(350, 90, 240, 51))
-        font = QtGui.QFont("Arial", 16)
-        font.setBold(True)
+        self.flickerButton.setGeometry(QtCore.QRect(300, 150, 350, 51))
+        font = QtGui.QFont("Arial", 20)
         self.flickerButton.setFont(font)
         self.flickerButton.setStyleSheet("""
             QPushButton {
                 background-color: black;
                 color: white;
                 border: 2px solid white;
-                border-radius: 15px;
             }
         """)
-        self.flickerButton.setText("Flicker On")
+        self.flickerButton.setText(Text_Fliker_OFF)
+        
+        # Connect button signals
+        self.upButton.clicked.connect(self.up_button_clicked)
+        self.downButton.clicked.connect(self.down_button_clicked)
         self.flickerButton.clicked.connect(self.toggle_flicker)
         
-        # Status label
-        self.statusLabel = QtWidgets.QLabel(self.main_frame)
-        self.statusLabel.setGeometry(QtCore.QRect(350, 170, 240, 50))
-        font = QtGui.QFont("Helvetica Rounded", 14)
-        font.setBold(True)
-        self.statusLabel.setFont(font)
-        self.statusLabel.setStyleSheet("color:white;")
-        self.statusLabel.setAlignment(Qt.AlignCenter)
-        self.statusLabel.setText("Press Button\nTo ON/OFF")
-        
-        # Navigation buttons
-        button_style = """
-            QPushButton {
-                background-color: black;
-                color: white;
-                border: 2px solid white;
-                border-radius: 15px;
-                padding: 10px;
-            }
-        """
-        
-        self.exitButton = QtWidgets.QPushButton(self.main_frame)
-        self.exitButton.setGeometry(QtCore.QRect(300, 350, 160, 51))
-        self.exitButton.setStyleSheet(button_style)
-        self.exitButton.setText("EXIT")
-        self.exitButton.clicked.connect(self.on_exit)
-        
-        self.homeButton = QtWidgets.QPushButton(self.main_frame)
-        self.homeButton.setGeometry(QtCore.QRect(490, 350, 160, 51))
-        self.homeButton.setStyleSheet(button_style)
-        self.homeButton.setText("HOME")
-        self.homeButton.clicked.connect(self.on_home)
-        
-        for button in [self.exitButton, self.homeButton]:
-            font = QtGui.QFont("Helvetica Rounded", 16)
-            font.setBold(True)
-            button.setFont(font)
-            
     def setupSideMenu(self):
         buttons = [
             ("Flicker Demo", 150, True),
@@ -245,32 +194,37 @@ class FlickerDemo(QtWidgets.QWidget):
                 }}
             """
             btn.setStyleSheet(style)
-            font = QtGui.QFont("Arial", 16)
+            font = QtGui.QFont("Arial", 20)
             btn.setFont(font)
             btn.setText(text)
-            
+
     def up_button_clicked(self):
-        if self.depth_value < MAX_DEPTH:
-            self.depth_value += 1
+        """Handle up button click"""
+        y = self.depth_value
+        if y < MAX_DEPTH:
+            self.depth_value = y + 1
             self.numberLabel.setText(str(self.depth_value))
         globaladc.buzzer_1()
-            
+
     def down_button_clicked(self):
+        """Handle down button click"""
         if self.depth_value > 0:
             self.depth_value -= 1
             self.numberLabel.setText(str(self.depth_value))
         globaladc.buzzer_1()
-            
+
     def toggle_flicker(self):
+        """Toggle flicker state"""
         globaladc.buzzer_1()
         
         if not self.threadCreated:
-            self.worker_flik = FlickerThread(INTERVAL)
+            self.worker_flik = FlickerThread(INTERVAL, self)
             self.worker_flik.trigger.connect(self.periodic_event)
             self.threadCreated = True
-        
-        if self.flickerButton.text() == "Flicker On":
-            self.flickerButton.setText("Flicker Off")
+            
+        if self.flickerButton.text() == Text_Fliker_OFF:
+            self.flickerButton.setText(Text_Fliker_ON)
+            self.flicker_on = True
             self.upButton.setEnabled(True)
             self.downButton.setEnabled(True)
             self.upButton.setStyleSheet(self.upButton.styleSheet().replace("#f56c87", "#a0f291"))
@@ -282,7 +236,8 @@ class FlickerDemo(QtWidgets.QWidget):
             else:
                 self.worker_flik.resume()
         else:
-            self.flickerButton.setText("Flicker On")
+            self.flickerButton.setText(Text_Fliker_OFF)
+            self.flicker_on = False
             self.depth_value = 0
             self.numberLabel.setText(str(self.depth_value))
             self.upButton.setEnabled(False)
@@ -291,52 +246,67 @@ class FlickerDemo(QtWidgets.QWidget):
             self.downButton.setStyleSheet(self.downButton.styleSheet().replace("#a0f291", "#f56c87"))
             if self.threadCreated:
                 self.worker_flik.stop()
-                
+
+    def run_thread(self):
+        """Start the flicker thread"""
+        globaladc.get_print("worker_flik thread started")
+        if not self.worker_flik.isStarted:
+            self.worker_flik.start()
+        else:
+            self.worker_flik.resume()
+
+    def stop_thread(self):
+        """Stop the flicker thread"""
+        globaladc.get_print("worker_flik thread stopped")
+        if self.threadCreated:
+            self.worker_flik.stop()
+            self.worker_flik.kill()
+            self.threadCreated = False
+
     def periodic_event(self):
+        """Handle periodic flicker event"""
         if self.flicker_bool:
             globaladc.fliker(self.depth_value)
             self.flicker_bool = False
         else:
             globaladc.fliker(0)
             self.flicker_bool = True
-            
+
     def showEvent(self, event):
+        """Handle show event"""
         try:
             if not self._prepared:
                 globaladc.flicker_Prepair()
                 globaladc.all_led_off()
                 globaladc.blue_led_on()
                 self._prepared = True
+            
+            # Reset UI state
             self.depth_value = 0
             self.numberLabel.setText(str(self.depth_value))
             self.upButton.setEnabled(False)
             self.downButton.setEnabled(False)
-            self.flickerButton.setText("Flicker On")
+            self.flickerButton.setText(Text_Fliker_OFF)
+            
+            # Start thread if needed
+            if self.threadCreated and not self.worker_flik.isStarted:
+                self.run_thread()
+                
         except Exception as e:
             print(f"Error in showEvent: {str(e)}")
         super().showEvent(event)
-            
+
     def hideEvent(self, event):
+        """Handle hide event"""
         try:
             if self.threadCreated:
-                self.worker_flik.stop()
-                self.worker_flik.kill()
-                self.threadCreated = False
+                self.stop_thread()
             self._prepared = False
             globaladc.all_led_off()
+            
         except Exception as e:
             print(f"Error in hideEvent: {str(e)}")
         super().hideEvent(event)
-            
-    def on_home(self):
-        self.hide()
-        if 'MainScreen' in pageDisctonary:
-            pageDisctonary['MainScreen'].show()
-            
-    def on_exit(self):
-        self.hide()
-        if 'MainScreen' in pageDisctonary:
-            pageDisctonary['MainScreen'].show()
 
 def main():
     import sys
