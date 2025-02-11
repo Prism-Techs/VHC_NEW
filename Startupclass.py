@@ -184,7 +184,7 @@ class StatrupClass:
         self.brkf_2.Load()
         self.admin.Load()  
         globaladc.buzzer_1()   
-        self.cffP.show()   
+        self.brkf_2.show()   
         # self.ShowMainScreen()
         self.window.mainloop()
         globaladc.buzzer_1()

@@ -293,7 +293,7 @@ class CffParaFovea :
             self.frame,
             "Macular Densitometer                                                          CFF-Para Fovea Test"
         )
-        self.header.set_wifi_callback(lambda _ : globaladc.buzzer_3())
+        self.header.set_wifi_callback(lambda : globaladc.buzzer_3())
         # self.cffValue_min.pack(side='left',pady=10 ,padx=20)
         # self.cffValue_max.pack(side='right',pady=10 ,padx=20)
 
