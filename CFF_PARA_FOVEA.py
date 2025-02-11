@@ -304,7 +304,8 @@ class CffParaFovea :
         # self.cffValue_max.pack(side='right',pady=40 ,padx=10)
         self.cffValue_max.place(x=200,y=80)
         self.cffValue_frq.place (x=600, y=35)   
-
+        self.status_frame.place(relx=0.1, rely=0.5)
+        self.status_label.pack(pady=10)
 
         self.btn_ready.pack(pady=5)
         self.btn_flicker_start.pack(pady=5)
@@ -345,7 +346,7 @@ class CffParaFovea :
                                  text=">>", font=Font2,
                                  command=onfw, bg='Green',
                                  width=10)
-       
+        
         bwButton = tk.Button (self.frame,
                                  text="<<", font=Font2,
                                  command=onbw, bg='Green',
