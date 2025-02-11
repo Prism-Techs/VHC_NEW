@@ -183,8 +183,9 @@ class StatrupClass:
         self.brkf_1.Load()
         self.brkf_2.Load()
         self.admin.Load()  
-        globaladc.buzzer_1()      
-        self.ShowMainScreen()
+        globaladc.buzzer_1()   
+        self.cffP.show()   
+        # self.ShowMainScreen()
         self.window.mainloop()
         globaladc.buzzer_1()
         # globaladc.main_Prepair() # run this while loading main Screen
