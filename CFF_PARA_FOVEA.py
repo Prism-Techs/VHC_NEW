@@ -298,7 +298,7 @@ class CffParaFovea :
         self.cffValue_max.pack(side='right',pady=10 ,padx=10)
 
         self.create_side_buttons()
-        self.cffpara_label.pack(pady=2)
+        self.cffpara_label.pack()
         self.cffValue_min.pack(side='left',pady=10 ,padx=10)
         self.cffValue_max.pack(side='right',pady=10 ,padx=10)
         self.cffValue_frq.place (x=600, y=35)   
