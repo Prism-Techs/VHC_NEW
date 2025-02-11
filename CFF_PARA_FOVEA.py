@@ -332,7 +332,7 @@ class CffParaFovea :
                                  command=handleReStart, font=Font,
                                  width=10,bg='#a0f291')
 
-        self.reStartButton.place (x=285, y=200)
+        self.reStartButton.place (x=285, y=100)
 
 
         def onfw():
