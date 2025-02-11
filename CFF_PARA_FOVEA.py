@@ -41,7 +41,7 @@ class CffParaFovea :
 
                
         self.cffpara_label =tk.Label(self.freques_frame, text="CFF-Para Fovea",
-                                font=('Helvetica Neue', 22),
+                                font=('Helvetica Neue', 20),
                                 bg='black', fg='white')
         self.cffValue_min =tk.Label(self.freques_frame, text="23.5",
                                  font=('Helvetica Neue', 28),
@@ -298,7 +298,7 @@ class CffParaFovea :
         self.cffValue_max.pack(side='right',pady=10 ,padx=10)
 
         self.create_side_buttons()
-        self.cffpara_label.pack(pady=10)
+        self.cffpara_label.pack(pady=2)
         self.cffValue_min.pack(side='left',pady=10 ,padx=10)
         self.cffValue_max.pack(side='right',pady=10 ,padx=10)
         self.cffValue_frq.place (x=600, y=35)   
