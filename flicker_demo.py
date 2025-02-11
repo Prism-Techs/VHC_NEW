@@ -42,6 +42,8 @@ class FlickerThread(QThread):
             if not self.isStarted:
                 self.start()
 
+
+
 class FlickerDemo(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
@@ -247,38 +249,13 @@ class FlickerDemo(QtWidgets.QWidget):
             if self.threadCreated:
                 self.worker_flik.stop()
 
-    def run_thread(self):
-        """Start the flicker thread"""
-        globaladc.get_print("worker_flik thread started")
-        if not self.worker_flik.isStarted:
-            self.worker_flik.start()
-        else:
-            self.worker_flik.resume()
-
-    def stop_thread(self):
-        """Stop the flicker thread"""
-        globaladc.get_print("worker_flik thread stopped")
-        if self.threadCreated:
-            self.worker_flik.stop()
-            self.worker_flik.kill()
-            self.threadCreated = False
-
-    def periodic_event(self):
-        """Handle periodic flicker event"""
-        if self.flicker_bool:
-            globaladc.fliker(self.depth_value)
-            self.flicker_bool = False
-        else:
-            globaladc.fliker(0)
-            self.flicker_bool = True
-
     def showEvent(self, event):
         """Handle show event"""
         try:
             if not self._prepared:
                 globaladc.flicker_Prepair()
                 globaladc.all_led_off()
-                globaladc.blue_led_on()
+                globaladc.blue_led_on()  # Turn on the blue light
                 self._prepared = True
             
             # Reset UI state
@@ -302,11 +279,13 @@ class FlickerDemo(QtWidgets.QWidget):
             if self.threadCreated:
                 self.stop_thread()
             self._prepared = False
-            globaladc.all_led_off()
+            globaladc.all_led_off()  # Turn off all LEDs when hiding the screen
             
         except Exception as e:
             print(f"Error in hideEvent: {str(e)}")
         super().hideEvent(event)
+
+
 
 def main():
     import sys
