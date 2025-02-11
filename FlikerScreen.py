@@ -19,6 +19,7 @@ defaultdepth = 7
 maxdepth = 15
 intervel = globaladc.get_flicker_delay()    #0.044 #sec
 Font2 = ("Arial",20)
+
 def HandleFliker(param):
     # add code here to run whin fliker is swtched on/off
     return
