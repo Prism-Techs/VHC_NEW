@@ -4,6 +4,8 @@ from tkinter import messagebox
 from dac_lib_soft import mup4728
 import os.path
 print_en = 0
+import json
+
 class PatientInfo :
      def __init__(self) :
          self.Name = ""
@@ -25,7 +27,31 @@ class PatientInfo :
          self.Hypertension = ""
          raw_dt = datetime.now()
          self.log_date_time=raw_dt.strftime("%d/%m/%Y %I:%M:%S %p")
-         
+
+     def update_json(self):
+        json_file_path = "patient_data/patient_latest.json"
+        
+        # Read existing JSON data
+        try:
+            with open(json_file_path, 'r') as json_file:
+                data = json.load(json_file)
+        except FileNotFoundError:
+            data = {}
+        
+        # Update the data with new information
+        data.update({
+            "CFF_F": self.CFF_F,
+            "CFF_P": self.CFF_P,
+            "f_mpod": self.f_mpod,
+            "f_sd": self.f_sd,
+        })
+        
+        # Write updated data back to JSON file
+        with open(json_file_path, 'w') as json_file:
+            json.dump(data, json_file, indent=4)
+        
+        self.log_update("JSON file updated")
+
 
      def SetName(self,Name):
           self.Name= Name
@@ -182,6 +208,7 @@ class PatientInfo :
          if print_en:
              print("Save_brk done")
          self.log_update("Save_brk_done")
+         self.update_json()
 
      def Save_brk_0(self,file_locate):
          self.Show()
@@ -224,6 +251,8 @@ class PatientInfo :
          if print_en:
              print("Save_brk_0 done")
          self.log_update("Save_brk_0_Done")
+         self.update_json()
+
 
      def Save_brk_19(self,file_locate):
          self.Show()
@@ -266,6 +295,8 @@ class PatientInfo :
          if print_en:
              print("Save_brk_19 done")
          self.log_update("Save_brk_19_done")
+         self.update_json()
+
 
      def Save_brk_p(self,file_locate):
          self.Show()
@@ -312,6 +343,8 @@ class PatientInfo :
          if print_en:
              print("Save_brk_p done")
          self.log_update("Save_brk_p_Done")
+         self.update_json()
+
 
 
 # def main(): 
