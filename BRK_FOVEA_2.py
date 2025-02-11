@@ -263,9 +263,9 @@ class BrkparaFovea :
         buttons = [
             ("Flicker Demo", 150, 'black'),
             ("CFF Fovea", 210, 'black'),
-            ("BRK Fovea", 270, 'white'),
+            ("BRK Fovea", 270, 'black'),
             ("CFF Para-Fovea", 330, 'black'),
-            ("BRK Para-Fovea", 390, 'black'),
+            ("BRK Para-Fovea", 390, 'white'),
             ("Test Result", 450, 'black')
         ]
 
