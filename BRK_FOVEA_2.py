@@ -312,7 +312,7 @@ class BrkparaFovea :
                                    width=3, height=1,
                                    bg='#1f2836', fg='white',
                                    textvariable=str(self.depthVal))
-        self.DepthVal.place(x=105,y=140)
+        self.DepthVal.place(x=100,y=130)
         self.UPButton.place (x=110,  y=75)   
         self.DownButton.place (x=110,  y=200)
         self.saveButton.place_forget()
@@ -334,7 +334,7 @@ class BrkparaFovea :
             #self.userButton.place (x=375, y=440)  
             self.patient_switch_enable()
 
-        self.resumeButton = tk.Button(self.frame,
+        self.resumeButton = tk.Button(self.content_frame,
                                  text="Resume",
                                  command=handleResume, font=Font, bg='Orange',
                                  width=10)
@@ -391,7 +391,7 @@ class BrkparaFovea :
         self.trialList_mid.delete(0,leng-1)
         self.trialList_mid.insert(0,defaultdepth)
         self.DepthVal.config(textvariable=str(self.depthVal))
-        self.DepthVal.place(x=120,y=130)
+        self.DepthVal.place(x=100,y=130)
         self.resumeButton.place(x=resume_spot_x,y=resume_spot_y)
         #self.userButton.place_forget()
         self.patient_switch_desable()
