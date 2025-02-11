@@ -274,7 +274,7 @@ class BrkparaFovea :
                           width=20, bg=bg_color,
                           fg='white' if bg_color == 'black' else 'black',
                           relief='solid', bd=2)
-            btn.place(x=10, y=y)
+            btn.place(x=1, y=y)
 
         
         
