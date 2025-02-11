@@ -39,7 +39,7 @@ class CffParaFovea :
         self.patentActionflabel_2 = tk.Label (self.freques_frame, text='Increment Patient in\n Parafoveal Viewing.\n\n Press RESUME when done',font=Font1,bg='white')
 
                
-        self.cff_label =tk.Label(self.freques_frame, text="CFF Fovea",
+        self.cffpara_label =tk.Label(self.freques_frame, text="CFF-Para Fovea",
                                 font=('Helvetica Neue', 22),
                                 bg='black', fg='white')
         self.cffValue_min =tk.Label(self.freques_frame, text="23.5",
@@ -132,6 +132,105 @@ class CffParaFovea :
             globaladc.get_print('patient_switch_desable')
             GPIO.remove_event_detect(switch) 
         
+
+    def create_side_buttons(self):
+        """Create side navigation buttons."""
+        buttons = [
+            ("Flicker Demo", 150, 'black'),
+            ("CFF Fovea", 210, 'black'),
+            ("BRK Fovea", 270, 'black'),
+            ("CFF Para-Fovea", 330, 'white'),
+            ("BRK Para-Fovea", 390, 'black'),
+            ("Test Result", 450, 'black')
+        ]
+
+        for text, y, bg_color in buttons:
+            btn = tk.Button(self.frame, text=text, font=Font,
+                          width=20, bg=bg_color,
+                          fg='white' if bg_color == 'black' else 'black',
+                          relief='solid', bd=2)
+            btn.place(x=10, y=y)
+
+
+    def blink_button(self, button, interval=500):
+        """
+        Fixed button blinking implementation
+        """
+        button_id = str(id(button))
+        
+        # If button is already blinking, don't start a new blink
+        if button_id in self.blinking_buttons:
+            return
+            
+        # Store initial colors immediately
+        initial_bg = button.cget('bg')
+        initial_fg = button.cget('fg')
+        
+        # Initialize blinking state for this button with original colors
+        self.blinking_buttons[button_id] = {
+            'button': button,
+            'after_id': None,
+            'original_colors': (initial_bg, initial_fg),
+            'is_original': True  # Track whether showing original colors
+        }
+        
+        def toggle_colors():
+            if button_id not in self.blinking_buttons:
+                return
+                
+            if self.blinking_buttons[button_id]['is_original']:
+                # Switch to alternate colors
+                button.configure(
+                    bg=self.blinking_buttons[button_id]['original_colors'][1],
+                    fg=self.blinking_buttons[button_id]['original_colors'][0]
+                )
+            else:
+                # Switch back to original colors
+                button.configure(
+                    bg=self.blinking_buttons[button_id]['original_colors'][0],
+                    fg=self.blinking_buttons[button_id]['original_colors'][1]
+                )
+            
+            # Toggle the state
+            self.blinking_buttons[button_id]['is_original'] = not self.blinking_buttons[button_id]['is_original']
+            
+            # Schedule next blink
+            self.blinking_buttons[button_id]['after_id'] = self.frame.after(interval, toggle_colors)
+        
+        # Start the blinking
+        toggle_colors()
+
+
+    def stop_specific_blink(self, button):
+        """
+        Improved method to stop specific button blinking
+        """
+        button_id = str(id(button))
+        
+        if button_id in self.blinking_buttons:
+            # Cancel the scheduled after event
+            if self.blinking_buttons[button_id]['after_id']:
+                self.frame.after_cancel(self.blinking_buttons[button_id]['after_id'])
+            
+            # Restore original colors
+            if self.blinking_buttons[button_id]['original_colors']:
+                orig_bg, orig_fg = self.blinking_buttons[button_id]['original_colors']
+                button.configure(bg=orig_bg, fg=orig_fg)
+            
+            # Remove button from blinking dictionary
+            del self.blinking_buttons[button_id]
+
+    def stop_all_blinking(self):
+        """
+        Stop all buttons from blinking
+        """
+        button_ids = list(self.blinking_buttons.keys())
+        for button_id in button_ids:
+            button = self.blinking_buttons[button_id]['button']
+            self.stop_specific_blink(button)
+
+
+
     def Load(self):
         self.response_count = 0  
         self.skip_event =True
@@ -151,15 +250,28 @@ class CffParaFovea :
         # self.trialList.place (x=800, y=60)
         self.content_frame.place(x=280, y=110, width=711, height=441)
         self.freques_frame.place(relx=0.3, rely=0.1, width=291, height=126)
-        self.trialList.place (x=604, y=100)
+        self.trialList.place(x=604, y=100)
         self.header = HeaderComponent(
             self.frame,
-            "Macular Densitometer                                                          CFF Fovea Test"
+            "Macular Densitometer                                                          CFF-Para Fovea Test"
         )
         self.header.set_wifi_callback(lambda _ : globaladc.buzzer_3())
         self.cff_label.pack(pady=10)
         self.cffValue_min.pack(side='left',pady=10 ,padx=10)
         self.cffValue_max.pack(side='right',pady=10 ,padx=10)
+
+        self.create_side_buttons()
+        self.cffpara_label.pack(pady=10)
+        self.cffValue_min.pack(side='left',pady=10 ,padx=10)
+        self.cffValue_max.pack(side='right',pady=10 ,padx=10)
+        self.cffValue_frq.place (x=600, y=35)   
+
+
+        self.btn_ready.pack(pady=5)
+        self.btn_flicker_start.pack(pady=5)
+        self.btn_flicker_visible.pack(pady=5)
+        self.blink_button(self.btn_ready)
+
 
 
         def handleReStart():
@@ -221,7 +333,8 @@ class CffParaFovea :
         self.patentActionflabel.place_forget()
         self.patentActionflabel_2.place(x=380,y=200)
         self.cfflabel.place (x=400, y=10) 
-        self.trialList.place (x=800, y=60)
+        self.trialList.place(x=604, y=100)
+
         self.run_therad()
         self.reStartButton.place (x=300, y=400)
         globaladc.cff_Para_Fovea_Prepair()    # run this while loding cff Fovea screen 
