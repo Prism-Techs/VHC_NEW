@@ -41,7 +41,7 @@ class CffParaFovea :
 
                
         self.cffpara_label =tk.Label(self.freques_frame, text="CFF-Para Fovea",
-                                font=('Helvetica Neue', 15),
+                                font=('Helvetica Neue', 20),
                                 bg='black', fg='white')
         self.cffValue_min =tk.Label(self.freques_frame, text="23.5",
                                  font=('Helvetica Neue', 28),
