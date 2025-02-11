@@ -33,11 +33,15 @@ class flikerWindow:
         self.frame.config(bg='black')
         self.content_frame = tk.Frame(frame, bg='#1f2836')
 
-        self.label_frame = tk.LabelFrame(self.frame, text = 'Depth',height=250, width=200, bg='white')
-        self.label_frame.place(x="40", y="40")
         self.depthVal = tk.IntVar()
         self.depthVal.set(defaultdepth)  
         self.threadCreated =False
+        self.label_frame = tk.Label(self.content_frame, text="15",
+                                   font=('Helvetica Rounded', 28, 'bold'),
+                                   width=3, height=1,
+                                   bg='#1f2836', fg='white',
+                                   textvariable=str(self.depthVal)).place(x=110,y=142)
+        
         
         def UpButtonClicked():
             y = self.depthVal.get()
@@ -66,6 +70,30 @@ class flikerWindow:
                                    command=DownButtonClicked,
                                    relief='solid', borderwidth=1)
     
+
+
+
+
+    def create_side_buttons(self):
+        """Create side navigation buttons."""
+        buttons = [
+            ("Flicker Demo", 150, 'white'),
+            ("CFF Fovea", 210, 'black'),
+            ("BRK Fovea", 270, 'black'),
+            ("CFF Para-Fovea", 330, 'black'),
+            ("BRK Para-Fovea", 390, 'black'),
+            ("Test Result", 450, 'black')
+        ]
+
+        for text, y, bg_color in buttons:
+            btn = tk.Button(self.frame, text=text, font=Font,
+                          width=20, bg=bg_color,
+                          fg='white' if bg_color == 'black' else 'black',
+                          relief='solid', bd=2)
+            btn.place(x=10, y=y)
+
+
+
     #load method
     def Load(self):
         steplabel = tk.Label (self.frame, text="Depth",font=Font)
@@ -75,12 +103,12 @@ class flikerWindow:
         DepthVal.place(x=70,y=90)
         self.DownButton.place (x=20,  y=140)
         self.content_frame.place(x=280, y=110, width=711, height=441)
-
+        self.create_side_buttons()
 
 
         self.header = HeaderComponent(
             self.frame,
-            "Macular Densitometer                                                          BRK-Para Fovea Test"
+            "Macular Densitometer                                                          Flicker Demo"
         )
         
 
