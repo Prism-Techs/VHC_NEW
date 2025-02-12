@@ -1,8 +1,8 @@
-import tkinter as tk
 from PIL import Image, ImageTk
 import time
 from login import LoginApp  # Your login implementation
 from Patient_checker import run_in_thread
+import tkinter as tk
 
 class LoadingScreen:
     def __init__(self, root):
