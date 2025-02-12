@@ -522,7 +522,7 @@ class Ui_Form(object):
                 background-color: #2a3445;
             }
         """)
-        self.wifiButton.setIcon(QtGui.QIcon(":/wifi/wifi.png"))  # Make sure to have wifi.png in resources
+        self.wifiButton.setIcon(QtGui.QIcon("wifi_logo.png"))  # Make sure to have wifi.png in resources
         self.wifiButton.setIconSize(QtCore.QSize(24, 24))
         self.wifiButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.wifiButton.clicked.connect(self.open_wifi_page)
