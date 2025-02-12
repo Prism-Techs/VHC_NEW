@@ -2,6 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QThread, pyqtSignal, Qt
 import time
 from globalvar import pageDisctonary, globaladc
+from PerodicThread import PeriodicThread
 
 # Constants 
 Text_Fliker_OFF = "Fliker is Off Press to Change"
@@ -54,6 +55,7 @@ class FlickerDemo(QtWidgets.QWidget):
         self._prepared = False
         self.worker_flik = None
         self.flicker_on = False
+        globaladc.blue_led_on()
         
         # Setup UI
         self.setupUi()
