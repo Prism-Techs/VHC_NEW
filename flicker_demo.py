@@ -2,13 +2,11 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget
-
-from PyQt5 import QtCore, QtGui, QtWidgets
 import threading
 import time
 from globalvar import globaladc
 
-# from cffsample import CFFTest
+
 
 
 
@@ -510,11 +508,47 @@ class Ui_Form(object):
         self.pushButton_2.setObjectName("pushButton_2")
         self.pushButton_2.clicked.connect(self.open_home_page)
         self.next.clicked.connect(self.open_cfftest)
+        
+
+
+        self.wifiButton = QtWidgets.QPushButton(self.frame_4)
+        self.wifiButton.setGeometry(QtCore.QRect(880, 5, 30, 30))
+        self.wifiButton.setStyleSheet("""
+            QPushButton {
+                border: none;
+                background-color: transparent;
+            }
+            QPushButton:hover {
+                background-color: #2a3445;
+            }
+        """)
+        self.wifiButton.setIcon(QtGui.QIcon(":/wifi/wifi.png"))  # Make sure to have wifi.png in resources
+        self.wifiButton.setIconSize(QtCore.QSize(24, 24))
+        self.wifiButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.wifiButton.clicked.connect(self.open_wifi_page)
+        self.wifiButton.setObjectName("wifiButton")
+
+
+
+        self.label_8.setGeometry(QtCore.QRect(930, 0, 71, 41))
+
+        
         self.retranslateUi(Form)
+
+
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def open_home_page(self):
         globaladc.buzzer_1()
+
+
+
+    def open_wifi_page(self):
+        """Handle WiFi button click"""
+        globaladc.buzzer_3()
+        # Add your WiFi page opening logic here
+        print("WiFi button clicked")
+
 
 
     def open_cfftest(self):
