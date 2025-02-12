@@ -56,10 +56,21 @@ class FlickerDemo(QtWidgets.QWidget):
         self.worker_flik = None
         self.flicker_on = False
         globaladc.blue_led_on()
-        
         # Setup UI
         self.setupUi()
         
+
+    def periodic_event(self):
+        """Handle periodic flicker events"""
+        if self.flicker_on:
+            if self.flicker_bool:
+                globaladc.red_led_on()
+                globaladc.blue_led_off()
+            else:
+                globaladc.red_led_off()
+                globaladc.blue_led_on()
+            self.flicker_bool = not self.flicker_bool
+
     def setupUi(self):
         self.setObjectName("FlickerDemo")
         self.resize(1024, 600)
