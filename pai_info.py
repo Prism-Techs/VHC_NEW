@@ -240,7 +240,7 @@ class PatientRegistrationForm:
 
 
                 # Get current user data
-                current_login_usr = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                current_login_usr = os.path.join(os.path.dirname(os.path.realpath(__file__)), 
                                             "user_data", "latest_user.json")
                 with open(current_login_usr, 'r') as f:
                     user_data = json.load(f)
@@ -249,7 +249,7 @@ class PatientRegistrationForm:
 
                 # Save patient data
                 filename = f"patient_{patient_data['first_name']}.json"
-                filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                filepath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 
                                     "patient_data", filename)
 
                 os.makedirs(os.path.dirname(filepath), exist_ok=True)
