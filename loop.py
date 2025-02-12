@@ -90,7 +90,7 @@ class LoadingScreen:
             text_label = tk.Label(
                 self.writeup,
                 text="Macular Densitometer is the only gold standard pre-clinical & clinical stage psycho-physical subjective (test) screening device - globally, for measuring Macular Pigment Optical Density (MPOD), using HFP (Heterochromatic Flicker Photometry Technology)",
-                font=('Arial', 12),
+                font=('Arial', 15),
                 bg='black',
                 fg='white',
                 wraplength=481,
