@@ -16,6 +16,7 @@ from globalvar import currentPatientInfo
 from tkinter import messagebox
 import os.path
 import subprocess as sp
+from flicker_demo import main
 
 Font =  ("Arial",20)
 Font2 = ("Arial",10)
@@ -198,7 +199,10 @@ class StatrupClass:
         #fliker Deom  
     def handleFlikerDrmo(self):
         globaladc.buzzer_1()
-        self.ShowFlikerScreen()
+        # self.ShowFlikerScreen()
+        main()
+        
+
 
 
     def handleHomeScreen(self):
