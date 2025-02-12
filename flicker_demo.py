@@ -59,17 +59,17 @@ class FlickerDemo(QtWidgets.QWidget):
         # Setup UI
         self.setupUi()
         
-
     def periodic_event(self):
-        """Handle periodic flicker events"""
+        """Handle periodic flicker events using DAC output"""
         if self.flicker_on:
             if self.flicker_bool:
-                globaladc.red_led_on()
-                globaladc.blue_led_off()
+                # Apply the DAC voltage based on depth value
+                globaladc.fliker(self.depth_value)  # Set DAC output with current depth
+                self.flicker_bool = False
             else:
-                globaladc.red_led_off()
-                globaladc.blue_led_on()
-            self.flicker_bool = not self.flicker_bool
+                # Reset DAC voltage to 0
+                globaladc.fliker(0)
+                self.flicker_bool = True
 
     def setupUi(self):
         self.setObjectName("FlickerDemo")
@@ -262,6 +262,7 @@ class FlickerDemo(QtWidgets.QWidget):
             if self.threadCreated:
                 self.worker_flik.stop()
 
+                
     def showEvent(self, event):
         """Handle show event"""
         try:
