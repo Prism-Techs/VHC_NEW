@@ -160,7 +160,7 @@ class HomePage:
     @lru_cache(maxsize=1)
     def get_user_data_path(self):
         """Cache the user data file path"""
-        return os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+        return os.path.join(os.path.dirname(os.path.realpath(__file__)), 
                            "user_data", "latest_user.json")
 
     def check_user_role(self):

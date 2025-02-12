@@ -17,6 +17,7 @@ from tkinter import messagebox
 import os.path
 import subprocess as sp
 from flicker_demo import main
+import json
 
 Font =  ("Arial",20)
 Font2 = ("Arial",10)
@@ -95,45 +96,59 @@ class StatrupClass:
                                     command=handleAdmin, font=Font,
                                     width=10)
 
-
         def handleStart():            
-            if self.mw.ValidateUserInput() == False :
-                globaladc.buzzer_1()
-                messagebox.showerror("Data Error","Please enter User information")
-                return
+            if self.mw.ValidateUserInput() == False:
+                    globaladc.buzzer_1()
+                    messagebox.showerror("Data Error", "Please enter User information")
+                    return
             state=self.find_usb()       
             if state == 'false':
                 globaladc.buzzer_1()
                 messagebox.showerror("USB Error","Please check USB Drive\n(Name:-\“USB_DEVICE\”)\nInserted Properly \nif not, insert \nif inserted, remove and Re-insert")
                 return
-            globaladc.buzzer_1()
-            MsgBox = messagebox.askquestion ('Alchohol Status','Do you consume\nAlchohol',icon = 'question')
-            if MsgBox == 'yes':
-               currentPatientInfo.setAlchohol_state("Y")
-            else:                
-                currentPatientInfo.setAlchohol_state("N")
-            globaladc.buzzer_1()    
-            MsgBox = messagebox.askquestion ('Smoking Status','Do you have habbit of\nSmoking',icon = 'question')
-            if MsgBox == 'yes':
-               currentPatientInfo.setSmoking_state("Y")
-            else:                
-                currentPatientInfo.setSmoking_state("N")
-            globaladc.buzzer_1()
-            MsgBox = messagebox.askquestion ('Diabetes Status','Are you suffering from\n Diabetes(Sugar)',icon = 'question')
-            if MsgBox == 'yes':
-               currentPatientInfo.setDiabetes_state("Y")
-            else:                
-                currentPatientInfo.setDiabetes_state("N")
-            globaladc.buzzer_1()
-            MsgBox = messagebox.askquestion ('Hypertension Status','Are you suffering from\nHypertension (BP)',icon = 'question')
-            if MsgBox == 'yes':
-               currentPatientInfo.setHypertension_state("Y")
-            else:                
-                currentPatientInfo.setHypertension_state("N")
+            # globaladc.buzzer_1()
+            try:
+                # Get the latest patient data from JSON
+                filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                    "patient_data", f"patient_{currentPatientInfo.Name.split()[0]}.json")
+                
+                if os.path.exists(filepath):
+                    with open(filepath, 'r') as f:
+                        patient_data = json.load(f)
+
+                    # Set all states from JSON data
+                    currentPatientInfo.setAlchohol_state("Y" if patient_data['alcohol'] == "Yes" else "N")
+                    currentPatientInfo.setSmoking_state("Y" if patient_data['smoking'] == "Yes" else "N")
+                    currentPatientInfo.setDiabetes_state("Y" if patient_data['diabetes']['has_diabetes'] == "Yes" else "N")
+                    currentPatientInfo.setHypertension_state("Y" if patient_data['bp']['has_bp'] == "Yes" else "N")
+
+                    # Additional data that might be useful
+                    if 'diabetes' in patient_data and 'value' in patient_data['diabetes']:
+                        currentPatientInfo.diabetes_value = patient_data['diabetes']['value']
+                    if 'bp' in patient_data and 'value' in patient_data['bp']:
+                        currentPatientInfo.bp_value = patient_data['bp']['value']
+
+                    # globaladc.buzzer_3()
+                    currentPatientInfo.log_update("Start_pressed")
+                    self.ShowTestRunScreen()
+
+                else:
+                    globaladc.buzzer_1()
+                    messagebox.showerror("Data Error", "Patient data not found. Please save patient information first.")
+                    return
+
+            except Exception as e:
+                globaladc.buzzer_1()
+                messagebox.showerror("Error", f"Error loading patient data: {str(e)}")
+                return
+
             globaladc.buzzer_3()
             currentPatientInfo.log_update("Start_pressed")
             self.ShowTestRunScreen()
+            # pageDisctonary['BrkFovea_1'].show()
+            # pageDisctonary['BrkFovea_2'].show()
             
+
 
         self.StartButton = tk.Button (self.window,
                                     text="Start", font=Font,
