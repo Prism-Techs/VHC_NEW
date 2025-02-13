@@ -82,6 +82,9 @@ update_button.grid(row=5, column=0, columnspan=2, pady=10)
 status_label = ttk.Label(root, text="", font=("Arial", 10))
 status_label.grid(row=6, column=0, columnspan=2)
 
+status_label.config(text="Invalid Input! Enter numbers only.", foreground="red")
+
+
 # Run the GUI
 root.mainloop()
 
