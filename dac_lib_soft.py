@@ -787,7 +787,7 @@ class mup4728:
                 self.blue_led_volt_control(3,0) #0(0 to 19), 1(1 to 20), 2(1 to 20), 3(0 to 20)
                 self.green_freq_control (16) # Flicker null value (0 to 15) and 16 = 0
                 self.green_volt_control(20) #0 to 20
-                self.inner_led_control(8) #0 to 20
+                self.inner_led_control(9) #0 to 20
                 self.outer_led_control(20) #0 to 20
                 self.actuator_control(1)    
                 time.sleep(.5)
@@ -797,7 +797,7 @@ class mup4728:
                 self.blue_led_volt_control(3,0) #0(0 to 19), 1(1 to 20), 2(1 to 20), 3(0 to 20)
                 self.green_freq_control (0) # Flicker null value (0 to 15) and other 0
                 self.green_volt_control(20) #0 to 20
-                self.inner_led_control(8) #0 to 20
+                self.inner_led_control(9) #0 to 20
                 self.outer_led_control(20) #0 to 20
                 self.get_print('main_Prepair+++++++++++++')  
                 self.green_led_on()  #check onec  
@@ -812,7 +812,7 @@ class mup4728:
                 self.blue_led_volt_control(3,0) #0(0 to 19), 1(1 to 20), 2(1 to 20), 3(0 to 20)
                 self.green_freq_control (0) # Flicker null value (0 to 15) and other 0
                 self.green_volt_control(20) #0 to 20
-                self.inner_led_control(8) #0 to 20
+                self.inner_led_control(9) #0 to 20
                 self.outer_led_control(20) #0 to 20
                 self.red_led_control(0) #0 to 20
             self.get_print('flicker_Prepair++++++++++++++++++') 
@@ -843,7 +843,7 @@ class mup4728:
         #             time.sleep(1)
         #             self.all_led_off()
         #             self.outer_led_control(20) #0 to 20
-        #             self.inner_led_control(8) #0 to 20            
+        #             self.inner_led_control(9) #0 to 20            
         #             self.green_freq_control (0) # Flicker null value (0 to 15) and other 0
         #             self.green_volt_control(20) #0 to 20
         #             time.sleep(0.3)
@@ -865,7 +865,7 @@ class mup4728:
                 self.blue_led_volt_control(3,0) #0(0 to 19), 1(1 to 20), 2(1 to 20), 3(0 to 20)
                 self.green_freq_control (0) # Flicker null value (0 to 15) and other 0
                 self.green_volt_control(20) #0 to 20
-                self.inner_led_control(8) #0 to 20
+                self.inner_led_control(9) #0 to 20
                 self.outer_led_control(20) #0 to 20
                 self.red_led_control(0) #0 to 20
                 time.sleep(1)
@@ -888,7 +888,7 @@ class mup4728:
                 time.sleep(1)
                 self.green_freq_control(0) # Flicker null value (0 to 15) and other 0
                 self.green_volt_control(20) #0 to 20
-                self.inner_led_control(8) #0 to 20
+                self.inner_led_control(9) #0 to 20
                 self.outer_led_control(20) #0 to 20
                 self.red_led_control(0) #0 to 20
                 time.sleep(0.021)
@@ -920,7 +920,7 @@ class mup4728:
                 self.blue_led_volt_control(3,0) #0(0 to 19), 1(1 to 20), 2(1 to 20), 3(0 to 20)
                 self.green_freq_control(0) # Flicker null value (0 to 15) and other 0
                 self.green_volt_control(20) #0 to 20
-                self.inner_led_control(8) #0 to 20
+                self.inner_led_control(9) #0 to 20
                 self.outer_led_control(20) #0 to 20
                 self.fliker_start_b()
                 time.sleep(4.5)
@@ -943,7 +943,7 @@ class mup4728:
                 time.sleep(4)
                 self.green_freq_control(0) # Flicker null value (0 to 15) and other 0
                 self.green_volt_control(20) #0 to 20
-                self.inner_led_control(8) #0 to 20
+                self.inner_led_control(9) #0 to 20
                 self.outer_led_control(20) #0 to 20
                 self.red_led_control(20) #0 to 20
                 self.blue_led_volt_control(3,20) #0(0 to 19), 1(1 to 20), 2(1 to 20), 3(0 to 20)
