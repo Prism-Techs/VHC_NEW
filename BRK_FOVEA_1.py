@@ -79,7 +79,8 @@ class BrkFovea_1 :
             elif self.process == 1 :
                 cff_fovea_frq = globaladc.get_cff_fovea_frq()
                 if(self.depthVal_2.get() < maxdepth_2):    #self.depthVal_2.get()
-                    x = round((self.depthVal_2.get()+0.5)+0.00555555,1) #depthVal_2
+                    #x = round((self.depthVal_2.get()+0.5)+0.00555555,1) #depthVal_2
+                    x = round((self.depthVal_2.get()+0.5),1) #depthVal_2
                     str_data = 'x='+str(x)                       
                     globaladc.get_print(str_data)
                     self.depthVal_2.set(x)                    

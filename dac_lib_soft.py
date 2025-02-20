@@ -333,6 +333,9 @@ class mup4728:
             else :
                 str_data = 'GREEN_FREQ_DAC must be 0 to 20 ' + str(dac_val)
                 self.get_print(str_data)           
+
+
+
 #-----------------------------------------------------------------------------------
         def blue_led_volt_control(self,mode,val):
             if mode == 0:
