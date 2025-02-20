@@ -311,7 +311,7 @@ class mup4728:
 #-----------------------------------------------------------------------------------
         def green_volt_control(self,data_in):
             if(0<=data_in<=20):
-                dac_val=int(85.4*data_in+0.380952) # 0 to 20
+                dac_val=int(84.4*data_in+0.380952) # 0 to 20
                 str_data = 'GREEN_Volt_DAC = ' + str(dac_val)
                 self.get_print(str_data)
                 self.GREEN_Volt(dac_val)              
@@ -383,7 +383,7 @@ class mup4728:
             if 0 <= data_in <= 20:
                 # Since the INNER_LED function divides by 1.6, we need to multiply by 1.6 here
                 # to achieve the intended DAC value
-                dac_val = int((2000/20) * data_in * 1.6)  # Compensate for the 1.6 division
+                dac_val = int((1500/20) * data_in * 1.6)  # Compensate for the 1.6 division
                 str_data = 'INNER_LED_DAC = ' + str(dac_val)
                 self.get_print(str_data)
                 self.INNER_LED(dac_val)
