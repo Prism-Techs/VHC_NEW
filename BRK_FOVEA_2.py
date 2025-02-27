@@ -42,7 +42,7 @@ class BrkparaFovea :
         self.depthVal_2 = tk.DoubleVar()        
         self.depthVal.set(defaultdepth)  
         self.threadCreated =False
-        self.save_enable_text = tk.Label (frame,font=Font1,bg='white')
+        self.save_enable_text = tk.Label (self.content_frame,font=Font1,bg='white')
         self.process = 0 
 
         def UpButtonClicked():
