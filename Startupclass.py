@@ -265,9 +265,9 @@ class StatrupClass:
             #intial work flow show Main Screen
     def ShowMainScreen(self):  
         #globaladc.buzzer_1()
-        self.ShowAdminButton()
+        # self.ShowAdminButton()
         self.ShowStartButton()
-        self.ShowFlikerButton()
+        # self.ShowFlikerButton()
         self.HideHomeButton()
         # self.fw.hide()
         self.cff.hide()

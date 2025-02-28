@@ -39,7 +39,7 @@ class mainWindow:
         # Time label - modernized and centered
         self.timelabel = tk.Label(self.frame, font=FONT_TIME, bg="black", fg="white")
         self.updateDateTime()
-        self.timelabel.place(x=400, y=20)  # Centered at the top
+        # self.timelabel.place(x=400, y=20)  # Centered at the top
 
         # Setup modern UI
         self.setup_ui()
@@ -65,11 +65,10 @@ class mainWindow:
         # bwButton.place(x=420, y=500)
 
     def setup_ui(self):
-        # Main Container
         self.main_frame = tk.Frame(self.frame, bg='black')
         self.main_frame.place(x=20, y=100, width=981, height=460)
 
-        # Create form fields with labels
+        # Create form fields
         self.create_text_field("1st Name", 0, 20, "first name")
         self.create_text_field("Mid. Name", 344, 20, "Middle Name")
         self.create_text_field("Surname", 670, 20, "Surname")
@@ -85,7 +84,7 @@ class mainWindow:
         self.create_radio_group("Smoking", 0, 260, self.smoking_var, [("Yes", "Yes"), ("No", "No")])
         self.create_radio_group("Food Habit", 0, 320, self.food_var, [("Veg", "Veg"), ("Non-Veg", "Non-Veg")])
 
-        # BP and Diabetes section
+        # Medical fields with repositioned input boxes
         self.create_medical_field("Blood Pressure", 450, 200, self.bp_var, "80/120")
         self.create_medical_field("Diabetes", 450, 260, self.diabetes_var, "97")
 
