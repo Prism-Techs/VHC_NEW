@@ -8,6 +8,7 @@ import PerodicThread
 import RPi.GPIO as GPIO
 import time
 from header import HeaderComponent
+from threading import Lock
 
 switch = 20
 Font = ("Arial", 15)
@@ -20,8 +21,8 @@ maxdepth_2 = 2.00
 resume_spot_x = 450
 resume_spot_y = 240
 
-# Calibration factor to adjust depthVal mapping (tweak this value based on testing)
-CALIBRATION_FACTOR = 1.5  # Increase sensitivity to delay flicker stop to 10-12
+# Calibration factor to adjust frequency/voltage for flicker stop at 10-12
+CALIBRATION_FACTOR = 1.5
 
 class BrkFovea_1:
     def __init__(self, frame):
@@ -33,6 +34,7 @@ class BrkFovea_1:
         self.inc_dec_2 = False
         self.skip_event = True
         self.threadCreated = False
+        self.update_lock = Lock()  # Thread-safe lock for updates
 
         def depthincrement_callback():
             globaladc.get_print('increment call back')
@@ -51,36 +53,33 @@ class BrkFovea_1:
         self.threadCreated = False
         self.save_enable_text = tk.Label(self.content_frame, font=Font1, bg='white')
         self.process = 0
+        self.last_update_time = 0  # For debouncing
 
         def UpButtonClicked():
             globaladc.buzzer_1()
+            current_time = time.time()
+            if current_time - self.last_update_time < 0.3:  # Debounce delay of 300ms
+                return
             if self.process == 0:
-                y = self.depthVal.get()
-                if y < maxdepth_1:
-                    x = y + 1
-                    # Apply calibration factor to delay flicker stop
-                    adjusted_depth = int(x * CALIBRATION_FACTOR) if x >= 5 else x
-                    self.depthVal.set(min(adjusted_depth, maxdepth_1))  # Cap at maxdepth_1
-                    globaladc.blue_led_volt_control(0, self.depthVal.get())
-                    log_data = "B_V_null-[" + str(self.depthVal.get()) + "]"
-                    currentPatientInfo.log_update(log_data)
-                if self.depthVal.get() == 19:
-                    self.save_enable_text.config(text='MPOD 1.0+\nSelect SAVE')
-                    self.save_enable_text.place(x=100, y=300)
-                    self.saveButton.place(x=100, y=380)
-                    self.resumeButton.place_forget()
-                else:
-                    self.save_enable_text.place_forget()
-                    self.saveButton.place_forget()
-                    self.resumeButton.place(x=resume_spot_x, y=resume_spot_y)
-            elif self.process == 1:
-                cff_fovea_frq = globaladc.get_cff_fovea_frq()
-                if self.depthVal_2.get() < maxdepth_2:
-                    x = round((self.depthVal_2.get() + 0.5), 1)
-                    str_data = 'x=' + str(x)
-                    globaladc.get_print(str_data)
-                    self.depthVal_2.set(x)
-                    globaladc.put_cff_fovea_frq(round((cff_fovea_frq + 0.5) + 0.00555555, 1))
+                with self.update_lock:  # Lock to prevent thread interference
+                    y = self.depthVal.get()
+                    if y < maxdepth_1:
+                        x = y + 1
+                        self.depthVal.set(x)
+                        globaladc.blue_led_volt_control(0, self.depthVal.get())
+                        log_data = "B_V_null-[" + str(self.depthVal.get()) + "]"
+                        currentPatientInfo.log_update(log_data)
+                        print(f"UpButtonClicked: depthVal set to {self.depthVal.get()}")
+                    if self.depthVal.get() == 19:
+                        self.save_enable_text.config(text='MPOD 1.0+\nSelect SAVE')
+                        self.save_enable_text.place(x=100, y=300)
+                        self.saveButton.place(x=100, y=380)
+                        self.resumeButton.place_forget()
+                    else:
+                        self.save_enable_text.place_forget()
+                        self.saveButton.place_forget()
+                        self.resumeButton.place(x=resume_spot_x, y=resume_spot_y)
+            self.last_update_time = current_time
 
         self.UPButton = tk.Button(self.content_frame, text="+",
                                  font=('Helvetica', 30, 'bold'),
@@ -91,31 +90,28 @@ class BrkFovea_1:
 
         def DownButtonClicked():
             globaladc.buzzer_1()
+            current_time = time.time()
+            if current_time - self.last_update_time < 0.3:  # Debounce delay of 300ms
+                return
             if self.process == 0:
-                if self.depthVal.get() > 0:
-                    x = self.depthVal.get() - 1
-                    # Apply calibration factor to delay flicker stop
-                    adjusted_depth = int(x * CALIBRATION_FACTOR) if x >= 5 else x
-                    self.depthVal.set(max(adjusted_depth, 0))  # Cap at 0
-                    globaladc.blue_led_volt_control(0, self.depthVal.get())
-                    log_data = "B_V_null-[" + str(self.depthVal.get()) + "]"
-                    currentPatientInfo.log_update(log_data)
-                if self.depthVal.get() == 0:
-                    self.save_enable_text.config(text='NEGLIGIBLE MPOD\nSelect SAVE')
-                    self.save_enable_text.place(x=80, y=300)
-                    self.saveButton.place(x=100, y=380)
-                    self.resumeButton.place_forget()
-                else:
-                    self.save_enable_text.place_forget()
-                    self.saveButton.place_forget()
-                    self.resumeButton.place(x=resume_spot_x, y=resume_spot_y)
-            elif self.process == 1:
-                cff_fovea_frq = globaladc.get_cff_fovea_frq()
-                y = self.depthVal_2.get()
-                if y > 0:
-                    x = round((y - 0.5) + 0.00555555, 1)
-                    self.depthVal_2.set(x)
-                    globaladc.put_cff_fovea_frq(round((cff_fovea_frq - 0.5) + 0.00555555, 1))
+                with self.update_lock:  # Lock to prevent thread interference
+                    if self.depthVal.get() > 0:
+                        x = self.depthVal.get() - 1
+                        self.depthVal.set(x)
+                        globaladc.blue_led_volt_control(0, self.depthVal.get())
+                        log_data = "B_V_null-[" + str(self.depthVal.get()) + "]"
+                        currentPatientInfo.log_update(log_data)
+                        print(f"DownButtonClicked: depthVal set to {self.depthVal.get()}")
+                    if self.depthVal.get() == 0:
+                        self.save_enable_text.config(text='NEGLIGIBLE MPOD\nSelect SAVE')
+                        self.save_enable_text.place(x=80, y=300)
+                        self.saveButton.place(x=100, y=380)
+                        self.resumeButton.place_forget()
+                    else:
+                        self.save_enable_text.place_forget()
+                        self.saveButton.place_forget()
+                        self.resumeButton.place(x=resume_spot_x, y=resume_spot_y)
+            self.last_update_time = current_time
 
         self.DownButton = tk.Button(self.content_frame, text="-",
                                    font=('Helvetica', 30, 'bold'),
@@ -438,8 +434,8 @@ class BrkFovea_1:
                     self.trialList_min.insert(self.locate, self.value)
         else:
             globaladc.get_print('BF')
-        # Apply calibration to delay flicker stop to 10-12
-        adjusted_value = self.value * CALIBRATION_FACTOR if 5 <= self.value <= 12 else self.value
+        # Apply calibration to delay flicker stop to 10-12 based on depthVal
+        adjusted_value = self.value * (CALIBRATION_FACTOR if 5 <= self.depthVal.get() <= 12 else 1.0)
         globaladc.blue_led_Freq_control(int(adjusted_value))
 
     def getName(self):
@@ -449,7 +445,6 @@ class BrkFovea_1:
         cff_fovea_frq = globaladc.get_cff_fovea_frq()
         globaladc.skip_main_rset()
         currentPatientInfo.SetCFF_F(cff_fovea_frq)
-        # state = os.path.isdir('/media/pi/USB_DEVICE')
         state = self.find_usb()
         if state != 'false':
             str_data = 'Save to file to ' + currentPatientInfo.Name + '.TXT'
@@ -482,5 +477,3 @@ class BrkFovea_1:
     def ShowMainScreen(self):
         pageDisctonary['BrkFovea_1'].hide()
         pageDisctonary['MainScreen'].show()
-
-
