@@ -6,7 +6,8 @@ class KeyBoard:
         self.shift_active = False
         self._drag_data = {"x": 0, "y": 0}  # For dragging
         self.current_window = None  # Track current keyboard window
-        
+        self.current_entry = None  # Track current entry
+
     def cleanup_keyboard(self):
         if self.current_window and self.current_window.winfo_exists():
             try:
@@ -36,9 +37,9 @@ class KeyBoard:
         """Handle key selection and input"""
         if not window.winfo_exists():  # Check if window still exists
             return
-            
+
         uppercase = ucase
-        
+
         if value == "Space":
             value = ' '
         elif value == 'Enter':
@@ -56,7 +57,7 @@ class KeyBoard:
                     entry.delete(len(entry.get())-1, 'end')
             else:
                 entry.delete('end - 2c', 'end')
-        
+
         elif value == 'Shift':
             self.shift_active = not self.shift_active
             for widget in window.winfo_children():
@@ -70,7 +71,7 @@ class KeyBoard:
                 value = value.upper()
             entry.insert('end', value)
             entry.focus_set()  # Keep focus on the entry
-            
+
         globaladc.buzzer_1()
         window.lift()  # Keep keyboard on top after each action
 
@@ -83,7 +84,7 @@ class KeyBoard:
 
         self.cleanup_keyboard()
         self.current_entry = entry
-        
+
         alphabets = [
             ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '@'],
             ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '#'],
@@ -91,16 +92,18 @@ class KeyBoard:
             ['Shift ^', 'z', 'x', 'c', 'v', 'b', 'n', 'm', '!', 'Back'],
             ['Space', 'Enter']
         ]
-        
+
         window = tk.Toplevel(root)
         window.attributes('-topmost', True)  # Make window stay on top
         self.current_window = window
-        
+
         x = root.winfo_x()
         y = root.winfo_y()
 
-        window.geometry("+%d+%d" %(x+20, y+400))
-        window.overrideredirect(1)
+        # Set initial size and allow resizing with minimum dimensions
+        window.geometry("600x200")  # Initial size
+        window.minsize(400, 150)  # Minimum size to ensure usability
+
         window.configure(background="black")
         window.wm_attributes("-alpha", 0.7)
 
@@ -108,9 +111,15 @@ class KeyBoard:
         window.bind("<Button-1>", lambda e: self.on_drag_start(e, window))
         window.bind("<B1-Motion>", lambda e: self.on_drag_motion(e, window))
 
-        # Create main frame
+        # Create main frame with dynamic resizing
         main_frame = tk.Frame(window, bg='black')
-        main_frame.pack(padx=2, pady=2)
+        main_frame.pack(fill='both', expand=True, padx=2, pady=2)
+
+        # Configure grid to resize
+        for i in range(5):  # Number of rows
+            main_frame.grid_rowconfigure(i, weight=1)
+        for i in range(11):  # Maximum number of columns
+            main_frame.grid_columnconfigure(i, weight=1)
 
         button_style = {
             'bg': "black",
@@ -122,8 +131,7 @@ class KeyBoard:
         }
 
         for y, row in enumerate(alphabets):
-            x = 0
-            for text in row:
+            for x, text in enumerate(row):
                 if text == 'Shift':
                     width = 8
                     columnspan = 2
@@ -141,8 +149,8 @@ class KeyBoard:
                     columnspan = 1
 
                 button = tk.Button(
-                    main_frame, 
-                    text=text, 
+                    main_frame,
+                    text=text,
                     width=width,
                     command=lambda value=text: self.select(entry, window, root, value),
                     **button_style
@@ -150,8 +158,6 @@ class KeyBoard:
                 button.grid(row=y, column=x, columnspan=columnspan, padx=2, pady=2, sticky='nsew')
                 button.bind("<Button-1>", lambda e, w=window: self.on_drag_start(e, w))
                 button.bind("<B1-Motion>", lambda e, w=window: self.on_drag_motion(e, w))
-
-                x += columnspan
 
         window.update_idletasks()  # Ensure window is fully created
         window.lift()  # Raise window to top
@@ -161,7 +167,7 @@ class KeyBoard:
     def createNumaKey(self, root, entry, number=False):
         """Create numeric keyboard"""
         self.cleanup_keyboard()
-        
+
         numbers = [
             ['1', '2', '3'],
             ['4', '5', '6'],
@@ -172,14 +178,30 @@ class KeyBoard:
         window = tk.Toplevel(root)
         window.attributes('-topmost', True)  # Make window stay on top
         self.current_window = window
-        
+
         x = root.winfo_x()
         y = root.winfo_y()
 
-        window.geometry("+%d+%d" % (x+40, y + 300))
-        window.overrideredirect(1)
+        # Set initial size and allow resizing with minimum dimensions
+        window.geometry("300x200")  # Initial size
+        window.minsize(200, 150)  # Minimum size to ensure usability
+
         window.configure(background="cornflowerblue")
         window.wm_attributes("-alpha", 0.7)
+
+        # Add dragging to window
+        window.bind("<Button-1>", lambda e: self.on_drag_start(e, window))
+        window.bind("<B1-Motion>", lambda e: self.on_drag_motion(e, window))
+
+        # Create main frame with dynamic resizing
+        main_frame = tk.Frame(window, bg='cornflowerblue')
+        main_frame.pack(fill='both', expand=True, padx=2, pady=2)
+
+        # Configure grid to resize
+        for i in range(4):  # Number of rows
+            main_frame.grid_rowconfigure(i, weight=1)
+        for i in range(3):  # Number of columns
+            main_frame.grid_columnconfigure(i, weight=1)
 
         button_style = {
             'width': 10,
@@ -193,15 +215,12 @@ class KeyBoard:
         for y, row in enumerate(numbers):
             for x, text in enumerate(row):
                 button = tk.Button(
-                    window,
+                    main_frame,
                     text=text,
                     command=lambda value=text: self.select(entry, window, root, value),
                     **button_style
                 )
-                button.grid(row=y, column=x)
-
-        window.bind("<Button-1>", lambda e: self.on_drag_start(e, window))
-        window.bind("<B1-Motion>", lambda e: self.on_drag_motion(e, window))
+                button.grid(row=y, column=x, padx=2, pady=2, sticky='nsew')
 
         window.update_idletasks()  # Ensure window is fully created
         window.lift()  # Raise window to top

@@ -43,7 +43,7 @@ class mainWindow:
         # self.timelabel.place(x=400, y=20)  # Centered at the top
         self.header = HeaderComponent(
             self.frame,
-            "Macular Densitometer                                                          Patient Info"
+            "Macular Densitometer                                                                   Patient Info"
         )
         
 
