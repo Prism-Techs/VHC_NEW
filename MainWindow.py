@@ -12,6 +12,7 @@ from globalvar import globaladc
 from Splash import Splash
 import tkinter.font as tkfont
 import os, json
+from header import HeaderComponent
 
 # Modernized constants
 FONT_MAIN = ("Helvetica Neue", 16)  # Clean, modern sans-serif font
@@ -40,6 +41,12 @@ class mainWindow:
         self.timelabel = tk.Label(self.frame, font=FONT_TIME, bg="black", fg="white")
         self.updateDateTime()
         # self.timelabel.place(x=400, y=20)  # Centered at the top
+        self.header = HeaderComponent(
+            self.frame,
+            "Macular Densitometer                                                          Patient Info"
+        )
+        
+
 
         # Setup modern UI
         self.setup_ui()
