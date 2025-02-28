@@ -3,14 +3,13 @@ from tkinter import messagebox
 from datetime import datetime
 import json
 import os
-from PIL import Image, ImageTk
 from header import HeaderComponent
 from Startupclass import StatrupClass
 
 class HomePage:
-    def __init__(self, root):
+    def __init__(self, root, startup_instance):
         self.root = root
-        self.wifi_window = None
+        self.startup = startup_instance  # Reference to StatrupClass instance
         self.time_label = None
         self.date_label = None
         self.user_info_label = None
@@ -26,10 +25,10 @@ class HomePage:
         }
         self.fonts = {
             'welcome': ('Helvetica Neue', 14, 'bold'),
-            'datetime': ('Helvetica Neue', 12),  # Slightly larger for readability
-            'button': ('Arial', 20, 'bold')      # Adjusted for better visibility
+            'datetime': ('Helvetica Neue', 12),
+            'button': ('Arial', 20, 'bold')
         }
-        self.time_update_interval = 10000  # 10 seconds for better responsiveness
+        self.time_update_interval = 10000  # 10 seconds
 
         # Setup window
         self.root.geometry("1024x600")
@@ -45,17 +44,15 @@ class HomePage:
         """Cleanup Tkinter resources"""
         for button in self.buttons:
             button.destroy()
-        if self.wifi_window:
-            self.wifi_window.destroy()
         self.time_label.destroy()
         self.date_label.destroy()
         self.user_info_label.destroy()
         self.header.destroy()
 
     def setup_ui(self):
-        # Header
+        # Header (assuming it handles WiFi without image for now)
         self.header = HeaderComponent(self.root, "                                                    Home Page")
-        self.header.set_wifi_callback(self.open_wifi_page)
+        self.header.set_wifi_callback(self.switch_to_wifi)
 
         # Welcome Label
         self.user_info_label = tk.Label(
@@ -84,9 +81,9 @@ class HomePage:
 
         # Time and Date Labels
         self.time_label = tk.Label(self.root, font=self.fonts['datetime'], fg=self.colors['fg_white'], bg=self.colors['bg_black'])
-        self.time_label.place(x=900, y=560)  # Adjusted for better alignment
+        self.time_label.place(x=900, y=560)
         self.date_label = tk.Label(self.root, font=self.fonts['datetime'], fg=self.colors['fg_white'], bg=self.colors['bg_black'])
-        self.date_label.place(x=900, y=580)  # Adjusted for better alignment
+        self.date_label.place(x=900, y=580)
 
         # Initial datetime update
         self.update_datetime()
@@ -100,21 +97,18 @@ class HomePage:
         self.date_label.config(text=current.strftime('%d-%m-%Y'))
         self.root.after(self.time_update_interval, self.update_datetime)
 
-    def open_wifi_page(self):
-        if not self.wifi_window or not self.wifi_window.winfo_exists():
-            self.wifi_window = tk.Toplevel(self.root)
-            self.wifi_window.title("WiFi Settings")
-            self.wifi_window.geometry("400x300")
-            self.wifi_window.configure(bg=self.colors['bg_black'])
-            tk.Label(self.wifi_window, text="WiFi settings placeholder", fg=self.colors['fg_white'], bg=self.colors['bg_black']).pack(pady=10)
-            self.wifi_window.protocol("WM_DELETE_WINDOW", self.close_wifi_page)
-        else:
-            self.wifi_window.lift()
-
-    def close_wifi_page(self):
-        if self.wifi_window and self.wifi_window.winfo_exists():
-            self.wifi_window.destroy()
-            self.wifi_window = None
+    def switch_to_wifi(self):
+        """Switch to WifiSettings frame instead of opening a new window"""
+        if "WifiSettings" not in pageDisctonary:
+            wifi_frame = tk.Frame(self.root, bg='#64edb4')
+            pageDisctonary["WifiSettings"] = WifiSettings(wifi_frame, self.startup)
+            pageDisctonary["WifiSettings"].Load()
+        self.startup.HideStartButton()
+        self.startup.HideAdminButton()
+        self.startup.HideFlikerButton()
+        self.startup.ShowHomeButton()
+        pageDisctonary["MainScreen"].hide()
+        pageDisctonary["WifiSettings"].show()
 
     def create_user(self):
         messagebox.showinfo("Action", "Create User functionality to be implemented")
@@ -126,14 +120,13 @@ class HomePage:
 
     def test_mode(self):
         self.root.withdraw()
-        st = StatrupClass()
+        st = self.startup
         st.main()
-        self.root.deiconify()  # Re-show the main window when returning
+        self.root.deiconify()
 
     def logout(self):
         if messagebox.askyesno("Logout", "Are you sure you want to logout?"):
             self.root.destroy()
-            # Optionally restart the application or return to login screen
             print("Logout clicked")
 
     def get_user_data_path(self):
@@ -164,18 +157,19 @@ class HomePage:
         self.user_info_label.config(text=user_info)
 
     def update_button_visibility(self, is_operator):
-        # For now, all buttons are visible; adjust based on role if needed
         pass  # Implement role-based visibility if required
 
 def main():
     try:
-        os.nice(10)  # Set lower priority if supported
+        os.nice(10)
     except AttributeError:
         pass
 
     root = tk.Tk()
     root.update_idletasks()
-    app = HomePage(root)
+    startup = StatrupClass()
+    app = HomePage(root, startup)
+    pageDisctonary["MainScreen"] = app
     root.mainloop()
 
 if __name__ == "__main__":
