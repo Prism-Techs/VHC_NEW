@@ -161,7 +161,9 @@ class StatrupClass:
 
             globaladc.buzzer_3()
             currentPatientInfo.log_update("Start_pressed")
-            self.ShowTestRunScreen()    
+            # self.ShowTestRunScreen()  
+            self.brkf_1.show()
+              
 
         self.StartButton = tk.Button (self.window,
                                     text="Start", font=Font,

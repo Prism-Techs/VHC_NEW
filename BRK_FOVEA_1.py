@@ -482,3 +482,5 @@ class BrkFovea_1:
     def ShowMainScreen(self):
         pageDisctonary['BrkFovea_1'].hide()
         pageDisctonary['MainScreen'].show()
+
+
