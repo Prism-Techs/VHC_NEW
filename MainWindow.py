@@ -14,14 +14,14 @@ import tkinter.font as tkfont
 import os, json
 
 # Modernized constants
-FONT_MAIN = ("Helvetica Neue", 16)  # Clean, modern sans-serif font
-FONT_SECONDARY = ("Helvetica Neue", 14)  # Slightly smaller for buttons
-FONT_TIME = ("Helvetica Neue", 18, "bold")  # Larger for time display
+FONT_MAIN = ("Helvetica Neue", 16)
+FONT_SECONDARY = ("Helvetica Neue", 14)
+FONT_TIME = ("Helvetica Neue", 18, "bold")
 
 class mainWindow:
     def __init__(self, frame):
         self.frame = frame
-        self.frame.configure(bg='black')  # Modern black background
+        self.frame.configure(bg='black')
         self.selectedGen = "M"
         self.selectedEye = "R"
         self.kb = KeyBoard()
@@ -36,18 +36,15 @@ class mainWindow:
         self.diabetes_var = tk.StringVar(value="No")
 
     def Load(self):
-        # Time label - modernized and centered
         self.timelabel = tk.Label(self.frame, font=FONT_TIME, bg="black", fg="white")
         self.updateDateTime()
-        # self.timelabel.place(x=400, y=20)  # Centered at the top
+        self.timelabel.place(x=400, y=20)
 
-        # Setup modern UI
         self.setup_ui()
 
-        # Navigation buttons
         def onfw():
             if self.ValidateUserInput():
-                self.save_patient_data()  # Save data before moving forward
+                self.save_patient_data()
                 pageDisctonary['MainScreen'].hide()
                 pageDisctonary['CffFovea'].show()
 
@@ -61,8 +58,8 @@ class mainWindow:
         bwButton = tk.Button(self.frame, text="<<", font=FONT_SECONDARY, 
                             command=onbw, bg='#28a745', fg='white', bd=0, 
                             activebackground="#218838", width=10)
-        # fwButton.place(x=620, y=500)
-        # bwButton.place(x=420, y=500)
+        fwButton.place(x=620, y=500)
+        bwButton.place(x=420, y=500)
 
     def setup_ui(self):
         self.main_frame = tk.Frame(self.frame, bg='black')
@@ -100,7 +97,7 @@ class mainWindow:
         label.place(x=x, y=y)
         entry = tk.Entry(self.main_frame, font=FONT_SECONDARY, bg='#334155', fg='#94a3b8', 
                         insertbackground='white', bd=0, highlightthickness=1, highlightcolor='#42A5F5')
-        entry.place(x=x+140, y=y, width=190, height=31)
+        entry.place(x=x+140, y=y+30, width=190, height=31)  # Moved below label
         entry.insert(0, placeholder)
         entry.bind('<FocusIn>', lambda e: self.on_entry_focus_in(entry, placeholder))
         entry.bind('<FocusOut>', lambda e: self.on_entry_focus_out(entry, placeholder))
@@ -112,22 +109,25 @@ class mainWindow:
         for i, (value, text) in enumerate(options):
             rb = tk.Radiobutton(self.main_frame, text=text, variable=variable, value=value, 
                                font=FONT_SECONDARY, bg='black', fg='white', selectcolor='black', 
-                               activebackground='black', activeforeground='white', 
-                               highlightthickness=0, highlightbackground='black', highlightcolor='black')
-            rb.place(x=x+140+(i*120), y=y)
+                               activebackground='black', activeforeground='white', highlightthickness=0)
+            rb.place(x=x+140+(i*100), y=y+30)  # Adjusted spacing for radio buttons
 
     def create_medical_field(self, label_text, x, y, variable, placeholder):
         label = tk.Label(self.main_frame, text=label_text, font=FONT_MAIN, bg='black', fg='white')
         label.place(x=x, y=y)
+        
+        # Radio buttons
         tk.Radiobutton(self.main_frame, text="Yes", variable=variable, value="Yes", 
                       font=FONT_SECONDARY, bg='black', fg='white', selectcolor='black', 
-                      activebackground='black', activeforeground='white', highlightthickness=0).place(x=x+210, y=y)
+                      activebackground='black', activeforeground='white', highlightthickness=0).place(x=x+140, y=y+30)
         tk.Radiobutton(self.main_frame, text="No", variable=variable, value="No", 
                       font=FONT_SECONDARY, bg='black', fg='white', selectcolor='black', 
-                      activebackground='black', activeforeground='white', highlightthickness=0).place(x=x+300, y=y)
+                      activebackground='black', activeforeground='white', highlightthickness=0).place(x=x+240, y=y+30)
+        
+        # Input box below radio buttons
         entry = tk.Entry(self.main_frame, font=FONT_SECONDARY, bg='#334155', fg='#94a3b8', 
                         insertbackground='white', bd=0, highlightthickness=1, highlightcolor='#42A5F5')
-        entry.place(x=x+140, y=y+30, width=190, height=31)
+        entry.place(x=x+140, y=y+60, width=190, height=31)  # Positioned below radio buttons
         entry.insert(0, placeholder)
         entry.bind('<FocusIn>', lambda e: self.on_entry_focus_in(entry, placeholder))
         entry.bind('<FocusOut>', lambda e: self.on_entry_focus_out(entry, placeholder))
@@ -159,7 +159,7 @@ class mainWindow:
         if (focused != original_entry and 
             not (self.kb.current_window and focused and 
                  (focused == self.kb.current_window or focused.winfo_toplevel() == self.kb.current_window))):
-            pass  # Add cleanup logic if needed
+            pass
 
     def save_patient_data(self):
         try:
@@ -233,7 +233,7 @@ class mainWindow:
 
     def loadValues(self):
         currentPatientInfo.Name = f"{self.get_entry_value('1st', '_name_entry')} {self.get_entry_value('mid', '_name_entry')} {self.get_entry_value('surname', '_entry')}"
-        currentPatientInfo.Age = self.get_entry_value('dob', '_entry')  # Using DOB as age
+        currentPatientInfo.Age = self.get_entry_value('dob', '_entry')
         currentPatientInfo.eye = self.eye_side_var.get()
         currentPatientInfo.Gender = "M" if self.gender_var.get() == "Male" else "F"
         currentPatientInfo.date = self.timelabel.cget("text")
