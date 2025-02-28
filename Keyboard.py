@@ -4,9 +4,10 @@ from globalvar import globaladc
 class KeyBoard:
     def __init__(self):
         self.shift_active = False
-        self._drag_data = {"x": 0, "y": 0}  # For dragging
+        self._drag_data = {"x": 0, "y": 0, "width": 0, "height": 0}  # For dragging and resizing
         self.current_window = None  # Track current keyboard window
         self.current_entry = None  # Track current entry
+        self.resizing = False  # Flag to indicate resize mode
 
     def cleanup_keyboard(self):
         if self.current_window and self.current_window.winfo_exists():
@@ -23,15 +24,38 @@ class KeyBoard:
         self._drag_data["x"] = event.x
         self._drag_data["y"] = event.y
 
+    def on_resize_start(self, event, window):
+        """Begin resize of the window with Ctrl key"""
+        if event.state & 0x4:  # Check if Ctrl key is pressed (state & 0x4)
+            self.resizing = True
+            self._drag_data["x"] = event.x
+            self._drag_data["y"] = event.y
+            self._drag_data["width"] = window.winfo_width()
+            self._drag_data["height"] = window.winfo_height()
+
     def on_drag_motion(self, event, window):
         """Handle dragging of the window"""
-        if window.winfo_exists():  # Check if window still exists
+        if window.winfo_exists() and not self.resizing:  # Only drag if not resizing
             delta_x = event.x - self._drag_data["x"]
             delta_y = event.y - self._drag_data["y"]
             x = window.winfo_x() + delta_x
             y = window.winfo_y() + delta_y
             window.geometry(f"+{x}+{y}")
             window.lift()  # Keep window on top while dragging
+
+    def on_resize_motion(self, event, window):
+        """Handle resizing of the window with Ctrl key"""
+        if window.winfo_exists() and self.resizing and (event.state & 0x4):  # Check Ctrl key
+            delta_x = event.x - self._drag_data["x"]
+            delta_y = event.y - self._drag_data["y"]
+            new_width = max(400, self._drag_data["width"] + delta_x)  # Minimum width 400
+            new_height = max(150, self._drag_data["height"] + delta_y)  # Minimum height 150
+            window.geometry(f"{int(new_width)}x{int(new_height)}+{window.winfo_x()}+{window.winfo_y()}")
+            window.lift()  # Keep window on top while resizing
+
+    def on_release(self, event, window):
+        """End resize or drag mode"""
+        self.resizing = False
 
     def select(self, entry, window, mainwindow, value, ucase=None):
         """Handle key selection and input"""
@@ -100,26 +124,21 @@ class KeyBoard:
         x = root.winfo_x()
         y = root.winfo_y()
 
-        # Set initial size and allow resizing with minimum dimensions
-        window.geometry("600x200")  # Initial size
-        window.minsize(400, 150)  # Minimum size to ensure usability
-
+        window.geometry("+%d+%d" % (x+20, y+400))
+        window.overrideredirect(1)  # Keep borderless for dragging
         window.configure(background="black")
         window.wm_attributes("-alpha", 0.7)
 
-        # Add dragging to window
+        # Add dragging and resizing bindings
         window.bind("<Button-1>", lambda e: self.on_drag_start(e, window))
         window.bind("<B1-Motion>", lambda e: self.on_drag_motion(e, window))
+        window.bind("<Control-Button-1>", lambda e: self.on_resize_start(e, window))
+        window.bind("<Control-B1-Motion>", lambda e: self.on_resize_motion(e, window))
+        window.bind("<ButtonRelease-1>", lambda e: self.on_release(e, window))
 
-        # Create main frame with dynamic resizing
+        # Create main frame
         main_frame = tk.Frame(window, bg='black')
-        main_frame.pack(fill='both', expand=True, padx=2, pady=2)
-
-        # Configure grid to resize
-        for i in range(5):  # Number of rows
-            main_frame.grid_rowconfigure(i, weight=1)
-        for i in range(11):  # Maximum number of columns
-            main_frame.grid_columnconfigure(i, weight=1)
+        main_frame.pack(padx=2, pady=2)
 
         button_style = {
             'bg': "black",
@@ -131,7 +150,8 @@ class KeyBoard:
         }
 
         for y, row in enumerate(alphabets):
-            for x, text in enumerate(row):
+            x = 0
+            for text in row:
                 if text == 'Shift':
                     width = 8
                     columnspan = 2
@@ -158,6 +178,11 @@ class KeyBoard:
                 button.grid(row=y, column=x, columnspan=columnspan, padx=2, pady=2, sticky='nsew')
                 button.bind("<Button-1>", lambda e, w=window: self.on_drag_start(e, w))
                 button.bind("<B1-Motion>", lambda e, w=window: self.on_drag_motion(e, w))
+                button.bind("<Control-Button-1>", lambda e, w=window: self.on_resize_start(e, w))
+                button.bind("<Control-B1-Motion>", lambda e, w=window: self.on_resize_motion(e, w))
+                button.bind("<ButtonRelease-1>", lambda e, w=window: self.on_release(e, w))
+
+                x += columnspan
 
         window.update_idletasks()  # Ensure window is fully created
         window.lift()  # Raise window to top
@@ -182,26 +207,17 @@ class KeyBoard:
         x = root.winfo_x()
         y = root.winfo_y()
 
-        # Set initial size and allow resizing with minimum dimensions
-        window.geometry("300x200")  # Initial size
-        window.minsize(200, 150)  # Minimum size to ensure usability
-
+        window.geometry("+%d+%d" % (x+40, y + 300))
+        window.overrideredirect(1)  # Keep borderless for dragging
         window.configure(background="cornflowerblue")
         window.wm_attributes("-alpha", 0.7)
 
-        # Add dragging to window
+        # Add dragging and resizing bindings
         window.bind("<Button-1>", lambda e: self.on_drag_start(e, window))
         window.bind("<B1-Motion>", lambda e: self.on_drag_motion(e, window))
-
-        # Create main frame with dynamic resizing
-        main_frame = tk.Frame(window, bg='cornflowerblue')
-        main_frame.pack(fill='both', expand=True, padx=2, pady=2)
-
-        # Configure grid to resize
-        for i in range(4):  # Number of rows
-            main_frame.grid_rowconfigure(i, weight=1)
-        for i in range(3):  # Number of columns
-            main_frame.grid_columnconfigure(i, weight=1)
+        window.bind("<Control-Button-1>", lambda e: self.on_resize_start(e, window))
+        window.bind("<Control-B1-Motion>", lambda e: self.on_resize_motion(e, window))
+        window.bind("<ButtonRelease-1>", lambda e: self.on_release(e, window))
 
         button_style = {
             'width': 10,
@@ -215,12 +231,17 @@ class KeyBoard:
         for y, row in enumerate(numbers):
             for x, text in enumerate(row):
                 button = tk.Button(
-                    main_frame,
+                    window,
                     text=text,
                     command=lambda value=text: self.select(entry, window, root, value),
                     **button_style
                 )
                 button.grid(row=y, column=x, padx=2, pady=2, sticky='nsew')
+                button.bind("<Button-1>", lambda e, w=window: self.on_drag_start(e, w))
+                button.bind("<B1-Motion>", lambda e, w=window: self.on_drag_motion(e, w))
+                button.bind("<Control-Button-1>", lambda e, w=window: self.on_resize_start(e, w))
+                button.bind("<Control-B1-Motion>", lambda e, w=window: self.on_resize_motion(e, w))
+                button.bind("<ButtonRelease-1>", lambda e, w=window: self.on_release(e, w))
 
         window.update_idletasks()  # Ensure window is fully created
         window.lift()  # Raise window to top
