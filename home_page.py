@@ -4,7 +4,8 @@ from datetime import datetime
 import json
 import os
 from header import HeaderComponent
-from Startupclass import StatrupClass
+from Startupclass import StatrupClass,WifiSettings
+from globalvar import pageDisctonary
 
 class HomePage:
     def __init__(self, root, startup_instance):
@@ -13,7 +14,7 @@ class HomePage:
         self.time_label = None
         self.date_label = None
         self.user_info_label = None
-        self.buttons = []
+        self.buttons = []  # Initialize buttons list here to avoid AttributeError
 
         # Optimized constants
         self.colors = {
@@ -38,16 +39,22 @@ class HomePage:
         self.root.update_idletasks()
 
         # Initialize UI
-        self.setup_ui()
+        try:
+            self.setup_ui()
+        except Exception as e:
+            print(f"Error setting up UI: {e}")
 
     def __del__(self):
         """Cleanup Tkinter resources"""
-        for button in self.buttons:
-            button.destroy()
-        self.time_label.destroy()
-        self.date_label.destroy()
-        self.user_info_label.destroy()
-        self.header.destroy()
+        try:
+            for button in getattr(self, 'buttons', []):  # Use getattr to avoid AttributeError if not initialized
+                button.destroy()
+            self.time_label.destroy()
+            self.date_label.destroy()
+            self.user_info_label.destroy()
+            self.header.destroy()
+        except AttributeError as e:
+            print(f"Cleanup error: {e}")
 
     def setup_ui(self):
         # Header (assuming it handles WiFi without image for now)
