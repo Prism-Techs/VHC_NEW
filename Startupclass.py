@@ -95,44 +95,73 @@ class StatrupClass:
                                     width=10)
 
 
-        def handleStart():            
-            if self.mw.ValidateUserInput() == False :
+        # def handleStart():            
+        #     if self.mw.ValidateUserInput() == False :
+        #         globaladc.buzzer_1()
+        #         messagebox.showerror("Data Error","Please enter User information")
+        #         return
+        #     state=self.find_usb()       
+        #     if state == 'false':
+        #         globaladc.buzzer_1()
+        #         messagebox.showerror("USB Error","Please check USB Drive\n(Name:-\“USB_DEVICE\”)\nInserted Properly \nif not, insert \nif inserted, remove and Re-insert")
+        #         return
+        #     globaladc.buzzer_1()
+        #     MsgBox = messagebox.askquestion ('Alchohol Status','Do you consume\nAlchohol',icon = 'question')
+        #     if MsgBox == 'yes':
+        #        currentPatientInfo.setAlchohol_state("Y")
+        #     else:                
+        #         currentPatientInfo.setAlchohol_state("N")
+        #     globaladc.buzzer_1()    
+        #     MsgBox = messagebox.askquestion ('Smoking Status','Do you have habbit of\nSmoking',icon = 'question')
+        #     if MsgBox == 'yes':
+        #        currentPatientInfo.setSmoking_state("Y")
+        #     else:                
+        #         currentPatientInfo.setSmoking_state("N")
+        #     globaladc.buzzer_1()
+        #     MsgBox = messagebox.askquestion ('Diabetes Status','Are you suffering from\n Diabetes(Sugar)',icon = 'question')
+        #     if MsgBox == 'yes':
+        #        currentPatientInfo.setDiabetes_state("Y")
+        #     else:                
+        #         currentPatientInfo.setDiabetes_state("N")
+        #     globaladc.buzzer_1()
+        #     MsgBox = messagebox.askquestion ('Hypertension Status','Are you suffering from\nHypertension (BP)',icon = 'question')
+        #     if MsgBox == 'yes':
+        #        currentPatientInfo.setHypertension_state("Y")
+        #     else:                
+        #         currentPatientInfo.setHypertension_state("N")
+        #     globaladc.buzzer_3()
+        #     currentPatientInfo.log_update("Start_pressed")
+        #     self.ShowTestRunScreen()
+            
+
+        def handleStart():
+            if not self.mw.ValidateUserInput():
                 globaladc.buzzer_1()
-                messagebox.showerror("Data Error","Please enter User information")
+                messagebox.showerror("Data Error", "Please enter User information")
                 return
-            state=self.find_usb()       
+            
+            state = self.find_usb()
             if state == 'false':
                 globaladc.buzzer_1()
-                messagebox.showerror("USB Error","Please check USB Drive\n(Name:-\“USB_DEVICE\”)\nInserted Properly \nif not, insert \nif inserted, remove and Re-insert")
+                messagebox.showerror("USB Error", "Please check USB Drive\n(Name:-\“USB_DEVICE\”)\nInserted Properly \nif not, insert \nif inserted, remove and Re-insert")
                 return
+
+            # Load data directly from mainWindow UI instead of pop-ups
             globaladc.buzzer_1()
-            MsgBox = messagebox.askquestion ('Alchohol Status','Do you consume\nAlchohol',icon = 'question')
-            if MsgBox == 'yes':
-               currentPatientInfo.setAlchohol_state("Y")
-            else:                
-                currentPatientInfo.setAlchohol_state("N")
-            globaladc.buzzer_1()    
-            MsgBox = messagebox.askquestion ('Smoking Status','Do you have habbit of\nSmoking',icon = 'question')
-            if MsgBox == 'yes':
-               currentPatientInfo.setSmoking_state("Y")
-            else:                
-                currentPatientInfo.setSmoking_state("N")
+            currentPatientInfo.setAlchohol_state("Y" if self.mw.alcohol_var.get() == "Yes" else "N")
+            
             globaladc.buzzer_1()
-            MsgBox = messagebox.askquestion ('Diabetes Status','Are you suffering from\n Diabetes(Sugar)',icon = 'question')
-            if MsgBox == 'yes':
-               currentPatientInfo.setDiabetes_state("Y")
-            else:                
-                currentPatientInfo.setDiabetes_state("N")
+            currentPatientInfo.setSmoking_state("Y" if self.mw.smoking_var.get() == "Yes" else "N")
+            
             globaladc.buzzer_1()
-            MsgBox = messagebox.askquestion ('Hypertension Status','Are you suffering from\nHypertension (BP)',icon = 'question')
-            if MsgBox == 'yes':
-               currentPatientInfo.setHypertension_state("Y")
-            else:                
-                currentPatientInfo.setHypertension_state("N")
+            currentPatientInfo.setDiabetes_state("Y" if self.mw.diabetes_var.get() == "Yes" else "N")
+            
+            globaladc.buzzer_1()
+            currentPatientInfo.setHypertension_state("Y" if self.mw.bp_var.get() == "Yes" else "N")
+
             globaladc.buzzer_3()
             currentPatientInfo.log_update("Start_pressed")
-            self.ShowTestRunScreen()
-            
+            self.ShowTestRunScreen()    
 
         self.StartButton = tk.Button (self.window,
                                     text="Start", font=Font,
