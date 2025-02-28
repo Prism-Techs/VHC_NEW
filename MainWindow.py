@@ -70,7 +70,7 @@ class mainWindow:
 
         # Create form fields
         self.create_text_field("1st Name", 0, 20, "first name")
-        self.create_text_field("Mid. Name", 344, 20, "Middle Name")
+        self.create_text_field("Mid. Name", 346, 20, "Middle Name")
         self.create_text_field("Surname", 670, 20, "Surname")
         self.create_text_field("DOB", 0, 80, "Date of Birth")
         self.create_text_field("Aadhaar", 346, 80, "Aadhaar No")
