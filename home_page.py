@@ -4,7 +4,6 @@ from datetime import datetime
 import json
 import os
 from header import HeaderComponent
-from Startupclass import StatrupClass, WifiSettings
 from globalvar import pageDisctonary
 
 class HomePage:
@@ -58,13 +57,14 @@ class HomePage:
         self.root.after(self.time_update_interval, self.update_datetime)
 
     def switch_to_wifi(self):
-        if "WifiSettings" not in pageDisctonary:
-            wifi_frame = tk.Frame(self.root, bg='#64edb4')
-            pageDisctonary["WifiSettings"] = WifiSettings(wifi_frame, self.startup)
-            pageDisctonary["WifiSettings"].Load()
-        self.startup.hide_all()
-        self.startup.show_home_button()
-        pageDisctonary["WifiSettings"].show()
+        # if "WifiSettings" not in pageDisctonary:
+        #     wifi_frame = tk.Frame(self.root, bg='#64edb4')
+        #     pageDisctonary["WifiSettings"] = WifiSettings(wifi_frame, self.startup)
+        #     pageDisctonary["WifiSettings"].Load()
+        # self.startup.hide_all()
+        # self.startup.show_home_button()
+        # pageDisctonary["WifiSettings"].show()
+        pass
 
     def create_user(self):
         messagebox.showinfo("Action", "Create User functionality to be implemented")
