@@ -12,6 +12,7 @@ from globalvar import pageDisctonary, globaladc, currentPatientInfo
 import os.path
 import subprocess as sp
 from login import LoginApp
+from home_page import HomePage
 
 Font = ("Arial", 20)
 Font2 = ("Arial", 10)

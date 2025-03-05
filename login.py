@@ -22,7 +22,6 @@ class LoginApp:
         self.load_ui()
 
     def load_ui(self):
-        self.header = HeaderComponent(self.root, "                                                       Macular Densitometer")
         self.content_frame = tk.Frame(self.root, bg='#1f2836', highlightbackground='white', highlightthickness=1)
         self.username = tk.Entry(self.content_frame, font=('Helvetica', 18), bg='#334155', fg='#94a3b8', insertbackground='white')
         self.username.insert(0, "Username")
@@ -47,7 +46,7 @@ class LoginApp:
         self.date_label = tk.Label(self.root, font=('Helvetica Neue', 10), bg='black', fg='white')
 
     def show_ui(self):
-        self.header.set_wifi_callback(self.open_wifi_page)
+        # self.header.set_wifi_callback(self.open_wifi_page)
         self.content_frame.place(x=200, y=115, width=624, height=430)
         self.username.place(x=62, y=50, width=500, height=61)
         self.username.bind('<FocusIn>', lambda e: self.on_entry_click(self.username, "Username"))
