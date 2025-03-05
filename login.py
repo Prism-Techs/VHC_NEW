@@ -21,7 +21,7 @@ class LoginApp:
             os.makedirs(self.json_path)
 
     def load_ui(self):
-        self.header = HeaderComponent(self.root, "                                                       Login Page")
+        self.header = HeaderComponent(self.root, "Macular Densitometer                                                             Login Page")
         self.content_frame = tk.Frame(self.root, bg='#1f2836', highlightbackground='white', highlightthickness=1)
         self.username = tk.Entry(self.content_frame, font=('Helvetica', 18), bg='#334155', fg='#94a3b8', insertbackground='white')
         self.username.insert(0, "Username")
