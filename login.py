@@ -96,6 +96,9 @@ class LoginApp:
         self.date_label.config(text=current_date)
         self.root.after(1000, self.update_datetime)
 
+    def hide(self):
+        self.root.place_forget()
+
     def on_entry_click(self, entry, default_text):
         current_text = entry.get().strip()
         if current_text == default_text:
@@ -172,7 +175,7 @@ class LoginApp:
                 messagebox.showinfo("Success",
                                 f'Welcome {user["title"] + " " if user["title"] else ""}{user["first_name"]} {user["last_name"]}',
                                 parent=self.root)
-                self.root.withdraw()
+                
                 if hasattr(self, 'callback') and callable(self.callback):
                     self.callback()  # Transition to HomePage
             else:
