@@ -117,7 +117,6 @@ class LoginApp:
                                  font=('Helvetica Neue', 10),
                                  bg='black',
                                  fg='white')
-        self.show_ui()
 
     def show_ui(self):
         """Place and configure all UI components"""

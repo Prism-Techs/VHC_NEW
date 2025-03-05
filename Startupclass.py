@@ -216,7 +216,7 @@ class StatrupClass:
         self.admin.Load()  
         globaladc.buzzer_1()      
         # self.ShowMainScreen()
-        self.login.load_ui()
+        self.ShowLoginScrren()
         self.window.mainloop()
         globaladc.buzzer_1()
 
@@ -277,6 +277,10 @@ class StatrupClass:
         self.mw.show()
         currentPatientInfo.log_update("Enter_to_Main_screeen")
         # globaladc.main_Prepair() # run this while loading main Screen
+    
+    def ShowLoginScrren(self):
+        self.login.load_ui()
+        self.login.show_ui()
 
     def ShowFlikerScreen(self):
         if self.mw.ValidateUserInput() == False :
