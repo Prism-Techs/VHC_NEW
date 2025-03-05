@@ -16,6 +16,7 @@ from globalvar import currentPatientInfo
 from tkinter import messagebox
 import os.path
 import subprocess as sp
+from login import LoginApp
 
 Font =  ("Arial",20)
 Font2 = ("Arial",10)
@@ -76,6 +77,7 @@ class StatrupClass:
         self.cff = CffFovea(self.cffFoveaFrame)
         self.cffP =CffParaFovea(self.CffParaFoveaFrame)
         self.admin = Admin(self.adminFrame)
+        self.login = LoginApp(self.mainFrame)
         
    
         #intialize the buttons
@@ -214,12 +216,10 @@ class StatrupClass:
         self.admin.Load()  
         globaladc.buzzer_1()      
         self.ShowMainScreen()
-        self.window.mainloop()
+        # self.window.mainloop()
+        self.login.setup_ui()
         globaladc.buzzer_1()
-        # globaladc.main_Prepair() # run this while loading main Screen
-        #Main Window Application
-        
-             	# run this while loding 1st blank screen
+
         
         
             

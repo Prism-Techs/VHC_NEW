@@ -16,14 +16,13 @@ WIDTH = 10
 Font2 = ("Arial",20)
 Font3 = ("Arial",30)
 
-class Admin:
 
+class Admin:
     def __init__(self, frame):
         self.frame = frame
         
     def Load(self):
         kb = KeyBoard()
-        
         #Name amd name text
         self.Namelabel = tk.Label (self.frame,font=Font, text="Password")
         self.Namelabel.place (x=10, y=80)
