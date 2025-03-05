@@ -19,7 +19,6 @@ class LoginApp:
         self.json_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "user_data")
         if not os.path.exists(self.json_path):
             os.makedirs(self.json_path)
-        self.load_ui()
 
     def load_ui(self):
         self.header = HeaderComponent(self.root, "                                                       Login Page")
