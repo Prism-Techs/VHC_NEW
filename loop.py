@@ -120,10 +120,5 @@ class LoadingScreen:
         login_window.destroy()
         self.root.destroy()
 
-def main():
-    root = tk.Tk()
-    app = LoadingScreen(root)
-    root.mainloop()
 
-if __name__ == "__main__":
-    main()
+

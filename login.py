@@ -301,8 +301,3 @@ class LoginApp:
         self.root.deiconify()
         startup_instance.window.destroy()
 
-# Example usage:
-# if __name__ == "__main__":
-#     root = tk.Tk()
-#     app = LoginApp(root)
-#     root.mainloop()
