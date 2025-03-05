@@ -45,7 +45,7 @@ class StatrupClass:
         self.cff = CffFovea(self.cff_fovea_frame)
         self.cff_p = CffParaFovea(self.cff_para_fovea_frame)
         self.admin = Admin(self.admin_frame)
-        self.login = LoginApp(self.main_frame)
+        self.login = LoginApp(self.window)
 
         # Initialize buttons
         self.setup_buttons()
