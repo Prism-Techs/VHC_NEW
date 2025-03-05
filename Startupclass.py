@@ -219,7 +219,7 @@ class StatrupClass:
         self.admin.Load()  
         globaladc.buzzer_1()      
         # self.ShowMainScreen()
-        self.hm.display()
+        self.hm.load_ui()
         self.window.mainloop()
         globaladc.buzzer_1()
 

@@ -10,9 +10,9 @@ from Keyboard import KeyBoard
 
 
 class LoginApp:
-    def __init__(self, root):
-        self.root = root
-        self.root.configure(bg='black')
+    def __init__(self, frame):
+        self.frame = frame
+        self.frame.configure(bg='black')
         self.kb = KeyBoard()
         self.wifi_window = None
         self.password_visible = False
@@ -20,9 +20,12 @@ class LoginApp:
         if not os.path.exists(self.json_path):
             os.makedirs(self.json_path)
 
+        self.db = DatabaseConnection()
+        self.db.connect()
+
     def load_ui(self):
-        self.header = HeaderComponent(self.root, "Macular Densitometer                                                             Login Page")
-        self.content_frame = tk.Frame(self.root, bg='#1f2836', highlightbackground='white', highlightthickness=1)
+        self.header = HeaderComponent(self.frame, "Macular Densitometer                                                             Login Page")
+        self.content_frame = tk.Frame(self.frame, bg='#1f2836', highlightbackground='white', highlightthickness=1)
         self.username = tk.Entry(self.content_frame, font=('Helvetica', 18), bg='#334155', fg='#94a3b8', insertbackground='white')
         self.username.insert(0, "Username")
         self.password = tk.Entry(self.content_frame, font=('Helvetica', 18), bg='#334155', fg='#94a3b8', insertbackground='white', show='*')
@@ -42,8 +45,8 @@ class LoginApp:
             self.radio_buttons[mode] = rb
         self.login_btn = tk.Button(self.content_frame, text="LOGIN", font=('Arial', 24, 'bold'), bg='#1f2836', fg='white', bd=1,
                                  relief='solid', command=self.handle_login)
-        self.time_label = tk.Label(self.root, font=('Helvetica Neue', 10), bg='black', fg='white')
-        self.date_label = tk.Label(self.root, font=('Helvetica Neue', 10), bg='black', fg='white')
+        self.time_label = tk.Label(self.frame, font=('Helvetica Neue', 10), bg='black', fg='white')
+        self.date_label = tk.Label(self.frame, font=('Helvetica Neue', 10), bg='black', fg='white')
 
     def show_ui(self):
         self.header.set_wifi_callback(self.open_wifi_page)
@@ -94,10 +97,10 @@ class LoginApp:
         current_date = datetime.now().strftime('%d-%m-%Y')
         self.time_label.config(text=current_time)
         self.date_label.config(text=current_date)
-        self.root.after(1000, self.update_datetime)
+        self.frame.after(1000, self.update_datetime)
 
     def hide(self):
-        self.root.place_forget()
+        self.frame.place_forget()
 
     def on_entry_click(self, entry, default_text):
         current_text = entry.get().strip()
@@ -106,7 +109,7 @@ class LoginApp:
             entry.configure(fg='white')
             if entry == self.password and current_text != "Password":
                 entry.configure(show='*')
-        self.kb.createAlphaKey(self.root, entry)
+        self.kb.createAlphaKey(self.frame, entry)
 
     def on_focus_out(self, entry, default_text):
         current_text = entry.get().strip()
@@ -162,33 +165,32 @@ class LoginApp:
         username = self.username.get()
         password = self.password.get()
         if username in ["", "Username"] or password in ["", "Password"]:
-            self.root.update()
-            x = self.root.winfo_x() + self.root.winfo_width()//2 - 100
-            y = self.root.winfo_y() + self.root.winfo_height()//2 - 50
+            self.frame.update()
+            x = self.frame.winfo_x() + self.frame.winfo_width()//2 - 100
+            y = self.frame.winfo_y() + self.frame.winfo_height()//2 - 50
             messagebox.showerror("Error", "Please enter both username and password")
             return
-        self.db = DatabaseConnection()
-        self.db.connect()
+
         user = self.db.verify_login(username, password)
         if user:
             json_file = self.generate_user_json(user, self.operation_mode.get())
             if json_file:
-                self.root.update()
-                x = self.root.winfo_x() + self.root.winfo_width()//2 - 100
-                y = self.root.winfo_y() + self.root.winfo_height()//2 - 50
+                self.frame.update()
+                x = self.frame.winfo_x() + self.frame.winfo_width()//2 - 100
+                y = self.frame.winfo_y() + self.frame.winfo_height()//2 - 50
                 messagebox.showinfo("Success",
                                 f'Welcome {user["title"] + " " if user["title"] else ""}{user["first_name"]} {user["last_name"]}',
-                                parent=self.root)
+                                parent=self.frame)
                 
                 if hasattr(self, 'callback') and callable(self.callback):
                     self.callback()  # Transition to HomePage
             else:
-                self.root.update()
-                x = self.root.winfo_x() + self.root.winfo_width()//2 - 100
-                y = self.root.winfo_y() + self.root.winfo_height()//2 - 50
+                self.frame.update()
+                x = self.frame.winfo_x() + self.frame.winfo_width()//2 - 100
+                y = self.frame.winfo_y() + self.frame.winfo_height()//2 - 50
                 messagebox.showwarning("Warning", 'Login successful but failed to save user data')
         else:
-            self.root.update()
-            x = self.root.winfo_x() + self.root.winfo_width()//2 - 100
-            y = self.root.winfo_y() + self.root.winfo_height()//2 - 50
+            self.frame.update()
+            x = self.frame.winfo_x() + self.frame.winfo_width()//2 - 100
+            y = self.frame.winfo_y() + self.frame.winfo_height()//2 - 50
             messagebox.showerror("Error", 'Invalid username or password')
