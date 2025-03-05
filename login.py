@@ -10,14 +10,10 @@ from Keyboard import KeyBoard
 
 
 class LoginApp:
-    def __init__(self, root):
-        self.root = root
-        self.root.geometry("1024x600")
-        self.root.resizable(False, False)
-        self.root.title("Vekaria Healthcare")
+    def __init__(self, frame):
+        self.root = frame
         self.root.configure(bg='black')
         self.kb = KeyBoard()
-        self.root.attributes('-fullscreen', True)
         
         # Initialize variables
         self.wifi_window = None
@@ -342,10 +338,4 @@ class LoginApp:
         self.root.deiconify()  # Show login window again
         startup_instance.window.destroy()  # Clean up StatrupClass window if needed
 
-def main():
-    root = tk.Tk()
-    app = LoginApp(root)
-    root.mainloop()
 
-if __name__ == "__main__":
-    main()
