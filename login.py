@@ -7,7 +7,6 @@ from PIL import Image, ImageTk
 from header import HeaderComponent
 from database import DatabaseConnection
 from Keyboard import KeyBoard
-from Startupclass import StatrupClass  # Import StatrupClass
 from home_page import HomePage  # Import HomePage
 
 class LoginApp:
@@ -319,11 +318,11 @@ class LoginApp:
                 self.root.withdraw()
 
                 # Create StatrupClass and HomePage instances
-                startup_instance = StatrupClass()
-                home_window = tk.Toplevel()
-                home_app = HomePage(home_window, startup_instance)
-                pageDisctonary["MainScreen"] = home_app  # Map HomePage to MainScreen
-                home_window.protocol("WM_DELETE_WINDOW", lambda: self.on_home_close(home_window, startup_instance))
+                # startup_instance = StatrupClass()
+                # home_window = tk.Toplevel()
+                # home_app = HomePage(home_window, startup_instance)
+                # pageDisctonary["MainScreen"] = home_app  # Map HomePage to MainScreen
+                # home_window.protocol("WM_DELETE_WINDOW", lambda: self.on_home_close(home_window, startup_instance))
             else:
                 # Center the warning message
                 self.root.update()
