@@ -1,7 +1,5 @@
-#import this
 import tkinter as tk
-from tkinter import Frame, ttk
-from tokenize import String
+from tkinter import Frame, ttk, messagebox
 from Keyboard import KeyBoard
 from FlikerScreen import flikerWindow
 from MainWindow import mainWindow
@@ -10,391 +8,286 @@ from CFF_PARA_FOVEA import CffParaFovea
 from Admin import Admin
 from BRK_FOVEA_1 import BrkFovea_1
 from BRK_FOVEA_2 import BrkparaFovea
-from globalvar import pageDisctonary
-from globalvar import globaladc
-from globalvar import currentPatientInfo
-from tkinter import messagebox
+from globalvar import pageDisctonary, globaladc, currentPatientInfo
 import os.path
 import subprocess as sp
 from login import LoginApp
 
-Font =  ("Arial",20)
-Font2 = ("Arial",10)
+Font = ("Arial", 20)
+Font2 = ("Arial", 10)
 x = 80
 
 class StatrupClass:
-    def HideStartButton(self):
-        self.StartButton.place_forget()
-
-    def ShowStartButton(self):
-        self.StartButton.place (x=x+220, y=500)
-
-    def HideAdminButton(self):
-        self.AdminButton.place_forget()
-
-    def ShowAdminButton(self):
-        self.AdminButton.place (x=x+10, y=500)
-
-    def HideFlikerButton(self):
-        self.FlikerDemoButton.place_forget()
-
-    def ShowFlikerButton(self):
-        self.FlikerDemoButton.place (x=x+420, y=500)
-
-    def ShowHomeButton(self):
-        self.HomeScreenButton.place (x=820,y=500)  
-
-    def HideHomeButton(self):
-        self.HomeScreenButton.place_forget()        
-
-    def __init__(self) -> None:        
-        self.window = tk.Tk ()
-        self.window.attributes('-fullscreen', True) 
-        self.window.geometry ("1024x600")
-        self.window.resizable (0, 0)
+    def __init__(self):
+        self.window = tk.Tk()
+        self.window.attributes('-fullscreen', True)
+        self.window.geometry("1024x600")
+        self.window.resizable(0, 0)
         self.window.configure(background='#64edb4')
-        self.mainFrame = Frame(self.window) 
-        self.flikerFrame = Frame(self.window)
-        self.cffFoveaFrame = Frame(self.window)
-        self.CffParaFoveaFrame = Frame(self.window)
-        self.brkf1Frame =  Frame(self.window)
-        self.brkf2Frame = Frame(self.window)
-        self.adminFrame = Frame(self.window)
-        currentPatientInfo.log_update("System_Started")        
-        self.mainFrame.config(bg='#64edb4')
-        self.flikerFrame.config(bg='#64edb4')
-        self.cffFoveaFrame.config(bg='#64edb4')
-        self.CffParaFoveaFrame.config(bg='#64edb4')
-        self.brkf1Frame.config(bg='#64edb4')
-        self.brkf2Frame.config(bg='#64edb4')
-        self.adminFrame.config(bg='#64edb4')
+
+        # Initialize frames
+        self.main_frame = Frame(self.window, bg='#64edb4')
+        self.fliker_frame = Frame(self.window, bg='#64edb4')
+        self.cff_fovea_frame = Frame(self.window, bg='#64edb4')
+        self.cff_para_fovea_frame = Frame(self.window, bg='#64edb4')
+        self.brkf1_frame = Frame(self.window, bg='#64edb4')
+        self.brkf2_frame = Frame(self.window, bg='#64edb4')
+        self.admin_frame = Frame(self.window, bg='#64edb4')
+
+        currentPatientInfo.log_update("System_Started")
         globaladc.fan_on()
-        #load all the frames
-        self.mw = mainWindow(self.mainFrame)
-        self.fw = flikerWindow(self.flikerFrame)
-        self.brkf_1 = BrkFovea_1(self.brkf1Frame)
-        self.brkf_2 = BrkparaFovea(self.brkf2Frame)
-        self.cff = CffFovea(self.cffFoveaFrame)
-        self.cffP =CffParaFovea(self.CffParaFoveaFrame)
-        self.admin = Admin(self.adminFrame)
-        self.login = LoginApp(self.mainFrame)
-        
-   
-        #intialize the buttons
-        def handleAdmin():
-            globaladc.get_print ("tobe implemented")
-            globaladc.buzzer_1()
-            self.ShowHomeButton()
-            self.admin.show()
-            self.HideAdminButton()
-            self.HideFlikerButton()
-            self.HideStartButton()
-            currentPatientInfo.log_update("Admin_pressed")
 
-        self.AdminButton = tk.Button (self.window,
-                                    text="Admin",
-                                    command=handleAdmin, font=Font,
-                                    width=10)
+        # Load all components
+        self.mw = mainWindow(self.main_frame)
+        self.fw = flikerWindow(self.fliker_frame)
+        self.brkf_1 = BrkFovea_1(self.brkf1_frame)
+        self.brkf_2 = BrkparaFovea(self.brkf2_frame)
+        self.cff = CffFovea(self.cff_fovea_frame)
+        self.cff_p = CffParaFovea(self.cff_para_fovea_frame)
+        self.admin = Admin(self.admin_frame)
+        self.login = LoginApp(self.main_frame)
 
+        # Initialize buttons
+        self.setup_buttons()
 
-        # def handleStart():            
-        #     if self.mw.ValidateUserInput() == False :
-        #         globaladc.buzzer_1()
-        #         messagebox.showerror("Data Error","Please enter User information")
-        #         return
-        #     state=self.find_usb()       
-        #     if state == 'false':
-        #         globaladc.buzzer_1()
-        #         messagebox.showerror("USB Error","Please check USB Drive\n(Name:-\“USB_DEVICE\”)\nInserted Properly \nif not, insert \nif inserted, remove and Re-insert")
-        #         return
-        #     globaladc.buzzer_1()
-        #     MsgBox = messagebox.askquestion ('Alchohol Status','Do you consume\nAlchohol',icon = 'question')
-        #     if MsgBox == 'yes':
-        #        currentPatientInfo.setAlchohol_state("Y")
-        #     else:                
-        #         currentPatientInfo.setAlchohol_state("N")
-        #     globaladc.buzzer_1()    
-        #     MsgBox = messagebox.askquestion ('Smoking Status','Do you have habbit of\nSmoking',icon = 'question')
-        #     if MsgBox == 'yes':
-        #        currentPatientInfo.setSmoking_state("Y")
-        #     else:                
-        #         currentPatientInfo.setSmoking_state("N")
-        #     globaladc.buzzer_1()
-        #     MsgBox = messagebox.askquestion ('Diabetes Status','Are you suffering from\n Diabetes(Sugar)',icon = 'question')
-        #     if MsgBox == 'yes':
-        #        currentPatientInfo.setDiabetes_state("Y")
-        #     else:                
-        #         currentPatientInfo.setDiabetes_state("N")
-        #     globaladc.buzzer_1()
-        #     MsgBox = messagebox.askquestion ('Hypertension Status','Are you suffering from\nHypertension (BP)',icon = 'question')
-        #     if MsgBox == 'yes':
-        #        currentPatientInfo.setHypertension_state("Y")
-        #     else:                
-        #         currentPatientInfo.setHypertension_state("N")
-        #     globaladc.buzzer_3()
-        #     currentPatientInfo.log_update("Start_pressed")
-        #     self.ShowTestRunScreen()
-            
+    def setup_buttons(self):
+        """Initialize and configure all buttons"""
+        self.admin_button = tk.Button(self.window, text="Admin", command=self.handle_admin,
+                                    font=Font, width=10)
+        self.start_button = tk.Button(self.window, text="Start", command=self.handle_start,
+                                    font=Font, bg='Green', width=10)
+        self.fliker_demo_button = tk.Button(self.window, text="Flicker Demo",
+                                          command=self.handle_flicker_demo, font=Font, width=10)
+        self.home_screen_button = tk.Button(self.window, text="Home",
+                                          command=self.handle_home_screen, font=Font, width=10)
+        self.save_button = tk.Button(self.brkf1_frame, text="Save", bg='#a0f291',
+                                   command=self.handle_save, font=Font, width=10)
+        self.save_button_2 = tk.Button(self.brkf2_frame, text="Save", bg='#a0f291',
+                                     command=self.handle_save_2, font=Font, width=10)
 
-        def handleStart():
-            if not self.mw.ValidateUserInput():
-                globaladc.buzzer_1()
-                messagebox.showerror("Data Error", "Please enter User information")
-                return
-            
-            state = self.find_usb()
-            if state == 'false':
-                globaladc.buzzer_1()
-                messagebox.showerror("USB Error", "Please check USB Drive\n(Name:-\“USB_DEVICE\”)\nInserted Properly \nif not, insert \nif inserted, remove and Re-insert")
-                return
+        self.brkf_1.saveButton = self.save_button
+        self.brkf_2.saveButton = self.save_button_2
 
-            # Load data directly from mainWindow UI instead of pop-ups
-            globaladc.buzzer_1()
-            currentPatientInfo.setAlchohol_state("Y" if self.mw.alcohol_var.get() == "Yes" else "N")
-            
-            globaladc.buzzer_1()
-            currentPatientInfo.setSmoking_state("Y" if self.mw.smoking_var.get() == "Yes" else "N")
-            
-            globaladc.buzzer_1()
-            currentPatientInfo.setDiabetes_state("Y" if self.mw.diabetes_var.get() == "Yes" else "N")
-            
-            globaladc.buzzer_1()
-            currentPatientInfo.setHypertension_state("Y" if self.mw.bp_var.get() == "Yes" else "N")
+    # Button visibility methods
+    def hide_start_button(self):
+        self.start_button.place_forget()
 
-            globaladc.buzzer_3()
-            currentPatientInfo.log_update("Start_pressed")
-            self.ShowTestRunScreen()    
+    def show_start_button(self):
+        self.start_button.place(x=x+220, y=500)
 
-        self.StartButton = tk.Button (self.window,
-                                    text="Start", font=Font,
-                                    command=handleStart, bg='Green',
-                                    width=10)
+    def hide_admin_button(self):
+        self.admin_button.place_forget()
 
-        
-            
-        self.FlikerDemoButton = tk.Button (self.window,
-                                text="Flicker Demo",
-                                command=self.handleFlikerDrmo,font=Font,
-                                width=10)
+    def show_admin_button(self):
+        self.admin_button.place(x=x+10, y=500)
 
-        self.HomeScreenButton = tk.Button (self.window,
-                                text="Home",
-                                command=self.handleHomeScreen,font=Font,
-                                width=10)
+    def hide_fliker_button(self):
+        self.fliker_demo_button.place_forget()
 
-        
-        
-        self.saveButton = tk.Button (self.brkf1Frame,
-                                 text="Save",bg='#a0f291',
-                                 command=self.handleSave, font=Font,
-                                 width=10)
-        self.brkf_1.saveButton = self.saveButton
-        
-        self.saveButton_2 = tk.Button (self.brkf2Frame,
-                                text="Save",bg='#a0f291',
-                                command=self.handleSave_2, font=Font,
-                                width=10)
-        self.brkf_2.saveButton = self.saveButton_2
-        
-        
-    def main(self):
-        globaladc.all_led_off()
-        globaladc.fan_on()
-        pageDisctonary["MainScreen"] = self.mw        
-        pageDisctonary["FlikerScreen"] = self.fw
-        pageDisctonary["BrkFovea_1"] = self.brkf_1
-        pageDisctonary["CffFovea"] = self.cff
-        pageDisctonary["CffParaFovea"] = self.cffP
-        pageDisctonary["BrkparaFovea"] = self.brkf_2    
-        pageDisctonary["Admin"] = self.admin
-        self.mw.Load()
-        # self.fw.Load()
-        self.cff.Load()
-        self.cffP.Load()
-        self.brkf_1.Load()
-        self.brkf_2.Load()
-        self.admin.Load()  
-        globaladc.buzzer_1()      
-        # self.ShowMainScreen()
-        self.ShowLoginScrren()
-        self.window.mainloop()
+    def show_fliker_button(self):
+        self.fliker_demo_button.place(x=x+420, y=500)
+
+    def show_home_button(self):
+        self.home_screen_button.place(x=820, y=500)
+
+    def hide_home_button(self):
+        self.home_screen_button.place_forget()
+
+    # Screen management methods
+    def hide_all(self):
+        """Hide all screens and buttons"""
+        self.mw.hide()
+        self.fw.hide()
+        self.cff.hide()
+        self.cff_p.hide()
+        self.brkf_1.hide()
+        self.brkf_2.hide()
+        self.admin.hide()
+        self.login.root.withdraw()  # Hide login window
+        self.hide_admin_button()
+        self.hide_start_button()
+        self.hide_fliker_button()
+        self.hide_home_button()
+
+    def show_login_screen(self):
+        self.hide_all()
+        self.login.load_ui()  # Load UI components
+        self.login.show_ui()  # Show UI components
+        self.login.root.deiconify()  # Show the login window
+        currentPatientInfo.log_update("Enter_to_Login_screen")
+
+    def show_main_screen(self):
+        self.hide_all()
+        self.show_admin_button()
+        self.show_start_button()
+        self.show_fliker_button()
+        self.mw.show()
+        currentPatientInfo.log_update("Enter_to_Main_screen")
+
+    def show_fliker_screen(self):
+        if not self.mw.ValidateUserInput():
+            messagebox.showerror("USB Error", "Please enter User information")
+            return
+        self.hide_all()
+        self.show_home_button()
+        self.fw.show()
         globaladc.buzzer_1()
+        currentPatientInfo.log_update("Enter_to_Flicker_screen")
 
-        
-        
-            
+    def show_test_run_screen(self):
+        self.hide_all()
+        self.show_home_button()
+        self.cff.show()
+        currentPatientInfo.log_update_pashent()
+        currentPatientInfo.log_update("Enter_to_CFF_screen")
 
-        #fliker Deom  
-    def handleFlikerDrmo(self):
+    def show_test_run_screen_2(self):
+        self.hide_all()
+        self.show_home_button()
+        self.cff_p.show()
+        currentPatientInfo.log_update("Enter_to_CFFP_screen")
+
+    # Button handlers
+    def handle_admin(self):
+        globaladc.get_print("to be implemented")
         globaladc.buzzer_1()
-        self.ShowFlikerScreen()
+        self.hide_all()
+        self.show_home_button()
+        self.admin.show()
+        currentPatientInfo.log_update("Admin_pressed")
 
+    def handle_start(self):
+        if not self.mw.ValidateUserInput():
+            globaladc.buzzer_1()
+            messagebox.showerror("Data Error", "Please enter User information")
+            return
+        
+        state = self.find_usb()
+        if state == 'false':
+            globaladc.buzzer_1()
+            messagebox.showerror("USB Error", "Please check USB Drive\n(Name:-\“USB_DEVICE\”)\nInserted Properly \nif not, insert \nif inserted, remove and Re-insert")
+            return
 
-    def handleHomeScreen(self):
+        globaladc.buzzer_1()
+        currentPatientInfo.setAlchohol_state("Y" if self.mw.alcohol_var.get() == "Yes" else "N")
+        globaladc.buzzer_1()
+        currentPatientInfo.setSmoking_state("Y" if self.mw.smoking_var.get() == "Yes" else "N")
+        globaladc.buzzer_1()
+        currentPatientInfo.setDiabetes_state("Y" if self.mw.diabetes_var.get() == "Yes" else "N")
+        globaladc.buzzer_1()
+        currentPatientInfo.setHypertension_state("Y" if self.mw.bp_var.get() == "Yes" else "N")
+
+        globaladc.buzzer_3()
+        currentPatientInfo.log_update("Start_pressed")
+        self.show_test_run_screen()
+
+    def handle_flicker_demo(self):
+        globaladc.buzzer_1()
+        self.show_fliker_screen()
+
+    def handle_home_screen(self):
         globaladc.end_process()
         globaladc.skip_main_rset()
         globaladc.buzzer_1()
-        sve= globaladc.get_save_no()        
-        if sve == 1 :
-            home=0
-            cff_fovea_frq=globaladc.get_cff_fovea_frq()
-            currentPatientInfo.SetCFF_F(cff_fovea_frq)        
-            F_mpod = globaladc.get_cal_f_mpod()
-            currentPatientInfo.SetF_mpod(F_mpod)
-            #make same for home screen        
-            #state=os.path.isdir('/media/pi/USB_DEVICE')        
-            state=self.find_usb()
-            if(state!= 'false'):      
-                globaladc.get_print('Save to file to' + currentPatientInfo.Name+'.TXT')            
-                #self.patient_switch_desable()
+        sve = globaladc.get_save_no()
+        if sve == 1:
+            cff_fovea_frq = globaladc.get_cff_fovea_frq()
+            currentPatientInfo.SetCFF_F(cff_fovea_frq)
+            f_mpod = globaladc.get_cal_f_mpod()
+            currentPatientInfo.SetF_mpod(f_mpod)
+            state = self.find_usb()
+            if state != 'false':
+                globaladc.get_print('Save to file to ' + currentPatientInfo.Name + '.TXT')
                 currentPatientInfo.Save_brk(state)
                 pageDisctonary['BrkparaFovea'].hide()
                 globaladc.put_save_no(0)
-                self.ShowMainScreen()                
+                self.show_main_screen()
             else:
-                messagebox.showerror("USB Error","Please check USB Drive Inserted Properly \nif not inserted, insert it wait for a second and Press SAVE once again \nif inserted, remove and Re-insert again Wait-a-while and Press SAVE once again")
+                messagebox.showerror("USB Error", "Please check USB Drive Inserted Properly \nif not inserted, insert it wait for a second and Press SAVE once again \nif inserted, remove and Re-insert again Wait-a-while and Press SAVE once again")
                 return
         else:
             currentPatientInfo.log_update("Home_pressed")
-            self.ShowMainScreen()
+            self.show_main_screen()
 
-            
-            
-           
-
-            #intial work flow show Main Screen
-    def ShowMainScreen(self):  
-        #globaladc.buzzer_1()
-        # self.ShowAdminButton()
-        self.ShowStartButton()
-        # self.ShowFlikerButton()
-        self.HideHomeButton()
-        # self.fw.hide()
-        self.cff.hide()
-        self.cffP.hide()
-        self.brkf_1.hide()
-        self.admin.hide()
-        self.mw.show()
-        currentPatientInfo.log_update("Enter_to_Main_screeen")
-        # globaladc.main_Prepair() # run this while loading main Screen
-    
-    def ShowLoginScrren(self):
-        self.login.load_ui()
-        self.login.show_ui()
-
-    def ShowFlikerScreen(self):
-        if self.mw.ValidateUserInput() == False :
-                    messagebox.showerror("USB Error","Please enter User information")
-                    return                        
-        globaladc.buzzer_1()
-        self.HideAdminButton()
-        self.HideStartButton()
-        self.HideFlikerButton()
-        self.ShowHomeButton()
-        # self.fw.show()
-        self.cff.hide()
-        self.admin.hide()
-        self.mw.hide()
-        currentPatientInfo.log_update("Enter_to_Flicker_screeen")
-
-    def ShowTestRunScreen(self):  
-        #globaladc.buzzer_1()
-        self.HideAdminButton()
-        self.HideFlikerButton()
-        self.HideStartButton()
-        self.ShowHomeButton()
-        # self.fw.hide()
-        self.mw.hide()
-        self.cff.show()
-        self.cffP.hide()
-        self.admin.hide()
-        currentPatientInfo.log_update_pashent()
-        currentPatientInfo.log_update("Enter_to_CFF_screeen")
-                
-
-    def ShowTestRunScreen_2(self):  
-        #globaladc.buzzer_1()
-        self.HideAdminButton()
-        self.HideFlikerButton()
-        self.HideStartButton()
-        self.ShowHomeButton()        
-        # self.fw.hide()
-        self.mw.hide()
-        self.cff.hide()
-        self.cffP.show()        
-        self.ShowMainScreen()
-        self.admin.hide()
-        currentPatientInfo.log_update("Enter_to_CFFP_screeen")
-        
-        
-    def find_usb(self):        
-        output = sp.getoutput("df -x squashfs")    
-        poss=output.find("/media")    
-        if poss == -1:
-            return("false")
-            currentPatientInfo.log_update("Drive_not_inserted")
-        else :
-            out =output[poss:]
-            return(out)
-        
-    def handleSave(self):
-        cff_fovea_frq=globaladc.get_cff_fovea_frq()
+    def handle_save(self):
+        cff_fovea_frq = globaladc.get_cff_fovea_frq()
         globaladc.skip_main_rset()
-        currentPatientInfo.SetCFF_F(cff_fovea_frq)        
-        #state=os.path.isdir('/media/pi/USB_DEVICE')        
-        state=self.find_usb()
-        if(state!= 'false'):
-            str_data = 'Save to file to' + currentPatientInfo.Name + '.TXT'
-            globaladc.get_print(str_data)             
+        currentPatientInfo.SetCFF_F(cff_fovea_frq)
+        state = self.find_usb()
+        if state != 'false':
+            str_data = 'Save to file to ' + currentPatientInfo.Name + '.TXT'
+            globaladc.get_print(str_data)
             if self.brkf_1.depthVal.get() == 0:
-                log_data = "CFF_F-"+str(cff_fovea_frq)+",F_mpod-0.00"
+                log_data = "CFF_F-" + str(cff_fovea_frq) + ",F_mpod-0.00"
                 currentPatientInfo.log_update(log_data)
-                currentPatientInfo.Save_brk_0(state) 
-            elif self.brkf_1.depthVal.get() == 19: 
+                currentPatientInfo.Save_brk_0(state)
+            elif self.brkf_1.depthVal.get() == 19:
                 currentPatientInfo.Save_brk_19(state)
-                log_data = "CFF_F-"+str(cff_fovea_frq)+",F_mpod-+1.00"
+                log_data = "CFF_F-" + str(cff_fovea_frq) + ",F_mpod-+1.00"
                 currentPatientInfo.log_update(log_data)
             globaladc.black_screen_initialize()
             pageDisctonary['BrkFovea_1'].hide()
-            self.ShowMainScreen()
+            self.show_main_screen()
         else:
-            messagebox.showerror("USB Error","Please check USB Drive Inserted Properly \nif not inserted, insert it Wait-a-while and Press SAVE once again \nif inserted, remove and Re-insert wait for a second again and Press SAVE once again")
-            return
-        # globaladc.main_screen_initialize()
-        
-    def non (self):
-            globaladc.get_print('non')
-        
-    def handleSave_2(self):
-        cff_F=globaladc.get_cff_fovea_frq()
-        currentPatientInfo.SetCFF_F(cff_F)       
+            messagebox.showerror("USB Error", "Please check USB Drive Inserted Properly \nif not inserted, insert it Wait-a-while and Press SAVE once again \nif inserted, remove and Re-insert wait for a second again and Press SAVE once again")
+
+    def handle_save_2(self):
+        cff_f = globaladc.get_cff_fovea_frq()
+        currentPatientInfo.SetCFF_F(cff_f)
         globaladc.skip_main_rset()
-        F_mpod=globaladc.get_cal_f_mpod()
-        currentPatientInfo.SetF_mpod(F_mpod)
-        
-        cff_p=globaladc.get_cff_para_fovea_frq()
+        f_mpod = globaladc.get_cal_f_mpod()
+        currentPatientInfo.SetF_mpod(f_mpod)
+        cff_p = globaladc.get_cff_para_fovea_frq()
         currentPatientInfo.SetCFF_P(cff_p)
-        
-        F_SD=globaladc.get_cal_f_sd()
-        currentPatientInfo.SetF_SD(F_SD)
-        
-        #make same for home screen        
-        state=os.path.isdir('/media/pi/USB_DEVICE')        
-        state=self.find_usb()
-        if(state!= 'false'):
-            log_data = "CFF_F-"+str(cff_F)+",CFF_P-"+str(cff_p)+",F_mpod-"+str(F_mpod)+",F_SD-"+str(F_SD)
+        f_sd = globaladc.get_cal_f_sd()
+        currentPatientInfo.SetF_SD(f_sd)
+        state = self.find_usb()
+        if state != 'false':
+            log_data = f"CFF_F-{cff_f},CFF_P-{cff_p},F_mpod-{f_mpod},F_SD-{f_sd}"
             currentPatientInfo.log_update(log_data)
-            str_data = 'Save to file to' + currentPatientInfo.Name +'.TXT'
-            globaladc.get_print(str_data)            
-            #self.patient_switch_desable()
-            self.brkf_2.saveButton.config(command=self.non,text="Bussey",bg='#f24e79')
+            str_data = 'Save to file to ' + currentPatientInfo.Name + '.TXT'
+            globaladc.get_print(str_data)
+            self.brkf_2.saveButton.config(command=self.non, text="Busy", bg='#f24e79')
             currentPatientInfo.Save_brk_p(state)
             globaladc.all_led_off()
             pageDisctonary['BrkparaFovea'].hide()
-            self.ShowMainScreen()
-            self.brkf_2.saveButton.config(command=self.handleSave_2,text="Save",bg='#a0f291')
+            self.show_main_screen()
+            self.brkf_2.saveButton.config(command=self.handle_save_2, text="Save", bg='#a0f291')
         else:
-            messagebox.showerror("USB Error","Please check USB Drive Inserted Properly \nif not inserted, insert it wait for a second and Press SAVE once again \nif inserted, remove and Re-insert again Wait-a-while and Press SAVE once again")
-            return
-        # globaladc.main_Prepair()
-        
+            messagebox.showerror("USB Error", "Please check USB Drive Inserted Properly \nif not inserted, insert it wait for a second and Press SAVE once again \nif inserted, remove and Re-insert again Wait-a-while and Press SAVE once again")
+
+    def non(self):
+        globaladc.get_print('non')
+
+    def find_usb(self):
+        output = sp.getoutput("df -x squashfs")
+        poss = output.find("/media")
+        if poss == -1:
+            currentPatientInfo.log_update("Drive_not_inserted")
+            return "false"
+        return output[poss:]
+
+    def main(self):
+        globaladc.all_led_off()
+        globaladc.fan_on()
+        pageDisctonary["MainScreen"] = self.mw
+        pageDisctonary["FlikerScreen"] = self.fw
+        pageDisctonary["BrkFovea_1"] = self.brkf_1
+        pageDisctonary["CffFovea"] = self.cff
+        pageDisctonary["CffParaFovea"] = self.cff_p
+        pageDisctonary["BrkparaFovea"] = self.brkf_2
+        pageDisctonary["Admin"] = self.admin
+        self.mw.Load()
+        self.cff.Load()
+        self.cff_p.Load()
+        self.brkf_1.Load()
+        self.brkf_2.Load()
+        self.admin.Load()
+        globaladc.buzzer_1()
+        self.show_login_screen()  # Start with login screen
+        self.window.mainloop()
+        globaladc.buzzer_1()
+
+if __name__ == "__main__":
+    app = StatrupClass()
+    app.main()
