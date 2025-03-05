@@ -52,7 +52,7 @@ class StatrupClass:
         self.window.attributes('-fullscreen', True) 
         self.window.geometry ("1024x600")
         self.window.resizable (0, 0)
-        self.window.configure(background='#64edb4')
+        # self.window.configure(background='#64edb4')
         self.mainFrame = Frame(self.window) 
         self.flikerFrame = Frame(self.window)
         self.cffFoveaFrame = Frame(self.window)
