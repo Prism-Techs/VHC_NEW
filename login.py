@@ -7,7 +7,7 @@ from PIL import Image, ImageTk
 from header import HeaderComponent
 from database import DatabaseConnection
 from Keyboard import KeyBoard
-from home_page import HomePage  # Import HomePage
+
 
 class LoginApp:
     def __init__(self, root):
