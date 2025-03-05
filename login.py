@@ -154,6 +154,10 @@ class LoginApp:
             print(f"Error generating user JSON: {e}")
             return None
 
+    def display(self):
+        self.load_ui()
+        self.show_ui()
+
     def handle_login(self):
         username = self.username.get()
         password = self.password.get()

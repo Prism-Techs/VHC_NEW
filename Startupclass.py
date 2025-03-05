@@ -16,6 +16,7 @@ from tkinter import messagebox
 import os.path
 import subprocess as sp
 from header import HeaderComponent
+from login import LoginApp
 
 Font =  ("Arial",20)
 Font2 = ("Arial",10)
@@ -77,8 +78,10 @@ class StatrupClass:
         self.cffP =CffParaFovea(self.CffParaFoveaFrame)
         self.admin = Admin(self.adminFrame)
         self.header = HeaderComponent(self.window)
-        self.header.title_label = "Macular Denstiometer"
-        
+
+        #added the dev
+        self.homePageFrame = Frame(self.window)
+        self.hm = LoginApp(self.homePageFrame)
    
         #intialize the buttons
         def handleAdmin():
@@ -215,7 +218,8 @@ class StatrupClass:
         self.brkf_2.Load()
         self.admin.Load()  
         globaladc.buzzer_1()      
-        self.ShowMainScreen()
+        # self.ShowMainScreen()
+        self.hm.display()
         self.window.mainloop()
         globaladc.buzzer_1()
 
