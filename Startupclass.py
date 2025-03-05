@@ -215,9 +215,9 @@ class StatrupClass:
         self.brkf_2.Load()
         self.admin.Load()  
         globaladc.buzzer_1()      
-        self.ShowMainScreen()
-        # self.window.mainloop()
-        self.login.setup_ui()
+        # self.ShowMainScreen()
+        self.login.load_ui()
+        self.window.mainloop()
         globaladc.buzzer_1()
 
         
