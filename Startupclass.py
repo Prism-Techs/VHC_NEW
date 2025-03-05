@@ -81,7 +81,7 @@ class StatrupClass:
 
         #added the dev
         self.homePageFrame = Frame(self.window)
-        self.hm = LoginApp(self.homePageFrame)
+        self.hm = LoginApp(self.window)
    
         #intialize the buttons
         def handleAdmin():
