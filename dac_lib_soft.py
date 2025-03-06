@@ -26,7 +26,9 @@ b_volt_val = [159,170,183,199,219,243,274,312,358,417,493,591,720,889,1111,1413,
 # red_led_val = int(4.80519*x-0.4329) # 0 to 20
 # inner_ring_val = int(13.1948*x-0.329004) # 0 to 20
 # DAC ADD-192
-Actuator_val = [0,142,1100,3680]  #0,1,2,3
+# Actuator_val = [0,142,1100,3680]  #0,1,2,3
+Actuator_val = [0,1100,1100,3680]  #0,1,2,3
+
 # g_volt_val = int(85.4*x+0.380952,) # 0 to 20
 # outer_ring_val= int(59.4*x-0.38095) # 0 to 20
 #b_freq_val & b_frq_f_val 0 to 250
