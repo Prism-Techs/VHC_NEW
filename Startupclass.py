@@ -344,7 +344,7 @@ class StatrupClass:
         #state=os.path.isdir('/media/pi/USB_DEVICE')        
         state=self.find_usb()
         if(state!= 'false'):
-            str_data = 'Save to file to' + current  PatientInfo.Name + '.TXT'
+            str_data = 'Save to file to' + currentPatientInfo.Name + '.TXT'
             globaladc.get_print(str_data)             
             if self.brkf_1.depthVal.get() == 0:
                 log_data = "CFF_F-"+str(cff_fovea_frq)+",F_mpod-0.00"
@@ -356,7 +356,7 @@ class StatrupClass:
                 currentPatientInfo.log_update(log_data)
             globaladc.black_screen_initialize()
             pageDisctonary['BrkFovea_1'].hide()
-            self.ShowMainScreen()
+            self.ShowMainScreen
         else:
             messagebox.showerror("USB Error","Please check USB Drive Inserted Properly \nif not inserted, insert it Wait-a-while and Press SAVE once again \nif inserted, remove and Re-insert wait for a second again and Press SAVE once again")
             return
