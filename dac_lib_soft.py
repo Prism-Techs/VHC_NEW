@@ -27,7 +27,7 @@ b_volt_val = [159,170,183,199,219,243,274,312,358,417,493,591,720,889,1111,1413,
 # inner_ring_val = int(13.1948*x-0.329004) # 0 to 20
 # DAC ADD-192
 # Actuator_val = [0,142,1100,3680]  #0,1,2,3
-Actuator_val = [0,1100,1100,3680]  #0,1,2,3
+Actuator_val = [0,142,1100,3680]  #0,1,2,3
 
 # g_volt_val = int(85.4*x+0.380952,) # 0 to 20
 # outer_ring_val= int(59.4*x-0.38095) # 0 to 20
@@ -917,7 +917,7 @@ class mup4728:
                 self.all_led_off()
 #                 time.sleep(1.5)
                 self.actuator_control(3) 
-                time.sleep(3)
+                time.sleep(5)
                 self.actuator_control(2)                
                 self.red_led_control(20) #0 to 20
                 self.blue_led_Freq_control(11) #0 to 250
