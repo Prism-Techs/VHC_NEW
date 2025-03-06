@@ -384,7 +384,7 @@ class mup4728:
             if 0 <= data_in <= 20:
                 # Since the INNER_LED function divides by 1.6, we need to multiply by 1.6 here
                 # to achieve the intended DAC value
-                dac_val = int((1450/20) * data_in * 1.6)  # Compensate for the 1.6 division
+                dac_val = int((1500/20) * data_in * 1.6)  # Compensate for the 1.6 division
                 # dac_val = 1200  # Compensate for the 1.6 division
                 str_data = 'INNER_LED_DAC = ' + str(dac_val)
                 self.get_print(str_data)
