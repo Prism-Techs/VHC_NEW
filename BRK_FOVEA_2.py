@@ -230,7 +230,7 @@ class BrkparaFovea :
                             time.sleep(2)
                             globaladc.get_print('call save butten to save MPOD')
                             jmp = True
-                            self.saveButton.place (x=100, y=340)
+                            self.saveButton.place (x=350, y=450)
                             #globaladc.buzzer_3()
                 else :                    
                     self.value = self.trialList_mid.get(self.locate)
