@@ -17,6 +17,7 @@ import os.path
 import subprocess as sp
 from header import HeaderComponent
 from login import LoginApp
+from Patient_checker import run_in_thread
 
 Font =  ("Arial",20)
 Font2 = ("Arial",10)
@@ -355,7 +356,7 @@ class StatrupClass:
                 currentPatientInfo.log_update(log_data)
             globaladc.black_screen_initialize()
             pageDisctonary['BrkFovea_1'].hide()
-            self.ShowMainScreen()
+            self.main()
         else:
             messagebox.showerror("USB Error","Please check USB Drive Inserted Properly \nif not inserted, insert it Wait-a-while and Press SAVE once again \nif inserted, remove and Re-insert wait for a second again and Press SAVE once again")
             return
