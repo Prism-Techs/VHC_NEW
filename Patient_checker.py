@@ -20,9 +20,13 @@ class PatientDataSyncer:
 
     def sync_file(self, file_path):
         """
-        Check and sync a single JSON file.
+        Check and sync a single JSON file based on specific conditions.
         :param file_path: Path to the JSON file.
         """
+        # Only process patient_latest.json
+        if os.path.basename(file_path) != "patient_latest.json":
+            return
+
         if not self._check_wifi_status():
             print("WiFi is not connected. Skipping sync.")
             return
@@ -30,14 +34,18 @@ class PatientDataSyncer:
         with open(file_path, "r") as file:
             try:
                 data = json.load(file)
-                if not data.get("is_sync", True):
+                # Check conditions: is_sync is False and f_mpod is not empty
+                if (not data.get("is_sync", True) and 
+                    data.get("f_mpod", "") != ""):
                     print(f"Syncing file: {file_path}")
                     if self._sync_to_api(data):
                         data["is_sync"] = True
                         self._update_file(file_path, data)
-                        print(f"File synced: {file_path}")
+                        print(f"File synced successfully: {file_path}")
                     else:
                         print(f"Failed to sync file: {file_path}")
+                else:
+                    print(f"File not eligible for sync: is_sync={data.get('is_sync', True)}, f_mpod='{data.get('f_mpod', '')}'")
             except json.JSONDecodeError:
                 print(f"Invalid JSON format in file: {file_path}")
 
@@ -82,6 +90,17 @@ class FolderMonitor(FileSystemEventHandler):
         """
         self.syncer = syncer
 
+    def on_modified(self, event):
+        """
+        Handle the event when a file is modified in the folder and verify it.
+        :param event: File system event.
+        """
+        if not event.is_directory and event.src_path.endswith(".json"):
+            print(f"Modification detected: {event.src_path}")
+            print(f"Verifying modification handling for: {event.src_path}")
+            self.syncer.sync_file(event.src_path)
+            print(f"Modification processing completed for: {event.src_path}")
+
     def on_created(self, event):
         """
         Handle the event when a new file is created in the folder.
@@ -93,26 +112,25 @@ class FolderMonitor(FileSystemEventHandler):
 
 def start_monitoring(folder_path, api_endpoint, wifi_status_file):
     """
-    Start monitoring the folder for new JSON files, and sync all unsynced files initially.
+    Start monitoring the folder for patient_latest.json modifications.
     :param folder_path: Path to the folder containing JSON files.
     :param api_endpoint: API endpoint to sync patient data.
     :param wifi_status_file: Path to the WiFi status JSON file.
     """
     syncer = PatientDataSyncer(folder_path, api_endpoint, wifi_status_file)
 
-    # Step 1: Sync all existing unsynced JSON files
-    print(f"Checking for unsynced files in: {folder_path}")
-    for filename in os.listdir(folder_path):
-        if filename.endswith(".json"):
-            file_path = os.path.join(folder_path, filename)
-            syncer.sync_file(file_path)
+    # Step 1: Initial sync of patient_latest.json if it exists
+    patient_file = os.path.join(folder_path, "patient_latest.json")
+    if os.path.exists(patient_file):
+        print(f"Checking initial state of: {patient_file}")
+        syncer.sync_file(patient_file)
 
     # Step 2: Start real-time monitoring
     event_handler = FolderMonitor(syncer)
     observer = Observer()
     observer.schedule(event_handler, folder_path, recursive=False)
 
-    print(f"Monitoring folder: {folder_path}")
+    print(f"Monitoring folder for patient_latest.json: {folder_path}")
     observer.start()
 
     try:
