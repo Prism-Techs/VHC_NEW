@@ -4,7 +4,7 @@ import requests
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 import time
-
+import threading
 
 class PatientDataSyncer:
     def __init__(self, folder_path, api_endpoint, wifi_status_file):
@@ -23,7 +23,6 @@ class PatientDataSyncer:
         Check and sync a single JSON file.
         :param file_path: Path to the JSON file.
         """
-        # Ensure WiFi is connected
         if not self._check_wifi_status():
             print("WiFi is not connected. Skipping sync.")
             return
@@ -31,22 +30,14 @@ class PatientDataSyncer:
         with open(file_path, "r") as file:
             try:
                 data = json.load(file)
-
-                # Check if `is_sync` is False
                 if not data.get("is_sync", True):
                     print(f"Syncing file: {file_path}")
-
-                    # Call the API to sync data
                     if self._sync_to_api(data):
-                        # Update the `is_sync` flag to True
                         data["is_sync"] = True
-
-                        # Write the updated data back to the file
                         self._update_file(file_path, data)
                         print(f"File synced: {file_path}")
                     else:
                         print(f"Failed to sync file: {file_path}")
-
             except json.JSONDecodeError:
                 print(f"Invalid JSON format in file: {file_path}")
 
@@ -58,7 +49,7 @@ class PatientDataSyncer:
         """
         try:
             response = requests.post(self.api_endpoint, json=data)
-            if response.status_code == 201:  # Successful creation
+            if response.status_code == 201:
                 return True
             else:
                 print(f"API Error: {response.status_code} - {response.text}")
@@ -81,20 +72,7 @@ class PatientDataSyncer:
         Check if WiFi is connected using the WiFi status JSON file.
         :return: True if WiFi is connected, False otherwise.
         """
-        # try:
-        #     with open(self.wifi_status_file, "r") as file:
-        #         status_data = json.load(file)
-        #         return status_data.get("wifi-connected", False)
-        # except (FileNotFoundError, json.JSONDecodeError):
-        #     print("WiFi status file not found or invalid.")
-        #     return False
-        return True
-
-
-import threading
-import time
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
+        return True  # Placeholder for actual WiFi check logic
 
 class FolderMonitor(FileSystemEventHandler):
     def __init__(self, syncer):
@@ -103,7 +81,6 @@ class FolderMonitor(FileSystemEventHandler):
         :param syncer: Instance of the PatientDataSyncer class.
         """
         self.syncer = syncer
-
 
     def on_created(self, event):
         """
@@ -116,12 +93,21 @@ class FolderMonitor(FileSystemEventHandler):
 
 def start_monitoring(folder_path, api_endpoint, wifi_status_file):
     """
-    Start monitoring the folder for new JSON files.
+    Start monitoring the folder for new JSON files, and sync all unsynced files initially.
     :param folder_path: Path to the folder containing JSON files.
     :param api_endpoint: API endpoint to sync patient data.
     :param wifi_status_file: Path to the WiFi status JSON file.
     """
     syncer = PatientDataSyncer(folder_path, api_endpoint, wifi_status_file)
+
+    # Step 1: Sync all existing unsynced JSON files
+    print(f"Checking for unsynced files in: {folder_path}")
+    for filename in os.listdir(folder_path):
+        if filename.endswith(".json"):
+            file_path = os.path.join(folder_path, filename)
+            syncer.sync_file(file_path)
+
+    # Step 2: Start real-time monitoring
     event_handler = FolderMonitor(syncer)
     observer = Observer()
     observer.schedule(event_handler, folder_path, recursive=False)
@@ -146,5 +132,14 @@ def run_in_thread(folder_path, api_endpoint, wifi_status_file):
     :param wifi_status_file: Path to the WiFi status JSON file.
     """
     monitoring_thread = threading.Thread(target=start_monitoring, args=(folder_path, api_endpoint, wifi_status_file))
-    monitoring_thread.daemon = True  # This ensures the thread exits when the main program exits
+    monitoring_thread.daemon = True
     monitoring_thread.start()
+
+# Example usage
+if __name__ == "__main__":
+    folder_path = "./patient_data"
+    api_endpoint = "https://example.com/api/patient"
+    wifi_status_file = "./wifi_status.json"
+    run_in_thread(folder_path, api_endpoint, wifi_status_file)
+    print("Monitoring started in a separate thread.")
+    time.sleep(10)  # Simulate main thread doing other work
