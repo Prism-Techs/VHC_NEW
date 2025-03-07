@@ -190,11 +190,11 @@ class mainWindow:
                 "CFF_F": '', "CFF_P": '', "f_mpod": '', "f-sd": '',
                 "date": self.timelabel.cget("text")
             }
-            current_login_usr = os.path.join(os.path.dirname(os.path.abspath(__file__)), "user_data", "patient_latest.json")
+            current_login_usr = os.path.join(os.path.dirname(os.path.abspath(__file__)), "user_data", "latest_user.json")
             with open(current_login_usr, 'r') as f:
                 user_data = json.load(f)
             patient_data['handler_id'] = user_data['user_id']
-            filename = f"patient_{self.get_entry_value('1st', '_name_entry')}.json"
+            filename = f"patient_latest.json"
             filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "patient_data", filename)
             os.makedirs(os.path.dirname(filepath), exist_ok=True)
             with open(filepath, 'w') as f:
