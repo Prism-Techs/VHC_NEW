@@ -168,56 +168,56 @@ class mainWindow:
                  (focused == self.kb.current_window or focused.winfo_toplevel() == self.kb.current_window))):
             pass  # Add cleanup logic if needed
 
-    def save_patient_data(self):
+def save_patient_data(self):
+    try:
+        # Retrieve the raw DOB value
+        dob_raw = self.get_entry_value("dob", "_entry")
+
+        # Convert DOB to YYYY-MM-DD format
         try:
-            # Retrieve the raw DOB value
-            dob_raw = self.get_entry_value("dob", "_entry")
+            # Assuming input format is DD-MM-YYYY (e.g., "25-12-1990")
+            dob_obj = datetime.strptime(dob_raw, "%d-%m-%Y")
+            dob_formatted = dob_obj.strftime("%Y-%m-%d")  # Output: "1990-12-25"
+        except ValueError as e:
+            raise ValueError(f"Invalid date format for DOB: {dob_raw}. Please use DD-MM-YYYY.")
 
-            # Convert DOB to YYYY-MM-DD format
-            try:
-                # Assuming input format is DD-MM-YYYY (e.g., "25-12-1990")
-                dob_obj = datetime.strptime(dob_raw, "%d-%m-%Y")
-                dob_formatted = dob_obj.strftime("%Y-%m-%d")  # Output: "1990-12-25"
-            except ValueError as e:
-                raise ValueError(f"Invalid date format for DOB: {dob_raw}. Please use DD-MM-YYYY.")
+        patient_data = {
+            "first_name": self.get_entry_value("1st", "_name_entry"),
+            "middle_name": self.get_entry_value("mid", "_name_entry"),
+            "surname": self.get_entry_value("surname", "_entry"),
+            "dob": dob_formatted,  # Use the formatted DOB
+            "aadhaar": self.get_entry_value("aadhaar", "_entry"),
+            "mobile": self.get_entry_value("mobile", "_entry"),
+            "nationality": self.get_entry_value("nationality", "_entry"),
+            "gender": self.gender_var.get(),
+            "alcohol": self.alcohol_var.get(),
+            "smoking": self.smoking_var.get(),
+            "food_habit": self.food_var.get(),
+            "bp": {"has_bp": self.bp_var.get(), "value": self.get_entry_value("blood_pressure", "_entry")},
+            "diabetes": {"has_diabetes": self.diabetes_var.get(), "value": self.get_entry_value("diabetes", "_entry")},
+            "eye_side": self.eye_side_var.get(),
+            "is_sync": False,
+            "handler_id": 0,
+            "CFF_F": '', "CFF_P": '', "f_mpod": '', "f-sd": '',
+            "date": self.timelabel.cget("text")
+        }
 
-            patient_data = {
-                "first_name": self.get_entry_value("1st", "_name_entry"),
-                "middle_name": self.get_entry_value("mid", "_name_entry"),
-                "surname": self.get_entry_value("surname", "_entry"),
-                "dob": dob_formatted,  # Use the formatted DOB
-                "aadhaar": self.get_entry_value("aadhaar", "_entry"),
-                "mobile": self.get_entry_value("mobile", "_entry"),
-                "nationality": self.get_entry_value("nationality", "_entry"),
-                "gender": self.gender_var.get(),
-                "alcohol": self.alcohol_var.get(),
-                "smoking": self.smoking_var.get(),
-                "food_habit": self.food_var.get(),
-                "bp": {"has_bp": self.bp_var.get(), "value": self.get_entry_value("blood_pressure", "_entry")},
-                "diabetes": {"has_diabetes": self.diabetes_var.get(), "value": self.get_entry_value("diabetes", "_entry")},
-                "eye_side": self.eye_side_var.get(),
-                "is_sync": False,
-                "handler_id": 0,
-                "CFF_F": '', "CFF_P": '', "f_mpod": '', "f-sd": '',
-                "date": self.timelabel.cget("text")
-            }
+        # Load handler_id from latest_user.json
+        current_login_usr = os.path.join(os.path.dirname(os.path.abspath(__file__)), "user_data", "latest_user.json")
+        with open(current_login_usr, 'r') as f:
+            user_data = json.load(f)
+        patient_data['handler_id'] = user_data['user_id']
 
-            # Load handler_id from latest_user.json
-            current_login_usr = os.path.join(os.path.dirname(os.path.abspath(__file__)), "user_data", "latest_user.json")
-            with open(current_login_usr, 'r') as f:
-                user_data = json.load(f)
-            patient_data['handler_id'] = user_data['user_id']
+        # Save the patient data to a JSON file
+        filename = "patient_latest.json"
+        filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "patient_data", filename)
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+        with open(filepath, 'w') as f:
+            json.dump(patient_data, f, indent=4)
 
-            # Save the patient data to a JSON file
-            filename = "patient_latest.json"
-            filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "patient_data", filename)
-            os.makedirs(os.path.dirname(filepath), exist_ok=True)
-            with open(filepath, 'w') as f:
-                json.dump(patient_data, f, indent=4)
-
-            messagebox.showinfo("Success", "Patient data saved successfully!")
-        except Exception as e:
-            messagebox.showerror("Error", f"Error saving patient data: {str(e)}")
+        messagebox.showinfo("Success", "Patient data saved successfully!")
+    except Exception as e:
+        messagebox.showerror("Error", f"Error saving patient data: {str(e)}")
 
     def get_entry_value(self, prefix, suffix):
         attribute_name = f"{prefix}{suffix}"
