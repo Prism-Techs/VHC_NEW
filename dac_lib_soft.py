@@ -422,7 +422,7 @@ class mup4728:
             GPIO.output(G_E,GPIO.HIGH)#D3 Green Enable
             GPIO.output(B_E,GPIO.LOW)#D3 Blue Enable
             if (not self.pwm_run):                
-                self.p.start(50.0)
+                self.p.start(80.0)
                 self.pwm_run = 1
                 self.get_print('fliker_start_g')                
                 
