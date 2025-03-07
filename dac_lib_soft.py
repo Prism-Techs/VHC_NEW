@@ -387,7 +387,7 @@ class mup4728:
                 # Since the INNER_LED function divides by 1.6, we need to multiply by 1.6 here
                 # to achieve the intended DAC value
                 # dac_val = int((1500/20) * data_in * 1.6)  # Compensate for the 1.6 division
-                dac_val = 1800*1.6  # Compensate for the 1.6 division
+                dac_val = 1900*1.6  # Compensate for the 1.6 division
                 str_data = 'INNER_LED_DAC = ' + str(dac_val)
                 self.get_print(str_data)
                 self.INNER_LED(dac_val)
@@ -422,7 +422,7 @@ class mup4728:
             GPIO.output(G_E,GPIO.HIGH)#D3 Green Enable
             GPIO.output(B_E,GPIO.LOW)#D3 Blue Enable
             if (not self.pwm_run):                
-                self.p.start(80.0)
+                self.p.start(100.0)
                 self.pwm_run = 1
                 self.get_print('fliker_start_g')                
                 
