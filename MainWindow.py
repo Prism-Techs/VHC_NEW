@@ -13,6 +13,7 @@ from Splash import Splash
 import tkinter.font as tkfont
 import os, json
 from header import HeaderComponent
+from datetime import datetime
 
 # Modernized constants
 FONT_MAIN = ("Helvetica Neue", 16)  # Clean, modern sans-serif font
