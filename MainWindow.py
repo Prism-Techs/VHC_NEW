@@ -13,7 +13,7 @@ from Splash import Splash
 import tkinter.font as tkfont
 import os, json
 from header import HeaderComponent
-from datetime import datetime
+
 
 # Modernized constants
 FONT_MAIN = ("Helvetica Neue", 16)  # Clean, modern sans-serif font
@@ -170,6 +170,7 @@ class mainWindow:
             pass  # Add cleanup logic if needed
 
 def save_patient_data(self):
+
     try:
         # Retrieve the raw DOB value
         dob_raw = self.get_entry_value("dob", "_entry")
@@ -177,7 +178,7 @@ def save_patient_data(self):
         # Convert DOB to YYYY-MM-DD format
         try:
             # Assuming input format is DD-MM-YYYY (e.g., "25-12-1990")
-            dob_obj = datetime.strptime(dob_raw, "%d-%m-%Y")
+            dob_obj = datetime.datetime.strptime(dob_raw, "%d-%m-%Y")
             dob_formatted = dob_obj.strftime("%Y-%m-%d")  # Output: "1990-12-25"
         except ValueError as e:
             raise ValueError(f"Invalid date format for DOB: {dob_raw}. Please use DD-MM-YYYY.")
