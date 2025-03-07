@@ -81,14 +81,14 @@ class PatientDataSyncer:
         Check if WiFi is connected using the WiFi status JSON file.
         :return: True if WiFi is connected, False otherwise.
         """
-        try:
-            with open(self.wifi_status_file, "r") as file:
-                status_data = json.load(file)
-                return status_data.get("wifi-connected", False)
-        except (FileNotFoundError, json.JSONDecodeError):
-            print("WiFi status file not found or invalid.")
-            return False
-
+        # try:
+        #     with open(self.wifi_status_file, "r") as file:
+        #         status_data = json.load(file)
+        #         return status_data.get("wifi-connected", False)
+        # except (FileNotFoundError, json.JSONDecodeError):
+        #     print("WiFi status file not found or invalid.")
+        #     return False
+        return True
 
 
 import threading

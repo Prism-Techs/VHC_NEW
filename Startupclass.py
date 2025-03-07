@@ -83,6 +83,7 @@ class StatrupClass:
         #added the dev
         self.homePageFrame = Frame(self.window)
         self.hm = LoginApp(self.window)
+        run_in_thread('patient_data','http://vhcbeta-api.prismtechs.in/patient/sync/','wifi_status.json')
    
         #intialize the buttons
         def handleAdmin():
