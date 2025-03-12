@@ -219,7 +219,7 @@ class StatrupClass:
         pageDisctonary["Admin"] = self.admin
         self.mw.Load()
         # self.fw.Load()
-        self.hm.load()
+        self.hm.Load()
         self.cff.Load()
         self.cffP.Load()
         self.brkf_1.Load()
