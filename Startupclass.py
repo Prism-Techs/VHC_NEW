@@ -275,7 +275,7 @@ class StatrupClass:
 
         globaladc.buzzer_3()
         currentPatientInfo.log_update("Start_pressed")
-        self.showTestRunScreen()
+        self.ShowTestRunScreen()
 
     def handleFlikerDrmo(self):
         self.ShowFlikerScreen()
