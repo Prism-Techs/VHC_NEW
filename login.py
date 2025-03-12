@@ -10,12 +10,13 @@ from Keyboard import KeyBoard
 
 
 class LoginApp:
-    def __init__(self, frame):
+    def __init__(self, frame, on_login_success=None):
         self.frame = frame
         self.frame.configure(bg='black')
         self.kb = KeyBoard()
         self.wifi_window = None
         self.password_visible = False
+        self.on_login_success = on_login_success  # Callback to transition to Home Page
         self.json_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "user_data")
         if not os.path.exists(self.json_path):
             os.makedirs(self.json_path)
@@ -23,7 +24,7 @@ class LoginApp:
         self.db = DatabaseConnection()
         self.db.connect()
 
-    def load_ui(self):
+    def Load(self):  # Renamed from load_ui to match StatrupClass convention
         self.header = HeaderComponent(self.frame, "Macular Densitometer                                                             Login Page")
         self.content_frame = tk.Frame(self.frame, bg='#1f2836', highlightbackground='white', highlightthickness=1)
         self.username = tk.Entry(self.content_frame, font=('Helvetica', 18), bg='#334155', fg='#94a3b8', insertbackground='white')
@@ -48,8 +49,9 @@ class LoginApp:
         self.time_label = tk.Label(self.frame, font=('Helvetica Neue', 10), bg='black', fg='white')
         self.date_label = tk.Label(self.frame, font=('Helvetica Neue', 10), bg='black', fg='white')
 
-    def show_ui(self):
+    def show(self):  # Renamed from show_ui to match convention
         self.header.set_wifi_callback(self.open_wifi_page)
+        self.frame.place(width=1024, height=600)  # Ensure full screen placement
         self.content_frame.place(x=200, y=115, width=624, height=430)
         self.username.place(x=62, y=50, width=500, height=61)
         self.username.bind('<FocusIn>', lambda e: self.on_entry_click(self.username, "Username"))
@@ -78,6 +80,9 @@ class LoginApp:
         self.date_label.place(x=934, y=570)
         self.update_datetime()
 
+    def hide(self):
+        self.frame.place_forget()
+
     def update_radio_styles(self, *args):
         selected_value = self.operation_mode.get()
         for value, rb in self.radio_buttons.items():
@@ -98,9 +103,6 @@ class LoginApp:
         self.time_label.config(text=current_time)
         self.date_label.config(text=current_date)
         self.frame.after(1000, self.update_datetime)
-
-    def hide(self):
-        self.frame.place_forget()
 
     def on_entry_click(self, entry, default_text):
         current_text = entry.get().strip()
@@ -157,17 +159,10 @@ class LoginApp:
             print(f"Error generating user JSON: {e}")
             return None
 
-    def display(self):
-        self.load_ui()
-        self.show_ui()
-
     def handle_login(self):
         username = self.username.get()
         password = self.password.get()
         if username in ["", "Username"] or password in ["", "Password"]:
-            self.frame.update()
-            x = self.frame.winfo_x() + self.frame.winfo_width()//2 - 100
-            y = self.frame.winfo_y() + self.frame.winfo_height()//2 - 50
             messagebox.showerror("Error", "Please enter both username and password")
             return
 
@@ -175,22 +170,15 @@ class LoginApp:
         if user:
             json_file = self.generate_user_json(user, self.operation_mode.get())
             if json_file:
-                self.frame.update()
-                x = self.frame.winfo_x() + self.frame.winfo_width()//2 - 100
-                y = self.frame.winfo_y() + self.frame.winfo_height()//2 - 50
                 messagebox.showinfo("Success",
-                                f'Welcome {user["title"] + " " if user["title"] else ""}{user["first_name"]} {user["last_name"]}',
-                                parent=self.frame)
-                
-                if hasattr(self, 'callback') and callable(self.callback):
-                    self.callback()  # Transition to HomePage
+                                    f'Welcome {user["title"] + " " if user["title"] else ""}{user["first_name"]} {user["last_name"]}')
+                if self.on_login_success:
+                    self.on_login_success()  # Call the callback to transition to Home Page
             else:
-                self.frame.update()
-                x = self.frame.winfo_x() + self.frame.winfo_width()//2 - 100
-                y = self.frame.winfo_y() + self.frame.winfo_height()//2 - 50
                 messagebox.showwarning("Warning", 'Login successful but failed to save user data')
         else:
-            self.frame.update()
-            x = self.frame.winfo_x() + self.frame.winfo_width()//2 - 100
-            y = self.frame.winfo_y() + self.frame.winfo_height()//2 - 50
             messagebox.showerror("Error", 'Invalid username or password')
+
+    def display(self):  # Optional, kept for compatibility
+        self.Load()
+        self.show()

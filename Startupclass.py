@@ -219,7 +219,7 @@ class StatrupClass:
         pageDisctonary["Admin"] = self.admin
         self.mw.Load()
         # self.fw.Load()
-        self.hm.load_ui()
+        self.hm.load()
         self.cff.Load()
         self.cffP.Load()
         self.brkf_1.Load()
@@ -287,7 +287,7 @@ class StatrupClass:
         self.brkf_1.hide()
         self.admin.hide()
         self.mw.hide()
-        self.hm.show_ui()
+        self.hm.show()
         currentPatientInfo.log_update("Enter_to_Main_screeen")
         # globaladc.main_Prepair() # run this while loading main Screen
 
