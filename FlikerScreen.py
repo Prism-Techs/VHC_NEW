@@ -40,7 +40,7 @@ class flikerWindow:
                                    font=('Helvetica Rounded', 28, 'bold'),
                                    width=3, height=1,
                                    bg='#1f2836', fg='white',
-                                   textvariable=str(self.depthVal)).place(x=110,y=142)
+                                   textvariable=str(self.depthVal))
         
         
         def UpButtonClicked():
@@ -179,6 +179,7 @@ class flikerWindow:
         flikerOn = False
         self.UPButton.config(state='disabled')
         self.DownButton.config(state='disabled')
+        self.label_frame.place(x=110,y=142)
         
     # def StopScheduler():
     #     
