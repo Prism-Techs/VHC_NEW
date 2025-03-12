@@ -97,11 +97,11 @@ class mainWindow:
         self.create_medical_field("Diabetes", 450, 260, self.diabetes_var, "97")
 
         # Submit Button
-        self.submit_btn = tk.Button(self.main_frame, text="SAVE", font=('Arial', 24, 'bold'), 
-                                   bg='#1f2836', fg='white', bd=1, command=self.save_patient_data)
-        self.submit_btn.place(x=650, y=390, width=161, height=51)
-        self.submit_btn.bind('<Enter>', lambda e: self.on_button_hover(e, self.submit_btn))
-        self.submit_btn.bind('<Leave>', lambda e: self.on_button_leave(e, self.submit_btn))
+        # self.submit_btn = tk.Button(self.main_frame, text="SAVE", font=('Arial', 24, 'bold'), 
+        #                            bg='#1f2836', fg='white', bd=1, command=self.save_patient_data)
+        # self.submit_btn.place(x=650, y=390, width=161, height=51)
+        # self.submit_btn.bind('<Enter>', lambda e: self.on_button_hover(e, self.submit_btn))
+        # self.submit_btn.bind('<Leave>', lambda e: self.on_button_leave(e, self.submit_btn))
 
     def create_text_field(self, label_text, x, y, placeholder):
         label = tk.Label(self.main_frame, text=label_text, font=FONT_MAIN, bg='black', fg='white')
@@ -169,25 +169,17 @@ class mainWindow:
                  (focused == self.kb.current_window or focused.winfo_toplevel() == self.kb.current_window))):
             pass  # Add cleanup logic if needed
 
-    def save_patient_data(self):
-
+    def save_patient_data(self, show_message=True):
         try:
-            # Retrieve the raw DOB value
+            # Existing code to construct and save patient_data
             dob_raw = self.get_entry_value("dob", "_entry")
-
-            # Convert DOB to YYYY-MM-DD format
-            try:
-                # Assuming input format is DD-MM-YYYY (e.g., "25-12-1990")
-                dob_obj = datetime.datetime.strptime(dob_raw, "%d-%m-%Y")
-                dob_formatted = dob_obj.strftime("%Y-%m-%d")  # Output: "1990-12-25"
-            except ValueError as e:
-                raise ValueError(f"Invalid date format for DOB: {dob_raw}. Please use DD-MM-YYYY.")
-
+            dob_obj = datetime.strptime(dob_raw, "%d-%m-%Y")
+            dob_formatted = dob_obj.strftime("%Y-%m-%d")
             patient_data = {
                 "first_name": self.get_entry_value("1st", "_name_entry"),
                 "middle_name": self.get_entry_value("mid", "_name_entry"),
                 "surname": self.get_entry_value("surname", "_entry"),
-                "dob": dob_formatted,  # Use the formatted DOB
+                "dob": dob_formatted,
                 "aadhaar": self.get_entry_value("aadhaar", "_entry"),
                 "mobile": self.get_entry_value("mobile", "_entry"),
                 "nationality": self.get_entry_value("nationality", "_entry"),
@@ -203,23 +195,21 @@ class mainWindow:
                 "CFF_F": '', "CFF_P": '', "f_mpod": '', "f-sd": '',
                 "date": self.timelabel.cget("text")
             }
-
-            # Load handler_id from latest_user.json
             current_login_usr = os.path.join(os.path.dirname(os.path.abspath(__file__)), "user_data", "latest_user.json")
             with open(current_login_usr, 'r') as f:
                 user_data = json.load(f)
             patient_data['handler_id'] = user_data['user_id']
-
-            # Save the patient data to a JSON file
             filename = "patient_latest.json"
             filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "patient_data", filename)
             os.makedirs(os.path.dirname(filepath), exist_ok=True)
             with open(filepath, 'w') as f:
                 json.dump(patient_data, f, indent=4)
-
-            messagebox.showinfo("Success", "Patient data saved successfully!")
+            if show_message:
+                messagebox.showinfo("Success", "Patient data saved successfully!")
+            return True
         except Exception as e:
             messagebox.showerror("Error", f"Error saving patient data: {str(e)}")
+            return False
 
     def get_entry_value(self, prefix, suffix):
         attribute_name = f"{prefix}{suffix}"
@@ -230,6 +220,24 @@ class mainWindow:
         if value in ["first name", "Middle Name", "Surname", "Date of Birth", "Aadhaar No", "+91XXXXXXXXXX", "80/120", "97", "Enter Nationality"]:
             return ""
         return value
+    
+
+
+    def update_current_patient_info(self):
+        currentPatientInfo.Name = f"{self.get_entry_value('1st', '_name_entry')} {self.get_entry_value('mid', '_name_entry')} {self.get_entry_value('surname', '_entry')}"
+        currentPatientInfo.Age = self.get_entry_value('dob', '_entry')
+        currentPatientInfo.Eye = self.eye_side_var.get()
+        currentPatientInfo.Gender = "M" if self.gender_var.get() == "Male" else "F"
+        currentPatientInfo.Nationality = self.get_entry_value('nationality', '_entry')
+        currentPatientInfo.Aadhaar = self.get_entry_value('aadhaar', '_entry')
+        currentPatientInfo.Mobile = self.get_entry_value('mobile', '_entry')
+        currentPatientInfo.Alcohol = self.alcohol_var.get() == "Yes"
+        currentPatientInfo.Smoking = self.smoking_var.get() == "Yes"
+        currentPatientInfo.FoodHabit = self.food_var.get()
+        currentPatientInfo.BP = {"has_bp": self.bp_var.get() == "Yes", "value": self.get_entry_value("blood_pressure", "_entry")}
+        currentPatientInfo.Diabetes = {"has_diabetes": self.diabetes_var.get() == "Yes", "value": self.get_entry_value("diabetes", "_entry")}
+        currentPatientInfo.date = self.timelabel.cget("text")
+
 
     def updateDateTime(self):
         raw_dt = datetime.datetime.now()

@@ -267,17 +267,15 @@ class StatrupClass:
             globaladc.buzzer_1()
             messagebox.showerror("USB Error", "Please check USB Drive\n(Name:-\“USB_DEVICE\”)\nInserted Properly \nif not, insert \nif inserted, remove and Re-insert")
             return
-        globaladc.buzzer_1()
-        currentPatientInfo.setAlchohol_state("Y" if self.mw.alcohol_var.get() == "Yes" else "N")
-        globaladc.buzzer_1()
-        currentPatientInfo.setSmoking_state("Y" if self.mw.smoking_var.get() == "Yes" else "N")
-        globaladc.buzzer_1()
-        currentPatientInfo.setDiabetes_state("Y" if self.mw.diabetes_var.get() == "Yes" else "N")
-        globaladc.buzzer_1()
-        currentPatientInfo.setHypertension_state("Y" if self.mw.bp_var.get() == "Yes" else "N")
+
+        self.mw.update_current_patient_info()
+        if not self.mw.save_patient_data(show_message=False):
+            messagebox.showerror("Save Error", "Failed to save patient data")
+            return
+
         globaladc.buzzer_3()
         currentPatientInfo.log_update("Start_pressed")
-        self.ShowTestRunScreen()
+        self.showTestRunScreen()
 
     def handleFlikerDrmo(self):
         self.ShowFlikerScreen()
