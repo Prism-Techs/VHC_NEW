@@ -173,7 +173,7 @@ class mainWindow:
         try:
             # Existing code to construct and save patient_data
             dob_raw = self.get_entry_value("dob", "_entry")
-            dob_obj = datetime.strptime(dob_raw, "%d-%m-%Y")
+            dob_obj = datetime.datetime.strptime(dob_raw, "%d-%m-%Y")
             dob_formatted = dob_obj.strftime("%Y-%m-%d")
             patient_data = {
                 "first_name": self.get_entry_value("1st", "_name_entry"),
