@@ -162,7 +162,7 @@ class PatientInfo :
          f = open(fileName, "a")
          f.write(time_now + "->"+str(self.SLNo)+",")
          f.write(str(self.Name) + ","+ str(self.Age)+","+self.Gender+","+self.eye + ",")
-         f.write(self.Alchohol+","+self.Smoking+","+self.Diabetes+","+self.Hypertension)
+         f.write(str(self.Alchohol)+","+str(self.Smoking)+","+str(self.Diabetes)+","+str(self.Hypertension))
          f.write("\n")
          f.close()
          
