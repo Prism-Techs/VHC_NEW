@@ -19,6 +19,9 @@ from header import HeaderComponent
 from login import LoginApp
 from Patient_checker import run_in_thread
 
+
+
+
 Font =  ("Arial",20)
 Font2 = ("Arial",10)
 x = 80
@@ -81,8 +84,10 @@ class StatrupClass:
         self.header = HeaderComponent(self.window)
 
         #added the dev
-        self.homePageFrame = Frame(self.window)
-        self.hm = LoginApp(self.window)
+        self.loginFrame = Frame(self.window, bg='black')
+        self.homeFram = Frame(self.window,bg="black")
+        self.hm = LoginApp(self.loginFrame)
+
         run_in_thread('patient_data','https://vhcbeta-api.prismtechs.in/patient/sync/','wifi_status.json')
    
         #intialize the buttons
@@ -214,6 +219,7 @@ class StatrupClass:
         pageDisctonary["Admin"] = self.admin
         self.mw.Load()
         # self.fw.Load()
+        self.hm.load_ui()
         self.cff.Load()
         self.cffP.Load()
         self.brkf_1.Load()
@@ -224,6 +230,7 @@ class StatrupClass:
         # self.hm.load_ui()
         self.window.mainloop()
         globaladc.buzzer_1()
+
 
         
         
@@ -271,7 +278,7 @@ class StatrupClass:
     def ShowMainScreen(self):  
         #globaladc.buzzer_1()
         # self.ShowAdminButton()
-        self.ShowStartButton()
+        # self.ShowStartButton()
         # self.ShowFlikerButton()
         self.HideHomeButton()
         # self.fw.hide()
@@ -279,7 +286,8 @@ class StatrupClass:
         self.cffP.hide()
         self.brkf_1.hide()
         self.admin.hide()
-        self.mw.show()
+        self.mw.hide()
+        self.hm.show_ui()
         currentPatientInfo.log_update("Enter_to_Main_screeen")
         # globaladc.main_Prepair() # run this while loading main Screen
 
