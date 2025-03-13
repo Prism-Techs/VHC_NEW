@@ -82,7 +82,7 @@ class KeyBoard:
             else:
                 entry.delete('end - 2c', 'end')
 
-        elif value == 'Shift':
+        elif value == 'Shift ^':
             self.shift_active = not self.shift_active
             for widget in window.winfo_children():
                 if isinstance(widget, tk.Frame):
