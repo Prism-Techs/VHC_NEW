@@ -397,7 +397,7 @@ class mup4728:
 
         def outer_led_control(self,data_in):
             if(0<=data_in<=20):
-                dac_val=int(150.4*data_in-0.38095) # 0 to 20
+                dac_val=int(84.4*data_in-0.38095) # 0 to 20
                 str_data = 'OUTER_LED_DAC = ' + str(dac_val)
                 self.get_print(str_data)
                 self.OUTER_LED(dac_val)
