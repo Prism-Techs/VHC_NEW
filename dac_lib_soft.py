@@ -103,6 +103,8 @@ class mup4728:
             GPIO.setup(Disp,GPIO.OUT)#D7 Disp Enable
             GPIO.setup(flik_pin,GPIO.OUT)
             GPIO.setup(DAC_lat,GPIO.OUT)# DAC Latch
+            self.last_inner_value = None
+            self.last_inner_value = 0
             
             GPIO.output(DAC_lat,GPIO.HIGH) # DAC Latch
             GPIO.output(B_E,GPIO.LOW)#D1 Blue Enable
@@ -240,14 +242,16 @@ class mup4728:
             GPIO.output(DAC_lat,GPIO.HIGH)
             
         def INNER_LED(self, in_data):
-            GPIO.output(DAC_lat, GPIO.LOW)
-            str_data = 'INNER_LED_data = ' + str(in_data)
-            self.get_print(str_data)
-            data = [int(in_data / 256), int(in_data % 256)]
-            self.DAC.write_i2c_block_data(self.dac_addr, self.dac_ch[5], data)
-            time.sleep(0.001)  # Add a small delay after I2C write
-            GPIO.output(DAC_lat, GPIO.HIGH)
-            time.sleep(0.001)  # Add a small delay after toggling the latch
+                """Set Inner LED DAC value with improved stability."""
+                GPIO.output(DAC_lat, GPIO.LOW)
+                str_data = 'INNER_LED_data = ' + str(in_data)
+                self.get_print(str_data)
+                data = [int(in_data / 256) + 128, int(in_data % 256)]
+                self.DAC.write_i2c_block_data(self.dac_addr, self.dac_ch[5], data)
+                time.sleep(0.005)  # Increased delay for DAC settling (5ms)
+                GPIO.output(DAC_lat, GPIO.HIGH)
+                time.sleep(0.005)  # Increased delay for latch stability (5ms)
+                self.get_print(f"INNER_LED set to {in_data}, DAC bytes: {data}")
             
         def RED_LED(self,in_data):
             GPIO.output(DAC_lat,GPIO.LOW)
@@ -384,18 +388,24 @@ class mup4728:
                 self.get_print('Blue Volt Beyond range')
 #-----------------------------------------------------------------------------------
         def inner_led_control(self, data_in):
-            if 0 <= data_in <= 20:
-                # Since the INNER_LED function divides by 1.6, we need to multiply by 1.6 here
-                # to achieve the intended DAC value
-                # dac_val = int((1500/20) * data_in * 1.6)  # Compensate for the 1.6 division
-                dac_val = 1600  # Compensate for the 1.6 division
-                str_data = 'INNER_LED_DAC = ' + str(dac_val)
-                self.get_print(str_data)
-                self.INNER_LED(dac_val)
-            else:
-                str_data = 'INNER_LED_DAC must be 0 to 20'
-                self.get_print(str_data)
-
+                """Control Inner LED with flicker prevention."""
+                if 0 <= data_in <= 20:
+                    dac_val = 1600  # Fixed value as per your modification
+                    current_time = time.time()
+                    
+                    # Debounce: Only update if value changed or enough time has passed
+                    if (self.last_inner_value != dac_val or 
+                        (current_time - self.last_inner_time) > 0.1):  # 100ms debounce
+                        str_data = 'INNER_LED_DAC = ' + str(dac_val)
+                        self.get_print(str_data)
+                        self.INNER_LED(dac_val)
+                        self.last_inner_value = dac_val
+                        self.last_inner_time = current_time
+                    else:
+                        self.get_print(f"INNER_LED skipped (debounced): {dac_val}")
+                else:
+                    str_data = 'INNER_LED_DAC must be 0 to 20'
+                    self.get_print(str_data)
         def outer_led_control(self,data_in):
             if(0<=data_in<=20):
                 dac_val=int(84.4*data_in-0.38095) # 0 to 20
