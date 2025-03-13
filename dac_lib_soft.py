@@ -785,6 +785,7 @@ class mup4728:
 #         def patient_switch_desable(self) :
 #             self.get_print('GPIO relese interrupt')
 #             GPIO.remove_event_detect(switch)
+
         def all_led_off (self):
             self.get_print('all_led_off-----------')      
             self.fan_on()
