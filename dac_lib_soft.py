@@ -383,18 +383,34 @@ class mup4728:
             else:                
                 self.get_print('Blue Volt Beyond range')
 #-----------------------------------------------------------------------------------
-        def inner_led_control(self, data_in):
-            if 0 <= data_in <= 20:
-                # Since the INNER_LED function divides by 1.6, we need to multiply by 1.6 here
-                # to achieve the intended DAC value
-                # dac_val = int((1500/20) * data_in * 1.6)  # Compensate for the 1.6 division
-                dac_val = 1600  # Compensate for the 1.6 division
-                str_data = 'INNER_LED_DAC = ' + str(dac_val)
-                self.get_print(str_data)
-                self.INNER_LED(dac_val)
-            else:
-                str_data = 'INNER_LED_DAC must be 0 to 20'
-                self.get_print(str_data)
+        def INNER_LED(self, in_data):
+            # Ensure the DAC value is within the valid range (0–4095 for a 12-bit DAC)
+            if in_data < 0:
+                in_data = 0
+            elif in_data > 4095:
+                in_data = 4095
+
+            # Stop PWM if it's running to avoid interference
+            if self.pwm_run:
+                self.p.stop()
+                self.pwm_run = 0
+
+            # Prepare the data for the DAC
+            data = [int(in_data / 256) + 128, int(in_data % 256)]
+
+            # Write data to the DAC
+            try:
+                GPIO.output(DAC_lat, GPIO.LOW)  # Pull DAC latch low
+                self.DAC.write_i2c_block_data(self.dac_addr, self.dac_ch[5], data)  # Write data to DAC
+                time.sleep(0.01)  # Add a delay to ensure the DAC processes the data
+                GPIO.output(DAC_lat, GPIO.HIGH)  # Pull DAC latch high
+                time.sleep(0.01)  # Add a delay to stabilize the DAC output
+            except Exception as e:
+                print(f"I2C Error: {e}")  # Debug I2C communication errors
+
+            # Log the operation
+            str_data = 'INNER_LED_data = ' + str(in_data)
+            self.get_print(str_data)
 
         def outer_led_control(self,data_in):
             if(0<=data_in<=20):
