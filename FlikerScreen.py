@@ -33,7 +33,8 @@ class flikerWindow:
     def __init__(self, frame):
         self.fliker_bool = True               
         self.frame = frame
-        self.label_frame = tk.LabelFrame(self.frame, text = 'Depth',height=250, width=200, bg='white')
+        self.content_frame = tk.Frame(self.frame, bg='#1f2836')
+        self.label_frame = tk.LabelFrame(self.content_frame, text = 'Depth',height=250, width=200, bg='white')
         self.label_frame.place(x="40", y="40")
         self.depthVal = tk.IntVar()
         self.depthVal.set(defaultdepth)  
@@ -56,14 +57,29 @@ class flikerWindow:
                 self.depthVal.set(x)
             #globaladc.buzzer_1()
              
-        self.UPButton = tk.Button (self.label_frame,
-                                  text="^", bg="#f56c87", font=12,  
-                                  width=10, command=UpButtonClicked)
+        self.UPButton = tk.Button (self.content_frame,
+                                  text="+",  
+                                   command=UpButtonClicked)
 
+
+        self.UPButton.configure(
+            font=tk.font.Font(family="Arial", size=30, weight="bold"),  # Bold font, ~40px adjusted to 30pt
+            bg="black",               # Background color
+            fg="white",               # Text color
+            bd=1,                     # 1px border
+            relief="solid",           # Solid border to mimic white border
+            activebackground="#177bad",# Pressed state color
+            activeforeground="white", # Text color when pressed
+            justify="center",         # Center text horizontally
+            # pady=3,
+            width=3 
+                                               # Vertical padding ~9px
+        )
+ 
         
 
-        self.DownButton = tk.Button (self.label_frame,
-                                  text="v", bg="#f56c87",font=12,  
+        self.DownButton = tk.Button (self.content_frame,
+                                  text="-", bg="#f56c87",font=12,  
                                   width=10, command=DownButtonClicked)
     
     #load method
@@ -75,6 +91,10 @@ class flikerWindow:
         DepthVal.place(x=70,y=90)
         self.DownButton.place (x=20,  y=140)
         self.create_side_buttons()
+        
+        self.content_frame.place(x=280, y=110, width=711, height=441)
+
+
 
         def clickFlikerButton():
             HandleFliker (ManageButton['text'])
@@ -100,7 +120,7 @@ class flikerWindow:
                    
                 
 
-        ManageButton = tk.Button (self.frame,
+        ManageButton = tk.Button (self.content_frame,
                                   text=Text_Fliker_OFF,font=Font, 
                                   command=clickFlikerButton, 
                                   width=30)
@@ -116,12 +136,12 @@ class flikerWindow:
             pageDisctonary['FlikerScreen'].hide()
             pageDisctonary['MainScreen'].show()
 
-        fwButton = tk.Button (self.frame,
+        fwButton = tk.Button (self.content_frame,
                                  text=">>", font=Font2,
                                  command=onfw, bg='Green',
                                  width=10)
        
-        bwButton = tk.Button (self.frame,
+        bwButton = tk.Button (self.content_frame,
                                  text="<<", font=Font2,
                                  command=onbw, bg='Green',
                                  width=10)
@@ -134,8 +154,8 @@ class flikerWindow:
     def create_side_buttons(self):
         """Create side navigation buttons."""
         buttons = [
-            ("Flicker Demo", 150, 'black'),
-            ("CFF Fovea", 210, 'white'),
+            ("Flicker Demo", 150, 'white'),
+            ("CFF Fovea", 210, 'black'),
             ("BRK Fovea", 270, 'black'),
             ("CFF Para-Fovea", 330, 'black'),
             ("BRK Para-Fovea", 390, 'black'),
@@ -144,7 +164,7 @@ class flikerWindow:
 
         for text, y, bg_color in buttons:
             btn = tk.Button(self.frame, text=text, font=Font,
-                          width=20, bg=bg_color,
+                          width=15, bg=bg_color,
                           fg='white' if bg_color == 'black' else 'black',
                           relief='solid', bd=2)
             btn.place(x=10, y=y)
@@ -196,14 +216,15 @@ class flikerWindow:
 def main():
     root = tk.Tk()
     root.title("Flicker Control")
-    root.geometry("1024x600")  # Set window size
+    root.geometry("1024x600")
+    root.resizable(0, 0)
 
     # Create the main frame
-    main_frame = tk.Frame(root, bg="black")
-    main_frame.pack(fill="both", expand=True)
+    # main_frame = tk.Frame(root, bg="black")
+    flikerFrame = tk.Frame(root, bg='black')
 
     # Create an instance of flikerWindow
-    flicker_screen = flikerWindow(main_frame)
+    flicker_screen = flikerWindow(flikerFrame)
     
     # Load UI components
     flicker_screen.Load()

@@ -243,7 +243,7 @@ class mup4728:
             GPIO.output(DAC_lat,GPIO.LOW)
             str_data = 'INNER_LED_data = ' + str(in_data)
             self.get_print(str_data)    
-            in_data = in_data/1.6     
+            # in_data = in_data/1.6     
             data = [ int(in_data / 256)+128, int(in_data % 256)]
             self.DAC.write_i2c_block_data(self.dac_addr, self.dac_ch[5], data)
             GPIO.output(DAC_lat,GPIO.HIGH)
@@ -387,7 +387,7 @@ class mup4728:
                 # Since the INNER_LED function divides by 1.6, we need to multiply by 1.6 here
                 # to achieve the intended DAC value
                 # dac_val = int((1500/20) * data_in * 1.6)  # Compensate for the 1.6 division
-                dac_val = 1900*1.6  # Compensate for the 1.6 division
+                dac_val = 1280  # Compensate for the 1.6 division
                 str_data = 'INNER_LED_DAC = ' + str(dac_val)
                 self.get_print(str_data)
                 self.INNER_LED(dac_val)
