@@ -103,9 +103,9 @@ class mup4728:
             GPIO.setup(Disp,GPIO.OUT)#D7 Disp Enable
             GPIO.setup(flik_pin,GPIO.OUT)
             GPIO.setup(DAC_lat,GPIO.OUT)# DAC Latch
-            self.last_inner_value = None
-            self.last_inner_value = 0
-            
+            self.last_inner_value = None  # Track last set value
+            self.last_inner_time = 0  # Track last update time
+            self.dac_lock = False  # Prevent concurrent DAC writes
             GPIO.output(DAC_lat,GPIO.HIGH) # DAC Latch
             GPIO.output(B_E,GPIO.LOW)#D1 Blue Enable
             GPIO.output(G_E,GPIO.LOW)#D3 Green Enable
@@ -242,16 +242,36 @@ class mup4728:
             GPIO.output(DAC_lat,GPIO.HIGH)
             
         def INNER_LED(self, in_data):
-                """Set Inner LED DAC value with improved stability."""
+                """Set Inner LED DAC value with maximum stability."""
+                if self.dac_lock:
+                    self.get_print("DAC locked, skipping INNER_LED write")
+                    return
+                self.dac_lock = True  # Lock DAC to prevent interference
+                
                 GPIO.output(DAC_lat, GPIO.LOW)
+                time.sleep(0.01)  # Ensure GPIO is fully low
                 str_data = 'INNER_LED_data = ' + str(in_data)
                 self.get_print(str_data)
+                
+                # Prepare DAC data
                 data = [int(in_data / 256) + 128, int(in_data % 256)]
-                self.DAC.write_i2c_block_data(self.dac_addr, self.dac_ch[5], data)
-                time.sleep(0.005)  # Increased delay for DAC settling (5ms)
+                self.get_print(f"INNER_LED DAC bytes: {data}")
+                
+                # Write to DAC with retries
+                for attempt in range(3):  # Retry up to 3 times
+                    try:
+                        self.DAC.write_i2c_block_data(self.dac_addr, self.dac_ch[5], data)
+                        break
+                    except Exception as e:
+                        self.get_print(f"DAC write failed (attempt {attempt + 1}): {e}")
+                        time.sleep(0.01)
+                
+                time.sleep(0.01)  # Increased settling time
                 GPIO.output(DAC_lat, GPIO.HIGH)
-                time.sleep(0.005)  # Increased delay for latch stability (5ms)
-                self.get_print(f"INNER_LED set to {in_data}, DAC bytes: {data}")
+                time.sleep(0.01)  # Ensure latch is stable
+                
+                self.dac_lock = False  # Release lock
+                self.get_print(f"INNER_LED completed: {in_data}")
             
         def RED_LED(self,in_data):
             GPIO.output(DAC_lat,GPIO.LOW)
@@ -388,17 +408,23 @@ class mup4728:
                 self.get_print('Blue Volt Beyond range')
 #-----------------------------------------------------------------------------------
         def inner_led_control(self, data_in):
-                """Control Inner LED with flicker prevention."""
+                """Control Inner LED with flicker prevention and diagnostics."""
                 if 0 <= data_in <= 20:
-                    dac_val = 1600  # Fixed value as per your modification
+                    dac_val = 1600  # Fixed value as per your setup
                     current_time = time.time()
                     
-                    # Debounce: Only update if value changed or enough time has passed
+                    # Debounce and check for changes
                     if (self.last_inner_value != dac_val or 
-                        (current_time - self.last_inner_time) > 0.1):  # 100ms debounce
+                        (current_time - self.last_inner_time) > 0.2):  # 200ms debounce
                         str_data = 'INNER_LED_DAC = ' + str(dac_val)
                         self.get_print(str_data)
+                        
+                        # Call INNER_LED and log timing
+                        start_time = time.time()
                         self.INNER_LED(dac_val)
+                        end_time = time.time()
+                        self.get_print(f"INNER_LED execution time: {end_time - start_time:.3f}s")
+                        
                         self.last_inner_value = dac_val
                         self.last_inner_time = current_time
                     else:
@@ -406,6 +432,15 @@ class mup4728:
                 else:
                     str_data = 'INNER_LED_DAC must be 0 to 20'
                     self.get_print(str_data)
+
+        def reset_inner_led(self):
+                """Reset Inner LED to a known state."""
+                self.get_print("Resetting Inner LED")
+                self.INNER_LED(0)  # Turn off completely
+                time.sleep(0.1)    # Wait for stability
+                self.last_inner_value = None  # Clear last value
+
+
         def outer_led_control(self,data_in):
             if(0<=data_in<=20):
                 dac_val=int(84.4*data_in-0.38095) # 0 to 20
