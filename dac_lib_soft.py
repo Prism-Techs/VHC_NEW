@@ -23,7 +23,7 @@ flik_pin = 18
 # DAC ADD-194
 b_volt_val = [159,170,183,199,219,243,274,312,358,417,493,591,720,889,1111,1413,1817,2376,3161,3918] # 0 to 19 
 # g_freq_val = int(80*x+2000) # 0 to 15
-# red_led_val = int(4.80519*x-0.4329) # 0 to 20
+# red_led_val = int(4.80519*x-0.4329) # 0 da 20
 # inner_ring_val = int(13.1948*x-0.329004) # 0 to 20
 # DAC ADD-192
 # Actuator_val = [0,142,1100,3680]  #0,1,2,3
@@ -240,33 +240,15 @@ class mup4728:
             GPIO.output(DAC_lat,GPIO.HIGH)
             
         def INNER_LED(self, in_data):
-            # Ensure the DAC value is within the valid range (0–4095 for a 12-bit DAC)
-            if in_data < 0:
-                in_data = 0
-            elif in_data > 4095:
-                in_data = 4095
-
-            # Stop PWM if it's running to avoid interference
-            if self.pwm_run:
-                self.p.stop()
-                self.pwm_run = 0
-
-            # Prepare the data for the DAC
-            data = [int(in_data / 256) + 128, int(in_data % 256)]
-
-            # Write data to the DAC
-            try:
-                GPIO.output(DAC_lat, GPIO.LOW)  # Pull DAC latch low
-                self.DAC.write_i2c_block_data(self.dac_addr, self.dac_ch[5], data)  # Write data to DAC
-                time.sleep(0.01)  # Add a delay to ensure the DAC processes the data
-                GPIO.output(DAC_lat, GPIO.HIGH)  # Pull DAC latch high
-                time.sleep(0.01)  # Add a delay to stabilize the DAC output
-            except Exception as e:
-                print(f"I2C Error: {e}")  # Debug I2C communication errors
-
-            # Log the operation
+            GPIO.output(DAC_lat, GPIO.LOW)
             str_data = 'INNER_LED_data = ' + str(in_data)
             self.get_print(str_data)
+            data = [int(in_data / 256), int(in_data % 256)]
+            self.DAC.write_i2c_block_data(self.dac_addr, self.dac_ch[5], data)
+            time.sleep(0.001)  # Add a small delay after I2C write
+            GPIO.output(DAC_lat, GPIO.HIGH)
+            time.sleep(0.001)  # Add a small delay after toggling the latch
+            
         def RED_LED(self,in_data):
             GPIO.output(DAC_lat,GPIO.LOW)
             str_data = 'RED_LED_data = ' + str(in_data)
