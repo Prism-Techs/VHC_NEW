@@ -7,9 +7,10 @@ import PerodicThread
 import time
 import threading
 #import schedule
-from globalvar import pageDisctonary
-from globalvar import globaladc
+# from globalvar import pageDisctonary
+# from globalvar import globaladc
 from header import HeaderComponent
+
 
 Font = ("Arial",20)
 
@@ -18,8 +19,10 @@ Text_Fliker_ON = "Fliker is On Press to Change"
 flikerOn = False
 defaultdepth = 7
 maxdepth = 15
-intervel = globaladc.get_flicker_delay()    #0.044 #sec
+# intervel = globaladc.get_flicker_delay()    #0.044 #sec
+intervel = 10    #0.044 #sec
 Font2 = ("Arial",20)
+
 
 def HandleFliker(param):
     # add code here to run whin fliker is swtched on/off
@@ -30,70 +33,39 @@ class flikerWindow:
     def __init__(self, frame):
         self.fliker_bool = True               
         self.frame = frame
-        self.frame.config(bg='black')
-        self.content_frame = tk.Frame(frame, bg='#1f2836')
-
+        self.label_frame = tk.LabelFrame(self.frame, text = 'Depth',height=250, width=200, bg='white')
+        self.label_frame.place(x="40", y="40")
         self.depthVal = tk.IntVar()
         self.depthVal.set(defaultdepth)  
         self.threadCreated =False
-        self.label_frame = tk.Label(self.content_frame, text="15",
-                                   font=('Helvetica Rounded', 28, 'bold'),
-                                   width=3, height=1,
-                                   bg='#1f2836', fg='white',
-                                   textvariable=str(self.depthVal))
+        self.header = HeaderComponent(frame,"Macular Densitometer                                                        Flicker Demo")
         
+
+
         
         def UpButtonClicked():
             y = self.depthVal.get()
             if(y < maxdepth):
                 x = y+1
                 self.depthVal.set(x)
-            globaladc.buzzer_1()
+            #globaladc.buzzer_1()
               
         def DownButtonClicked():
             if(self.depthVal.get() > 0):
                 x= self.depthVal.get()-1
                 self.depthVal.set(x)
-            globaladc.buzzer_1()
+            #globaladc.buzzer_1()
              
-        self.UPButton = tk.Button (self.content_frame, text="+",
-                                 font=('Helvetica', 30, 'bold'),
-                                 width=2, height=1,
-                                 bg='black', fg='white',command=UpButtonClicked,relief='solid', borderwidth=1)
+        self.UPButton = tk.Button (self.label_frame,
+                                  text="^", bg="#f56c87", font=12,  
+                                  width=10, command=UpButtonClicked)
 
         
 
-        self.DownButton = tk.Button (self.content_frame, text="-",
-                                   font=('Helvetica', 30, 'bold'),
-                                   width=2, height=1,
-                                   bg='black', fg='white',
-                                   command=DownButtonClicked,
-                                   relief='solid', borderwidth=1)
+        self.DownButton = tk.Button (self.label_frame,
+                                  text="v", bg="#f56c87",font=12,  
+                                  width=10, command=DownButtonClicked)
     
-
-
-
-
-    def create_side_buttons(self):
-        """Create side navigation buttons."""
-        buttons = [
-            ("Flicker Demo", 150, 'white'),
-            ("CFF Fovea", 210, 'black'),
-            ("BRK Fovea", 270, 'black'),
-            ("CFF Para-Fovea", 330, 'black'),
-            ("BRK Para-Fovea", 390, 'black'),
-            ("Test Result", 450, 'black')
-        ]
-
-        for text, y, bg_color in buttons:
-            btn = tk.Button(self.frame, text=text, font=Font,
-                          width=20, bg=bg_color,
-                          fg='white' if bg_color == 'black' else 'black',
-                          relief='solid', bd=2)
-            btn.place(x=10, y=y)
-
-
-
     #load method
     def Load(self):
         steplabel = tk.Label (self.frame, text="Depth",font=Font)
@@ -102,20 +74,11 @@ class flikerWindow:
         DepthVal = tk.Label(self.label_frame,textvariable=str(self.depthVal),justify="center", font=Font, bg='#a0f291')
         DepthVal.place(x=70,y=90)
         self.DownButton.place (x=20,  y=140)
-        self.content_frame.place(x=280, y=110, width=711, height=441)
         self.create_side_buttons()
-
-
-        self.header = HeaderComponent(
-            self.frame,
-            "Macular Densitometer                                                          Flicker Demo"
-        )
-        
-
 
         def clickFlikerButton():
             HandleFliker (ManageButton['text'])
-            globaladc.buzzer_1()
+            #globaladc.buzzer_1()
             if not self.threadCreated:
                 self.worker_flik = PerodicThread.PeriodicThread(intervel,self)
                 self.threadCreated=True
@@ -168,30 +131,47 @@ class flikerWindow:
         # bwButton.place(x=420, y=500) 
      
         
+    def create_side_buttons(self):
+        """Create side navigation buttons."""
+        buttons = [
+            ("Flicker Demo", 150, 'black'),
+            ("CFF Fovea", 210, 'white'),
+            ("BRK Fovea", 270, 'black'),
+            ("CFF Para-Fovea", 330, 'black'),
+            ("BRK Para-Fovea", 390, 'black'),
+            ("Test Result", 450, 'black')
+        ]
+
+        for text, y, bg_color in buttons:
+            btn = tk.Button(self.frame, text=text, font=Font,
+                          width=20, bg=bg_color,
+                          fg='white' if bg_color == 'black' else 'black',
+                          relief='solid', bd=2)
+            btn.place(x=10, y=y)
+
     def hide(self):
         self.stop_therad()
         self.frame.place_forget()            
     
     def show(self):
-        globaladc.flicker_Prepair() 			# run this while loding flicller screen
+        # globaladc.flicker_Prepair() 			# run this while loding flicller screen
         self.frame.place(width=1024,height=600)
         self.depthVal.set(0)
         flikerOn = False
         self.UPButton.config(state='disabled')
         self.DownButton.config(state='disabled')
-        self.label_frame.place(x=110,y=142)
         
     # def StopScheduler():
     #     
     def run_therad(self):
-        globaladc.get_print("worker_flik thread started")
+        # globaladc.get_print("worker_flik thread started")
         if not self.worker_flik.isStarted :
             self.worker_flik.start()
         else: 
             self.worker_flik.resume()       
 
     def stop_therad(self):
-        globaladc.get_print("worker_flik thread stopped")
+        # globaladc.get_print("worker_flik thread stopped")
         if self.threadCreated :
             self.worker_flik.stop()
             self.worker_flik.kill()
@@ -200,11 +180,11 @@ class flikerWindow:
     def periodic_event(self):
            #fliker_dac_val = 1325+(25*self.depthVal.get())
            if self.fliker_bool == True :
-                globaladc.fliker(self.depthVal.get())#A1 GREEN_FREQ                    
+                # globaladc.fliker(self.depthVal.get())#A1 GREEN_FREQ                    
                 self.fliker_bool = False
                 #lobaladc.get_print('event1-0')
            else:
-                globaladc.fliker(0)#A1 GREEN_FREQ  
+                # globaladc.fliker(0)#A1 GREEN_FREQ  
                 self.fliker_bool = True
                 #lobaladc.get_print('event')   
          #this can be used to set the High/positive side of the pulse wave
@@ -219,7 +199,7 @@ def main():
     root.geometry("1024x600")  # Set window size
 
     # Create the main frame
-    main_frame = tk.Frame(root, bg="white")
+    main_frame = tk.Frame(root, bg="black")
     main_frame.pack(fill="both", expand=True)
 
     # Create an instance of flikerWindow

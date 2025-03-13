@@ -58,7 +58,7 @@ class StatrupClass:
         self.loginFrame = Frame(self.window, bg='black')
         self.homeFrame = Frame(self.window, bg="black")  # Fixed typo: homeFram -> homeFrame
         self.mainFrame = Frame(self.window, bg='#64edb4')
-        self.flikerFrame = Frame(self.window, bg='#64edb4')
+        self.flikerFrame = Frame(self.window, bg='black')
         self.cffFoveaFrame = Frame(self.window, bg='#64edb4')
         self.CffParaFoveaFrame = Frame(self.window, bg='#64edb4')
         self.brkf1Frame = Frame(self.window, bg='#64edb4')
