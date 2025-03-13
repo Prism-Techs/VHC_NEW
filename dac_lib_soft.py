@@ -247,6 +247,7 @@ class mup4728:
             data = [ int(in_data / 256)+128, int(in_data % 256)]
             self.DAC.write_i2c_block_data(self.dac_addr, self.dac_ch[5], data)
             GPIO.output(DAC_lat,GPIO.HIGH)
+            time.sleep(0.001)
             
         def RED_LED(self,in_data):
             GPIO.output(DAC_lat,GPIO.LOW)
