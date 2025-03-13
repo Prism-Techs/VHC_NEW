@@ -239,15 +239,15 @@ class mup4728:
             self.DAC.write_i2c_block_data(self.dac_addr, self.dac_ch[4], data)
             GPIO.output(DAC_lat,GPIO.HIGH)
             
-        def INNER_LED(self,in_data):
-            GPIO.output(DAC_lat,GPIO.LOW)
+        def INNER_LED(self, in_data):
+            GPIO.output(DAC_lat, GPIO.LOW)
             str_data = 'INNER_LED_data = ' + str(in_data)
-            self.get_print(str_data)    
-            # in_data = in_data/1.6     
-            data = [ int(in_data / 256)+128, int(in_data % 256)]
+            self.get_print(str_data)
+            data = [int(in_data / 256) + 128, int(in_data % 256)]
             self.DAC.write_i2c_block_data(self.dac_addr, self.dac_ch[5], data)
-            GPIO.output(DAC_lat,GPIO.HIGH)
-            time.sleep(0.001)
+            time.sleep(0.001)  # Add a small delay after I2C write
+            GPIO.output(DAC_lat, GPIO.HIGH)
+            time.sleep(0.001)  # Add a small delay after toggling the latch
             
         def RED_LED(self,in_data):
             GPIO.output(DAC_lat,GPIO.LOW)
