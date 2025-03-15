@@ -52,11 +52,13 @@ class mup4728:
         self.buz = GPIO.PWM(BZ_I, 9000)
 
     def set_dac_value(self, channel, value):
-        GPIO.output(DAC_lat, GPIO.LOW)
-        data = [int(value / 256), int(value % 256)]
-        self.DAC.write_i2c_block_data(self.dac_addr, self.dac_ch[channel], data)
-        GPIO.output(DAC_lat, GPIO.HIGH)
-        time.sleep(0.01)  # Small delay to allow DAC to settle
+            value = max(0, min(4095, int(value)))  # Clamp to valid 12-bit range
+            GPIO.output(DAC_lat, GPIO.LOW)
+            data = [int(value / 256), int(value % 256)]
+            print(f"Set DAC Channel {channel}: Value={value}, Data={data}")  # Debug
+            self.DAC.write_i2c_block_data(self.dac_addr, self.dac_ch[channel], data)
+            GPIO.output(DAC_lat, GPIO.HIGH)
+            time.sleep(0.02)  # Ensure stability
 
     def blue_led_volt_control(self, mode, val):
         if mode == 0 and 0 <= val <= 19:
