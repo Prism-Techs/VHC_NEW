@@ -39,8 +39,7 @@ class mup4728:
         GPIO.setup(G_E, GPIO.OUT)
         GPIO.setup(FN_E, GPIO.OUT)
         GPIO.setup(Disp, GPIO.OUT)
-        GPIO.setup(BZ_I,GPIO.OUT)#D4 Buzz 
-
+        GPIO.setup(BZ_I, GPIO.OUT)  # Set up buzzer pin as output
         GPIO.setup(flik_pin, GPIO.OUT)
         GPIO.output(DAC_lat, GPIO.HIGH)
         GPIO.output(B_E, GPIO.LOW)
@@ -50,7 +49,7 @@ class mup4728:
         self.dac_ch = [0, 8, 16, 24, 32, 40, 48, 56]
         self.pwm_run = 0
         self.p = GPIO.PWM(flik_pin, 35)
-        self.buz = GPIO.PWM(BZ_I, 9000)
+        self.buz = GPIO.PWM(BZ_I, 9000)  # Initialize PWM for buzzer
 
     def set_dac_value(self, channel, value):
         GPIO.output(DAC_lat, GPIO.LOW)
@@ -62,35 +61,48 @@ class mup4728:
         if mode == 0 and 0 <= val <= 19:
             b_volt = int(b_volt_val[val] * 1.95)
             self.set_dac_value(2, b_volt)
+            return b_volt
         elif mode == 1 and 1 <= val <= 20:
             b_volt = int((7.79398 * val - 4.93684) / 1.25)
             self.set_dac_value(2, b_volt)
+            return b_volt
         elif mode == 2 and 1 <= val <= 20:
             b_volt = int((24.606 * val - 23.4632) / 1.25)
             self.set_dac_value(2, b_volt)
+            return b_volt
         elif mode == 3 and 0 <= val <= 20:
             b_volt = int((28.8 * val + 0.4) / 1)
             self.set_dac_value(2, b_volt)
+            return b_volt
+        return 0
 
     def green_volt_control(self, data_in):
         if 0 <= data_in <= 20:
             dac_val = int(85.4 * data_in + 0.380952)
             self.set_dac_value(4, dac_val)
+            return dac_val
+        return 0
 
     def red_led_control(self, data_in):
         if 0 <= data_in <= 20:
             dac_val = int(4.80519 * data_in - 0.4329)
             self.set_dac_value(6, dac_val)
+            return dac_val
+        return 0
 
     def inner_led_control(self, data_in):
         if 0 <= data_in <= 20:
             dac_val = int(13.1948 * data_in - 0.329004)
             self.set_dac_value(5, dac_val)
+            return dac_val
+        return 0
 
     def outer_led_control(self, data_in):
         if 0 <= data_in <= 20:
             dac_val = int(59.4 * data_in - 0.38095)
             self.set_dac_value(7, dac_val)
+            return dac_val
+        return 0
 
     def fliker_start_g(self):
         GPIO.output(G_E, GPIO.HIGH)
@@ -136,6 +148,13 @@ class LEDControlApp:
         self.inner_slider = self.create_slider("Inner LED", 0, 20, 0, row=3)
         self.outer_slider = self.create_slider("Outer LED", 0, 20, 0, row=4)
 
+        # Labels for displaying DAC values, voltages, and data_in
+        self.blue_label = self.create_label("Blue DAC Value: 0", row=0, column=3)
+        self.green_label = self.create_label("Green DAC Value: 0", row=1, column=3)
+        self.red_label = self.create_label("Red DAC Value: 0", row=2, column=3)
+        self.inner_label = self.create_label("Inner DAC Value: 0", row=3, column=3)
+        self.outer_label = self.create_label("Outer DAC Value: 0", row=4, column=3)
+
         # Flicker control
         self.flicker_freq_slider = self.create_slider("Flicker Frequency", 1, 100, 35, row=5)
         self.flicker_start_g_button = ttk.Button(root, text="Start Green Flicker", command=self.start_green_flicker)
@@ -156,12 +175,24 @@ class LEDControlApp:
         slider.grid(row=row, column=1, columnspan=2, padx=10, pady=5)
         return slider
 
+    def create_label(self, text, row, column):
+        label = ttk.Label(self.root, text=text)
+        label.grid(row=row, column=column, padx=10, pady=5)
+        return label
+
     def update_leds(self):
-        self.dac.blue_led_volt_control(0, int(self.blue_slider.get()))
-        self.dac.green_volt_control(int(self.green_slider.get()))
-        self.dac.red_led_control(int(self.red_slider.get()))
-        self.dac.inner_led_control(int(self.inner_slider.get()))
-        self.dac.outer_led_control(int(self.outer_slider.get()))
+        blue_dac = self.dac.blue_led_volt_control(0, int(self.blue_slider.get()))
+        green_dac = self.dac.green_volt_control(int(self.green_slider.get()))
+        red_dac = self.dac.red_led_control(int(self.red_slider.get()))
+        inner_dac = self.dac.inner_led_control(int(self.inner_slider.get()))
+        outer_dac = self.dac.outer_led_control(int(self.outer_slider.get()))
+
+        # Update labels with DAC values
+        self.blue_label.config(text=f"Blue DAC Value: {blue_dac}")
+        self.green_label.config(text=f"Green DAC Value: {green_dac}")
+        self.red_label.config(text=f"Red DAC Value: {red_dac}")
+        self.inner_label.config(text=f"Inner DAC Value: {inner_dac}")
+        self.outer_label.config(text=f"Outer DAC Value: {outer_dac}")
 
     def start_green_flicker(self):
         self.dac.fliker_start_g()
