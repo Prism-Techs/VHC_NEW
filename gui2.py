@@ -49,6 +49,7 @@ class mup4728:
         self.dac_ch = [0, 8, 16, 24, 32, 40, 48, 56]
         self.pwm_run = 0
         self.p = GPIO.PWM(flik_pin, 35)
+        self.last_inner_dac = None  # Track last inner LED DAC value
         # Ensure PWM is stopped initially
         if self.pwm_run:
             self.p.stop()
@@ -61,7 +62,7 @@ class mup4728:
         print(f"Set DAC Channel {channel}: Value={value}, Data={data}")
         self.DAC.write_i2c_block_data(self.dac_addr, self.dac_ch[channel], data)
         GPIO.output(DAC_lat, GPIO.HIGH)
-        time.sleep(0.05)  # Increased to 50ms for stability
+        time.sleep(0.1)  # Increased to 100ms for maximum stability
 
     def blue_led_volt_control(self, mode, val):
         if mode == 0 and 0 <= val <= 19:
@@ -100,16 +101,22 @@ class mup4728:
         if 0 <= data_in <= 20:
             dac_val = int(204.75 * data_in)
             dac_val = max(0, min(4095, dac_val))
-            str_data = 'INNER_LED_DAC = ' + str(dac_val)
-            print(str_data)
-            self.set_dac_value(5, dac_val)
-            voltage = dac_val * 3.3 / 4095
-            print(f"Inner LED: data_in={data_in}, DAC={dac_val}, Voltage={voltage:.2f}V")
-            return dac_val, voltage
+            # Only update DAC if value has changed
+            if self.last_inner_dac != dac_val:
+                str_data = 'INNER_LED_DAC = ' + str(dac_val)
+                print(str_data)
+                self.set_dac_value(5, dac_val)
+                self.last_inner_dac = dac_val
+                voltage = dac_val * 3.3 / 4095
+                print(f"Inner LED: data_in={data_in}, DAC={dac_val}, Voltage={voltage:.2f}V")
+            else:
+                print(f"Inner LED: No change, DAC remains {dac_val}")
+            return dac_val, dac_val * 3.3 / 4095
         else:
             str_data = 'INNER_LED_DAC must be 0 to 20, got ' + str(data_in)
             print(str_data)
             self.set_dac_value(5, 0)
+            self.last_inner_dac = 0
             return 0, 0
 
     def outer_led_control(self, data_in):
@@ -147,6 +154,7 @@ class mup4728:
         if self.pwm_run:
             self.p.stop()
             self.pwm_run = 0
+        self.last_inner_dac = 0
 
 # Tkinter GUI with Entry Boxes
 class LEDControlApp:
@@ -155,21 +163,18 @@ class LEDControlApp:
         self.root.title("LED Control")
         self.dac = mup4728(0x61)
 
-        # Entry boxes for LED control
         self.blue_entry = self.create_entry("Blue LED (0-20)", "0", row=0)
         self.green_entry = self.create_entry("Green LED (0-20)", "0", row=1)
         self.red_entry = self.create_entry("Red LED (0-20)", "0", row=2)
         self.inner_entry = self.create_entry("Inner LED (0-20)", "0", row=3)
         self.outer_entry = self.create_entry("Outer LED (0-20)", "0", row=4)
 
-        # Labels for displaying DAC values and voltages
         self.blue_label = self.create_label("Blue: DAC=0, Voltage=0.00V", row=0, column=3)
         self.green_label = self.create_label("Green: DAC=0, Voltage=0.00V", row=1, column=3)
         self.red_label = self.create_label("Red: DAC=0, Voltage=0.00V", row=2, column=3)
         self.inner_label = self.create_label("Inner: DAC=0, Voltage=0.00V", row=3, column=3)
         self.outer_label = self.create_label("Outer: DAC=0, Voltage=0.00V", row=4, column=3)
 
-        # Flicker control with entry box
         self.flicker_freq_entry = self.create_entry("Flicker Frequency (1-100 Hz)", "35", row=5)
         self.flicker_start_g_button = ttk.Button(root, text="Start Green Flicker", command=self.start_green_flicker)
         self.flicker_start_g_button.grid(row=6, column=0, padx=10, pady=10)
@@ -178,7 +183,6 @@ class LEDControlApp:
         self.flicker_stop_button = ttk.Button(root, text="Stop Flicker", command=self.stop_flicker)
         self.flicker_stop_button.grid(row=6, column=2, padx=10, pady=10)
 
-        # Update button
         self.update_button = ttk.Button(root, text="Update LEDs", command=self.update_leds)
         self.update_button.grid(row=7, column=0, columnspan=3, padx=10, pady=10)
 
