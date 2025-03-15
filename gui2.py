@@ -93,9 +93,8 @@ class mup4728:
 
     def inner_led_control(self, data_in):
         if 0 <= data_in <= 20:
-            dac_val = int(84.5 * data_in - 0.329004)
+            dac_val = int(204.75 * data_in)  # Scales 0-20 to 0-4095 (0-3.3V)
             self.set_dac_value(5, dac_val)
-            # Debug print to verify DAC value
             print(f"Inner LED: data_in={data_in}, DAC={dac_val}, Voltage={dac_val * 3.3 / 4095:.2f}V")
             return dac_val, dac_val * 3.3 / 4095
         return 0, 0
