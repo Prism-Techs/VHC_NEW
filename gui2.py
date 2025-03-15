@@ -39,6 +39,8 @@ class mup4728:
         GPIO.setup(G_E, GPIO.OUT)
         GPIO.setup(FN_E, GPIO.OUT)
         GPIO.setup(Disp, GPIO.OUT)
+        GPIO.setup(BZ_I,GPIO.OUT)#D4 Buzz 
+
         GPIO.setup(flik_pin, GPIO.OUT)
         GPIO.output(DAC_lat, GPIO.HIGH)
         GPIO.output(B_E, GPIO.LOW)
