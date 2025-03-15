@@ -92,7 +92,7 @@ class mup4728:
 
     def inner_led_control(self, data_in):
         if 0 <= data_in <= 20:
-            dac_val = int(13.1948 * data_in - 0.329004)
+            dac_val = int(84.5 * data_in - 0.329004)
             self.set_dac_value(5, dac_val)
             return dac_val, dac_val * 3.3 / 4095
         return 0, 0
