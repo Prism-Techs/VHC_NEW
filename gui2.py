@@ -39,7 +39,7 @@ class mup4728:
         GPIO.setup(G_E, GPIO.OUT)
         GPIO.setup(FN_E, GPIO.OUT)
         GPIO.setup(Disp, GPIO.OUT)
-        GPIO.setup(BZ_I, GPIO.OUT)  # Set up buzzer pin as output
+        GPIO.setup(BZ_I, GPIO.OUT)
         GPIO.setup(flik_pin, GPIO.OUT)
         GPIO.output(DAC_lat, GPIO.HIGH)
         GPIO.output(B_E, GPIO.LOW)
@@ -49,19 +49,20 @@ class mup4728:
         self.dac_ch = [0, 8, 16, 24, 32, 40, 48, 56]
         self.pwm_run = 0
         self.p = GPIO.PWM(flik_pin, 35)
-        self.buz = GPIO.PWM(BZ_I, 9000)  # Initialize PWM for buzzer
+        self.buz = GPIO.PWM(BZ_I, 9000)
 
     def set_dac_value(self, channel, value):
         GPIO.output(DAC_lat, GPIO.LOW)
         data = [int(value / 256), int(value % 256)]
         self.DAC.write_i2c_block_data(self.dac_addr, self.dac_ch[channel], data)
         GPIO.output(DAC_lat, GPIO.HIGH)
+        time.sleep(0.01)  # Small delay to allow DAC to settle
 
     def blue_led_volt_control(self, mode, val):
         if mode == 0 and 0 <= val <= 19:
             b_volt = int(b_volt_val[val] * 1.95)
             self.set_dac_value(2, b_volt)
-            return b_volt, b_volt * 3.3 / 4095  # DAC value and voltage
+            return b_volt, b_volt * 3.3 / 4095
         elif mode == 1 and 1 <= val <= 20:
             b_volt = int((7.79398 * val - 4.93684) / 1.25)
             self.set_dac_value(2, b_volt)
@@ -94,6 +95,8 @@ class mup4728:
         if 0 <= data_in <= 20:
             dac_val = int(84.5 * data_in - 0.329004)
             self.set_dac_value(5, dac_val)
+            # Debug print to verify DAC value
+            print(f"Inner LED: data_in={data_in}, DAC={dac_val}, Voltage={dac_val * 3.3 / 4095:.2f}V")
             return dac_val, dac_val * 3.3 / 4095
         return 0, 0
 
@@ -122,11 +125,11 @@ class mup4728:
         self.p.ChangeFrequency(frq)
 
     def all_led_off(self):
-        self.set_dac_value(2, 0)  # Blue LED off
-        self.set_dac_value(4, 0)  # Green LED off
-        self.set_dac_value(6, 0)  # Red LED off
-        self.set_dac_value(5, 0)  # Inner LED off
-        self.set_dac_value(7, 0)  # Outer LED off
+        self.set_dac_value(2, 0)
+        self.set_dac_value(4, 0)
+        self.set_dac_value(6, 0)
+        self.set_dac_value(5, 0)
+        self.set_dac_value(7, 0)
         GPIO.output(G_E, GPIO.LOW)
         GPIO.output(B_E, GPIO.LOW)
         if self.pwm_run:
@@ -140,21 +143,18 @@ class LEDControlApp:
         self.root.title("LED Control")
         self.dac = mup4728(0x61)
 
-        # Entry boxes for LED control
         self.blue_entry = self.create_entry("Blue LED (0-20)", "0", row=0)
         self.green_entry = self.create_entry("Green LED (0-20)", "0", row=1)
         self.red_entry = self.create_entry("Red LED (0-20)", "0", row=2)
         self.inner_entry = self.create_entry("Inner LED (0-20)", "0", row=3)
         self.outer_entry = self.create_entry("Outer LED (0-20)", "0", row=4)
 
-        # Labels for displaying DAC values and voltages
         self.blue_label = self.create_label("Blue: DAC=0, Voltage=0.00V", row=0, column=3)
         self.green_label = self.create_label("Green: DAC=0, Voltage=0.00V", row=1, column=3)
         self.red_label = self.create_label("Red: DAC=0, Voltage=0.00V", row=2, column=3)
         self.inner_label = self.create_label("Inner: DAC=0, Voltage=0.00V", row=3, column=3)
         self.outer_label = self.create_label("Outer: DAC=0, Voltage=0.00V", row=4, column=3)
 
-        # Flicker control with entry box
         self.flicker_freq_entry = self.create_entry("Flicker Frequency (1-100 Hz)", "35", row=5)
         self.flicker_start_g_button = ttk.Button(root, text="Start Green Flicker", command=self.start_green_flicker)
         self.flicker_start_g_button.grid(row=6, column=0, padx=10, pady=10)
@@ -163,7 +163,6 @@ class LEDControlApp:
         self.flicker_stop_button = ttk.Button(root, text="Stop Flicker", command=self.stop_flicker)
         self.flicker_stop_button.grid(row=6, column=2, padx=10, pady=10)
 
-        # Update button
         self.update_button = ttk.Button(root, text="Update LEDs", command=self.update_leds)
         self.update_button.grid(row=7, column=0, columnspan=3, padx=10, pady=10)
 
@@ -181,28 +180,24 @@ class LEDControlApp:
 
     def update_leds(self):
         try:
-            # Get values from entry boxes and validate
             blue_val = int(self.blue_entry.get())
             green_val = int(self.green_entry.get())
             red_val = int(self.red_entry.get())
             inner_val = int(self.inner_entry.get())
             outer_val = int(self.outer_entry.get())
 
-            # Ensure values are within valid range (0-20)
             blue_val = max(0, min(20, blue_val))
             green_val = max(0, min(20, green_val))
             red_val = max(0, min(20, red_val))
             inner_val = max(0, min(20, inner_val))
             outer_val = max(0, min(20, outer_val))
 
-            # Update LED values
             blue_dac, blue_voltage = self.dac.blue_led_volt_control(0, blue_val)
             green_dac, green_voltage = self.dac.green_volt_control(green_val)
             red_dac, red_voltage = self.dac.red_led_control(red_val)
             inner_dac, inner_voltage = self.dac.inner_led_control(inner_val)
             outer_dac, outer_voltage = self.dac.outer_led_control(outer_val)
 
-            # Update labels with DAC values and voltages
             self.blue_label.config(text=f"Blue: DAC={blue_dac}, Voltage={blue_voltage:.2f}V")
             self.green_label.config(text=f"Green: DAC={green_dac}, Voltage={green_voltage:.2f}V")
             self.red_label.config(text=f"Red: DAC={red_dac}, Voltage={red_voltage:.2f}V")
@@ -215,7 +210,7 @@ class LEDControlApp:
     def start_green_flicker(self):
         try:
             freq = int(self.flicker_freq_entry.get())
-            freq = max(1, min(100, freq))  # Ensure frequency is between 1-100 Hz
+            freq = max(1, min(100, freq))
             self.dac.fliker_start_g()
             self.dac.fliker_Freq(freq)
         except ValueError:
@@ -224,7 +219,7 @@ class LEDControlApp:
     def start_blue_flicker(self):
         try:
             freq = int(self.flicker_freq_entry.get())
-            freq = max(1, min(100, freq))  # Ensure frequency is between 1-100 Hz
+            freq = max(1, min(100, freq))
             self.dac.fliker_start_b()
             self.dac.fliker_Freq(freq)
         except ValueError:
