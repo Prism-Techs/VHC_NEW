@@ -48,21 +48,23 @@ class mup4728:
         self.dac_addr = dac_addr
         self.dac_ch = [0, 8, 16, 24, 32, 40, 48, 56]
         self.pwm_run = 0
-        self.p = GPIO.PWM(flik_pin, 35)
-        self.last_inner_dac = None  # Track last inner LED DAC value
-        # Ensure PWM is stopped initially
-        if self.pwm_run:
-            self.p.stop()
-            self.pwm_run = 0
+        # Comment out PWM initialization to disable it completely for now
+        # self.p = GPIO.PWM(flik_pin, 35)  # Disabled to isolate interference
+        self.last_dac_values = {2: None, 4: None, 6: None, 5: None, 7: None}  # Track all LED DAC values
 
     def set_dac_value(self, channel, value):
         value = max(0, min(4095, int(value)))
-        GPIO.output(DAC_lat, GPIO.LOW)
-        data = [int(value / 256), int(value % 256)]
-        print(f"Set DAC Channel {channel}: Value={value}, Data={data}")
-        self.DAC.write_i2c_block_data(self.dac_addr, self.dac_ch[channel], data)
-        GPIO.output(DAC_lat, GPIO.HIGH)
-        time.sleep(0.1)  # Increased to 100ms for maximum stability
+        # Only update if value has changed
+        if self.last_dac_values[channel] != value:
+            GPIO.output(DAC_lat, GPIO.LOW)
+            data = [int(value / 256), int(value % 256)]
+            print(f"Set DAC Channel {channel}: Value={value}, Data={data}")
+            self.DAC.write_i2c_block_data(self.dac_addr, self.dac_ch[channel], data)
+            GPIO.output(DAC_lat, GPIO.HIGH)
+            self.last_dac_values[channel] = value
+        else:
+            print(f"DAC Channel {channel}: No change, Value remains {value}")
+        time.sleep(0.01)  # Reduced to 10ms for minimal delay
 
     def blue_led_volt_control(self, mode, val):
         if mode == 0 and 0 <= val <= 19:
@@ -101,22 +103,16 @@ class mup4728:
         if 0 <= data_in <= 20:
             dac_val = int(204.75 * data_in)
             dac_val = max(0, min(4095, dac_val))
-            # Only update DAC if value has changed
-            if self.last_inner_dac != dac_val:
-                str_data = 'INNER_LED_DAC = ' + str(dac_val)
-                print(str_data)
-                self.set_dac_value(5, dac_val)
-                self.last_inner_dac = dac_val
-                voltage = dac_val * 3.3 / 4095
-                print(f"Inner LED: data_in={data_in}, DAC={dac_val}, Voltage={voltage:.2f}V")
-            else:
-                print(f"Inner LED: No change, DAC remains {dac_val}")
-            return dac_val, dac_val * 3.3 / 4095
+            str_data = 'INNER_LED_DAC = ' + str(dac_val)
+            print(str_data)
+            self.set_dac_value(5, dac_val)
+            voltage = dac_val * 3.3 / 4095
+            print(f"Inner LED: data_in={data_in}, DAC={dac_val}, Voltage={voltage:.2f}V")
+            return dac_val, voltage
         else:
             str_data = 'INNER_LED_DAC must be 0 to 20, got ' + str(data_in)
             print(str_data)
             self.set_dac_value(5, 0)
-            self.last_inner_dac = 0
             return 0, 0
 
     def outer_led_control(self, data_in):
@@ -129,19 +125,20 @@ class mup4728:
     def fliker_start_g(self):
         GPIO.output(G_E, GPIO.HIGH)
         GPIO.output(B_E, GPIO.LOW)
-        if not self.pwm_run:
+        if not self.pwm_run and hasattr(self, 'p'):
             self.p.start(50.0)
             self.pwm_run = 1
 
     def fliker_start_b(self):
         GPIO.output(G_E, GPIO.HIGH)
         GPIO.output(B_E, GPIO.HIGH)
-        if not self.pwm_run:
+        if not self.pwm_run and hasattr(self, 'p'):
             self.p.start(50.0)
             self.pwm_run = 1
 
     def fliker_Freq(self, frq):
-        self.p.ChangeFrequency(frq)
+        if hasattr(self, 'p'):
+            self.p.ChangeFrequency(frq)
 
     def all_led_off(self):
         self.set_dac_value(2, 0)
@@ -151,10 +148,9 @@ class mup4728:
         self.set_dac_value(7, 0)
         GPIO.output(G_E, GPIO.LOW)
         GPIO.output(B_E, GPIO.LOW)
-        if self.pwm_run:
+        if self.pwm_run and hasattr(self, 'p'):
             self.p.stop()
             self.pwm_run = 0
-        self.last_inner_dac = 0
 
 # Tkinter GUI with Entry Boxes
 class LEDControlApp:
