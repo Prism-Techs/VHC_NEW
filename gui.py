@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import RPi.GPIO as GPIO
 from smbus2 import SMBus
+import time
 
 # Initialize GPIO and DAC
 GPIO.setmode(GPIO.BCM)
@@ -17,11 +18,17 @@ DAC = SMBus(1)
 # LED Control Functions
 def set_dac_value(channel, value):
     """Set DAC value for a specific channel."""
+    if value < 0 or value > 4095:
+        raise ValueError("DAC value must be between 0 and 4095.")
+
+    # Split the 12-bit value into two 8-bit bytes
+    msb = (value >> 8) & 0xFF  # Most Significant Byte (upper 8 bits)
+    lsb = value & 0xFF         # Least Significant Byte (lower 8 bits)
+
+    # Send the data to the DAC
     GPIO.output(DAC_lat, GPIO.LOW)
-    print(value)
-    data = [int(value / 256), int(value % 256)]
-    print(data)
-    DAC.write_i2c_block_data(dac_addr, dac_ch[channel], data)
+    DAC.write_i2c_block_data(dac_addr, dac_ch[channel], [msb, lsb])
+    time.sleep(0.001)  # Small delay for stable communication
     GPIO.output(DAC_lat, GPIO.HIGH)
 
 def update_leds():
@@ -34,6 +41,12 @@ def update_leds():
         inner_value = int(inner_entry.get())
         outer_value = int(outer_entry.get())
 
+        # Validate values
+        if not (0 <= red_value <= 4095 and 0 <= green_value <= 4095 and
+                0 <= blue_value <= 4095 and 0 <= inner_value <= 4095 and
+                0 <= outer_value <= 4095):
+            raise ValueError("Values must be between 0 and 4095.")
+
         # Set DAC values for each LED
         set_dac_value(6, red_value)    # Red LED (Channel 6)
         set_dac_value(4, green_value)  # Green LED (Channel 4)
@@ -42,8 +55,8 @@ def update_leds():
         set_dac_value(7, outer_value)  # Outer LED (Channel 7)
 
         status_label.config(text="LEDs Updated Successfully!", fg="green")
-    except ValueError:
-        status_label.config(text="Invalid Input! Enter numbers only.", fg="red")
+    except ValueError as e:
+        status_label.config(text=f"Error: {str(e)}", fg="red")
 
 # Create the GUI
 root = tk.Tk()
@@ -83,9 +96,6 @@ update_button.grid(row=5, column=0, columnspan=2, pady=10)
 # Status Label
 status_label = ttk.Label(root, text="", font=("Arial", 10))
 status_label.grid(row=6, column=0, columnspan=2)
-
-status_label.config(text="Invalid Input! Enter numbers only.", foreground="red")
-
 
 # Run the GUI
 root.mainloop()
