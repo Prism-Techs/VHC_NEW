@@ -20,6 +20,8 @@ def set_dac_value(channel, value):
     """Set DAC value for a specific channel."""
     if value < 0 or value > 4095:
         raise ValueError("DAC value must be between 0 and 4095.")
+    
+    print(value)
 
     # Split the 12-bit value into two 8-bit bytes
     msb = (value >> 8) & 0xFF  # Most Significant Byte (upper 8 bits)
@@ -27,6 +29,7 @@ def set_dac_value(channel, value):
 
     # Send the data to the DAC
     GPIO.output(DAC_lat, GPIO.LOW)
+    print(msb,lsb)
     DAC.write_i2c_block_data(dac_addr, dac_ch[channel], [msb, lsb])
     time.sleep(0.001)  # Small delay for stable communication
     GPIO.output(DAC_lat, GPIO.HIGH)
