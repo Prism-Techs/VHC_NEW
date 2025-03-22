@@ -18,7 +18,7 @@ DAC = SMBus(1)
 def set_dac_value(channel, value):
     """Set DAC value for a specific channel."""
     GPIO.output(DAC_lat, GPIO.LOW)
-
+    print(value)
     data = [int(value / 256), int(value % 256)]
     print(data)
     DAC.write_i2c_block_data(dac_addr, dac_ch[channel], data)
