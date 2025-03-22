@@ -246,7 +246,8 @@ class mup4728:
             str_data = 'INNER_LED_data = ' + str(in_data)
             self.get_print(str_data)    
             in_data = in_data   
-            data = [ int(in_data / 256), int(in_data % 256)]
+            # data = [ int(in_data / 256), int(in_data % 256)]
+            data = [ 2, 168]
             print(data)
             self.DAC.write_i2c_block_data(self.dac_addr, self.dac_ch[5], data)
             GPIO.output(DAC_lat,GPIO.HIGH)
