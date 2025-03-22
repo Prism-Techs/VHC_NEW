@@ -386,6 +386,7 @@ class mup4728:
                 self.get_print('Blue Volt Beyond range')
 #-----------------------------------------------------------------------------------
         def inner_led_control(self,data_in):
+            print("called")
             if(0<=data_in<=20):
                 dac_val = 800
                 str_data = 'INNER_LED_DAC = ' + str(dac_val)

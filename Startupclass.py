@@ -50,7 +50,7 @@ class StatrupClass:
 
     def __init__(self):
         self.window = tk.Tk()
-        self.window.attributes('-fullscreen', True)
+        # self.window.attributes('-fullscreen', True)
         self.window.geometry("1024x600")
         self.window.resizable(0, 0)
 
