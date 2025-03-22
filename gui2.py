@@ -54,6 +54,7 @@ class mup4728:
 
     def set_dac_value(self, channel, value):
         value = max(0, min(4095, int(value)))
+        print(value)
         # Only update if value has changed
         if self.last_dac_values[channel] != value:
             GPIO.output(DAC_lat, GPIO.LOW)
