@@ -322,19 +322,19 @@ class StatrupClass:
         F_SD = globaladc.get_cal_f_sd()
         currentPatientInfo.SetF_SD(F_SD)
         state = self.find_usb()
-        if state != 'false':
-            log_data = f"CFF_F-{cff_F},CFF_P-{cff_p},F_mpod-{F_mpod},F_SD-{F_SD}"
-            currentPatientInfo.log_update(log_data)
-            str_data = 'Save to file to ' + currentPatientInfo.Name + '.TXT'
-            globaladc.get_print(str_data)
-            self.brkf_2.saveButton.config(command=lambda: globaladc.get_print('non'), text="Busy", bg='#f24e79')
-            currentPatientInfo.Save_brk_p(state)
-            globaladc.all_led_off()
-            pageDisctonary['BrkparaFovea'].hide()
-            self.ShowHomeScreen()  # Return to Home Screen after save
-            self.brkf_2.saveButton.config(command=self.handleSave_2, text="Save", bg='#a0f291')
-        else:
-            messagebox.showerror("USB Error", "Please check USB Drive Inserted Properly \nif not inserted, insert it wait for a second and Press SAVE once again \nif inserted, remove and Re-insert again Wait-a-while and Press SAVE once again")
+        # if state != 'false':
+        #     log_data = f"CFF_F-{cff_F},CFF_P-{cff_p},F_mpod-{F_mpod},F_SD-{F_SD}"
+        #     currentPatientInfo.log_update(log_data)
+        #     str_data = 'Save to file to ' + currentPatientInfo.Name + '.TXT'
+        #     globaladc.get_print(str_data)
+        #     self.brkf_2.saveButton.config(command=lambda: globaladc.get_print('non'), text="Busy", bg='#f24e79')
+        #     currentPatientInfo.Save_brk_p(state)
+        #     globaladc.all_led_off()
+        #     pageDisctonary['BrkparaFovea'].hide()
+        #     self.ShowHomeScreen()  # Return to Home Screen after save
+        #     self.brkf_2.saveButton.config(command=self.handleSave_2, text="Save", bg='#a0f291')
+        # else:
+        #     messagebox.showerror("USB Error", "Please check USB Drive Inserted Properly \nif not inserted, insert it wait for a second and Press SAVE once again \nif inserted, remove and Re-insert again Wait-a-while and Press SAVE once again")
 
 if __name__ == "__main__":
     app = StatrupClass()
