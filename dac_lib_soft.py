@@ -236,8 +236,10 @@ class mup4728:
             GPIO.output(DAC_lat,GPIO.LOW)
             str_data = 'GREEN_Volt_data = ' + str(in_data)
             self.get_print(str_data) 
-            in_data = in_data/1.6      
-            data = [ int(in_data / 256), int(in_data % 256)]                       
+            in_data = in_data/1.6
+            print(in_data)      
+            data = [ int(in_data / 256), int(in_data % 256)]   
+            print(data)                    
             self.DAC.write_i2c_block_data(self.dac_addr, self.dac_ch[4], data)
             GPIO.output(DAC_lat,GPIO.HIGH)
             
@@ -319,7 +321,7 @@ class mup4728:
 #-----------------------------------------------------------------------------------
         def green_volt_control(self,data_in):
             if(0<=data_in<=20):
-                dac_val=int(300*data_in+0.380952) # 0 to 20
+                dac_val=int(1000*data_in+0.380952) # 0 to 20
                 str_data = 'GREEN_Volt_DAC = ' + str(dac_val)
                 self.get_print(str_data)
                 self.GREEN_Volt(dac_val)              
