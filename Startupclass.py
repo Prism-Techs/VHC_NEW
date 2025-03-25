@@ -321,6 +321,7 @@ class StatrupClass:
         currentPatientInfo.SetCFF_P(cff_p)
         F_SD = globaladc.get_cal_f_sd()
         currentPatientInfo.SetF_SD(F_SD)
+        currentPatientInfo.update_json()
         state = self.find_usb()
         if state != 'false':
             log_data = f"CFF_F-{cff_F},CFF_P-{cff_p},F_mpod-{F_mpod},F_SD-{F_SD}"
