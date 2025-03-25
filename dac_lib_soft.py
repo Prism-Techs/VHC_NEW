@@ -249,7 +249,7 @@ class mup4728:
             self.get_print(str_data)    
             in_data = in_data   
             # data = [ int(in_data / 256), int(in_data % 256)]
-            data = [ 2, 250]
+            data = [ 1, 250]
             print(data)
             self.DAC.write_i2c_block_data(self.dac_addr, self.dac_ch[5], data)
             GPIO.output(DAC_lat,GPIO.HIGH)
@@ -410,7 +410,7 @@ class mup4728:
 
         def outer_led_control(self,data_in):
             if(0<=data_in<=20):
-                dac_val=int(84.4*data_in-0.38095) # 0 to 20
+                dac_val=int(94.4*data_in-0.38095) # 0 to 20
                 str_data = 'OUTER_LED_DAC = ' + str(dac_val)
                 self.get_print(str_data)
                 self.OUTER_LED(dac_val)
@@ -435,7 +435,7 @@ class mup4728:
             GPIO.output(G_E,GPIO.HIGH)#D3 Green Enable
             GPIO.output(B_E,GPIO.LOW)#D3 Blue Enable
             if (not self.pwm_run):                
-                self.p.start(90.0)
+                self.p.start(70.4)
                 self.pwm_run = 1
                 self.get_print('fliker_start_g')                
                 
