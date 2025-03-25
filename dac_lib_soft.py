@@ -391,6 +391,9 @@ class mup4728:
 #-----------------------------------------------------------------------------------
         def inner_led_control(self,data_in):
             print("called")
+            if data_in == 0:
+                dac_val = 0
+                self.INNER_LED(dac_val)
             if(0<=data_in<=20):
                 dac_val = 257
                 str_data = 'INNER_LED_DAC = ' + str(dac_val)
