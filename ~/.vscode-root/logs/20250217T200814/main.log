@@ -1,0 +1,6 @@
+2025-02-17 20:08:14.892 [info] update#setState idle
+2025-02-17 20:08:21.975 [info] Starting extension host with pid 1945 (fork() took 45 ms).
+2025-02-17 20:08:44.747 [info] update#setState checking for updates
+2025-02-17 20:08:44.859 [info] update#setState idle
+2025-02-17 20:11:36.540 [info] Waiting for extension host with pid 1945 to exit.
+2025-02-17 20:11:36.661 [info] Extension host with pid 1945 exited with code: 0, signal: null.

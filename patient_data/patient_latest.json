@@ -1,0 +1,29 @@
+{
+    "first_name": "user1",
+    "middle_name": "",
+    "surname": "",
+    "dob": "2005-08-21",
+    "aadhaar": "",
+    "mobile": "",
+    "nationality": "",
+    "gender": "Male",
+    "alcohol": "No",
+    "smoking": "No",
+    "food_habit": "Veg",
+    "bp": {
+        "has_bp": "No",
+        "value": ""
+    },
+    "diabetes": {
+        "has_diabetes": "No",
+        "value": ""
+    },
+    "eye_side": "R",
+    "is_sync": false,
+    "handler_id": 1,
+    "CFF_F": "",
+    "CFF_P": "",
+    "f_mpod": "",
+    "f-sd": "",
+    "date": "25/03/2025 11:02:10 AM"
+}
