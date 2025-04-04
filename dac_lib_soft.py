@@ -321,7 +321,7 @@ class mup4728:
 #-----------------------------------------------------------------------------------
         def green_volt_control(self,data_in):
             if(0<=data_in<=20):
-                dac_val=int(500*data_in+0.380952) # 0 to 20
+                dac_val=int(600*data_in+0.380952) # 0 to 20
                 str_data = 'GREEN_Volt_DAC = ' + str(dac_val)
                 self.get_print(str_data)
                 self.GREEN_Volt(dac_val)              
@@ -391,8 +391,11 @@ class mup4728:
 #-----------------------------------------------------------------------------------
         def inner_led_control(self,data_in):
             print("called")
+            # if data_in == 0:
+            #     dac_val = 0
+            #     self.INNER_LED(dac_val)
             if(0<=data_in<=20):
-                dac_val = 750
+                dac_val = 257
                 str_data = 'INNER_LED_DAC = ' + str(dac_val)
                 self.get_print(str_data)
                 self.INNER_LED(dac_val)
@@ -435,7 +438,7 @@ class mup4728:
             GPIO.output(G_E,GPIO.HIGH)#D3 Green Enable
             GPIO.output(B_E,GPIO.LOW)#D3 Blue Enable
             if (not self.pwm_run):                
-                self.p.start(70.4)
+                self.p.start(80.4)
                 self.pwm_run = 1
                 self.get_print('fliker_start_g')                
                 
