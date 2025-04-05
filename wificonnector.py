@@ -6,13 +6,14 @@ import re
 from header import HeaderComponent
 from PIL import Image, ImageTk
 import os
+from Keyboard import KeyBoard
 
 class WifiConnectionWindow:
     def __init__(self, root):
         self.root = root
         self.root.title("Vekaria Healthcare - WiFi Connection")
         self.root.configure(bg="#1F2937")
-        
+        self.keyboard = KeyBoard()
         # Colors for dark theme
         self.bg_color = "#1F2937"
         self.text_color = "#FFFFFF"
@@ -153,6 +154,8 @@ class WifiConnectionWindow:
                                       highlightthickness=1,
                                       highlightbackground=self.border_color)
         self.password_entry.pack(side=tk.LEFT, fill=tk.X, expand=True)
+
+        self.password_entry.bind("<Button-1>", self.show_keyboard)
         
         self.show_password = False
         self.show_password_button = self.create_button(self.password_frame, "Show", self.toggle_password_visibility)
