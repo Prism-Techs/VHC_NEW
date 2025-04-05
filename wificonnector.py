@@ -40,8 +40,8 @@ class WifiConnectionWindow(tk.Toplevel):
         self.previous_networks = set()
         self.wifi_networks = []
         
-        # Start periodic scanning
-        self.scan_networks_periodically()
+        # Scan networks once at startup
+        self.scan_networks()
         self.transient(parent)  # Make it modal if desired
         self.grab_set()  # Focus on this window
         self.protocol("WM_DELETE_WINDOW", self.on_close)  # Handle window close
@@ -216,7 +216,7 @@ class WifiConnectionWindow(tk.Toplevel):
     def show_keyboard(self, event):
         """Show the on-screen keyboard for the password entry"""
         if self.password_entry['state'] == tk.NORMAL:
-            self.keyboard.createAlphaKey(self, self.password_entry)  # Changed to self instead of root
+            self.keyboard.createAlphaKey(self, self.password_entry)
 
     def scan_wifi_networks(self):
         """Scan for available WiFi networks using iwlist"""
@@ -285,11 +285,6 @@ class WifiConnectionWindow(tk.Toplevel):
         self.previous_networks = current_networks
         self.refresh_networks()
         self.status_label.config(text="Select a network to connect")
-
-    def scan_networks_periodically(self):
-        """Periodically scan for networks"""
-        self.scan_networks()
-        self.after(10000, self.scan_networks_periodically)
 
     def on_network_select(self, event):
         """Handle network selection"""
