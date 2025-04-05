@@ -21,41 +21,42 @@ from home_page import HomePage
 
 Font = ("Arial", 20)
 Font2 = ("Arial", 10)
-BUTTON_SPACING = 20  # Professional spacing between buttons
+x = 80
 
 class StatrupClass:
     def HideStartButton(self):
         self.StartButton.place_forget()
 
     def ShowStartButton(self):
-        self.StartButton.place(x=20, y=550)
+        self.StartButton.place(x=x+220, y=500)
 
     def HideAdminButton(self):
         self.AdminButton.place_forget()
 
     def ShowAdminButton(self):
-        self.AdminButton.place(x=20, y=500)
+        self.AdminButton.place(x=x+10, y=500)
 
     def HideFlikerButton(self):
         self.FlikerDemoButton.place_forget()
 
     def ShowFlikerButton(self):
-        self.FlikerDemoButton.place(x=140, y=550)
+        self.FlikerDemoButton.place(x=x+420, y=500)
 
     def ShowHomeButton(self):
-        self.HomeScreenButton.place(x=290, y=550)
+        self.HomeScreenButton.place(x=820, y=500)
 
     def HideHomeButton(self):
         self.HomeScreenButton.place_forget()
 
     def __init__(self):
         self.window = tk.Tk()
+        # self.window.attributes('-fullscreen', True)
         self.window.geometry("1024x600")
         self.window.resizable(0, 0)
 
         # Frames
         self.loginFrame = Frame(self.window, bg='black')
-        self.homeFrame = Frame(self.window, bg="black")
+        self.homeFrame = Frame(self.window, bg="black")  # Fixed typo: homeFram -> homeFrame
         self.mainFrame = Frame(self.window, bg='#64edb4')
         self.flikerFrame = Frame(self.window, bg='black')
         self.cffFoveaFrame = Frame(self.window, bg='#64edb4')
@@ -81,18 +82,14 @@ class StatrupClass:
 
         run_in_thread('patient_data', 'https://vhcbeta-api.prismtechs.in/patient/sync/', 'wifi_status.json')
 
-        # Buttons with professional styling
-        self.StartButton = tk.Button(self.window, text="Start", font=Font, command=self.handleStart, bg='#28a745', fg='white', bd=0,
-                                    activebackground="#218838", width=10, height=2)
-        self.AdminButton = tk.Button(self.window, text="Admin", font=Font, command=self.handleAdmin, bg='#28a745', fg='white', bd=0,
-                                    activebackground="#218838", width=10, height=2)
-        self.FlikerDemoButton = tk.Button(self.window, text="Flicker Demo", font=Font, command=self.handleFlikerDrmo, bg='#28a745', fg='white', bd=0,
-                                         activebackground="#218838", width=12, height=2)
-        self.HomeScreenButton = tk.Button(self.window, text="Home", font=Font, command=self.ShowHomeScreen, bg='#dcdcdc', fg='black', bd=0,
-                                         activebackground="#c0c0c0", width=10, height=2)
-        self.saveButton = tk.Button(self.brkf1Frame, text="Save", bg='#a0f291', command=self.handleSave, font=Font, width=10, height=2)
+        # Buttons
+        self.StartButton = tk.Button(self.window, text="Start", font=Font, command=self.handleStart, bg='Green', width=10)
+        self.AdminButton = tk.Button(self.window, text="Admin", font=Font, command=self.handleAdmin, width=10)
+        self.FlikerDemoButton = tk.Button(self.window, text="Flicker Demo", font=Font, command=self.handleFlikerDrmo, width=10)
+        self.HomeScreenButton = tk.Button(self.window, text="Home", font=Font, command=self.ShowHomeScreen, width=10)
+        self.saveButton = tk.Button(self.brkf1Frame, text="Save", bg='#a0f291', command=self.handleSave, font=Font, width=10)
         self.brkf_1.saveButton = self.saveButton
-        self.saveButton_2 = tk.Button(self.brkf2Frame, text="Save", bg='#a0f291', command=self.handleSave_2, font=Font, width=10, height=2)
+        self.saveButton_2 = tk.Button(self.brkf2Frame, text="Save", bg='#a0f291', command=self.handleSave_2, font=Font, width=10)
         self.brkf_2.saveButton = self.saveButton_2
 
     def main(self):
@@ -119,7 +116,7 @@ class StatrupClass:
         self.admin.Load()
 
         globaladc.buzzer_1()
-        self.ShowLoginScreen()
+        self.ShowLoginScreen()  # Start with Login Screen
         self.window.mainloop()
         globaladc.buzzer_1()
 
@@ -168,7 +165,9 @@ class StatrupClass:
         self.brkf_2.hide()
         self.admin.hide()
         self.HideStartButton()
+        # self.ShowAdminButton()
         self.HideAdminButton()
+
         self.HideFlikerButton()
         self.HideHomeButton()
         currentPatientInfo.log_update("Enter_to_Home_screen")
@@ -184,7 +183,7 @@ class StatrupClass:
         self.brkf_2.hide()
         self.admin.hide()
         self.ShowStartButton()
-        self.ShowAdminButton()
+        self.HideAdminButton()
         self.ShowFlikerButton()
         self.ShowHomeButton()
         currentPatientInfo.log_update("Enter_to_Main_screen")
@@ -310,7 +309,7 @@ class StatrupClass:
                 currentPatientInfo.log_update(log_data)
             globaladc.black_screen_initialize()
             pageDisctonary['BrkFovea_1'].hide()
-            self.ShowHomeScreen()
+            self.ShowHomeScreen()  # Return to Home Screen after save
         else:
             messagebox.showerror("USB Error", "Please check USB Drive Inserted Properly \nif not inserted, insert it Wait-a-while and Press SAVE once again \nif inserted, remove and Re-insert wait for a second again and Press SAVE once again")
 
@@ -335,7 +334,7 @@ class StatrupClass:
             currentPatientInfo.Save_brk_p(state)
             globaladc.all_led_off()
             pageDisctonary['BrkparaFovea'].hide()
-            self.ShowHomeScreen()
+            self.ShowHomeScreen()  # Return to Home Screen after save
             self.brkf_2.saveButton.config(command=self.handleSave_2, text="Save", bg='#a0f291')
         else:
             messagebox.showerror("USB Error", "Please check USB Drive Inserted Properly \nif not inserted, insert it wait for a second and Press SAVE once again \nif inserted, remove and Re-insert again Wait-a-while and Press SAVE once again")
