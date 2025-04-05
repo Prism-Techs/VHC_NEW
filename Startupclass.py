@@ -28,7 +28,7 @@ class StatrupClass:
         self.StartButton.place_forget()
 
     def ShowStartButton(self):
-        self.StartButton.place(x=x+220, y=500)
+        self.StartButton.place(x=x+220, y=520)
 
     def HideAdminButton(self):
         self.AdminButton.place_forget()
@@ -40,10 +40,10 @@ class StatrupClass:
         self.FlikerDemoButton.place_forget()
 
     def ShowFlikerButton(self):
-        self.FlikerDemoButton.place(x=x+420, y=500)
+        self.FlikerDemoButton.place(x=x+420, y=520)
 
     def ShowHomeButton(self):
-        self.HomeScreenButton.place(x=820, y=500)
+        self.HomeScreenButton.place(x=820, y=520)
 
     def HideHomeButton(self):
         self.HomeScreenButton.place_forget()
