@@ -3,7 +3,7 @@ from PIL import Image, ImageTk
 from tkinter import font
 import os
 from globalvar import globaladc
-
+from wificonnector import WifiConnectionWindow
 class HeaderComponent:
     def __init__(self, parent_frame, page_title=""):
             # Create header frame
@@ -93,6 +93,8 @@ class HeaderComponent:
     def _on_click(self, event):
         """Handle click events on labels"""
         globaladc.buzzer_1()
+        wifconnector_window = WifiConnectionWindow(self.header_frame.master)  # Pass the root window
+        wifconnector_window.show()
         if hasattr(event.widget, 'callback') and event.widget.callback:
             event.widget.callback()
 
