@@ -92,8 +92,8 @@ class HeaderComponent:
 
     def _on_click(self, event):
         """Handle click events on labels"""
+        globaladc.buzzer_1()
         if hasattr(event.widget, 'callback') and event.widget.callback:
-            globaladc.buzzer_1()
             event.widget.callback()
 
     def set_wifi_callback(self, callback):
