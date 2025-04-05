@@ -40,7 +40,7 @@ class mainWindow:
         # Time label - left-aligned at the top
         self.timelabel = tk.Label(self.frame, font=FONT_TIME, bg="black", fg="white")
         self.updateDateTime()
-        self.timelabel.place(x=20, y=20)
+        self.timelabel.place(x=20, y=20)  # Left-aligned
 
         # Header - left-aligned
         self.header = HeaderComponent(
@@ -68,23 +68,8 @@ class mainWindow:
         bwButton = tk.Button(self.frame, text="<<", font=FONT_SECONDARY, 
                             command=onbw, bg='#28a745', fg='white', bd=0, 
                             activebackground="#218838", width=10)
-        bwButton.place(x=20, y=500)
-        fwButton.place(x=160, y=500)
-
-        # Additional buttons - evenly spaced at the bottom
-        start_btn = tk.Button(self.frame, text="Start", font=FONT_SECONDARY, 
-                             command=lambda: print("Start clicked"), bg='#28a745', fg='white', bd=0, 
-                             activebackground="#218838", width=10)
-        flicker_demo_btn = tk.Button(self.frame, text="Flicker Demo", font=FONT_SECONDARY, 
-                                    command=lambda: print("Flicker Demo clicked"), bg='#28a745', fg='white', bd=0, 
-                                    activebackground="#218838", width=12)
-        home_btn = tk.Button(self.frame, text="Home", font=FONT_SECONDARY, 
-                            command=lambda: print("Home clicked"), bg='#dcdcdc', fg='black', bd=0, 
-                            activebackground="#c0c0c0", width=10)
-
-        start_btn.place(x=20, y=550, width=100, height=40)
-        flicker_demo_btn.place(x=140, y=550, width=140, height=40)  # Adjusted width for "Flicker Demo"
-        home_btn.place(x=290, y=550, width=100, height=40)
+        # bwButton.place(x=20, y=500)  # Left-aligned
+        # fwButton.place(x=160, y=500)  # Next to back button
 
     def setup_ui(self):
         self.main_frame = tk.Frame(self.frame, bg='black')
@@ -112,7 +97,7 @@ class mainWindow:
 
     def create_text_field(self, label_text, x, y, placeholder):
         label = tk.Label(self.main_frame, text=label_text, font=FONT_MAIN, bg='black', fg='white')
-        label.place(x=x, y=y, width=140, height=31)
+        label.place(x=x, y=y, width=140, height=31)  # Fixed width for consistency
         entry = tk.Entry(self.main_frame, font=FONT_SECONDARY, bg='#334155', fg='#94a3b8', 
                         insertbackground='white', bd=0, highlightthickness=1, highlightcolor='#42A5F5')
         entry.place(x=x+150, y=y, width=190, height=31)
@@ -123,17 +108,17 @@ class mainWindow:
 
     def create_radio_group(self, label_text, x, y, variable, options):
         label = tk.Label(self.main_frame, text=label_text, font=FONT_MAIN, bg='black', fg='white')
-        label.place(x=x, y=y, width=140, height=31)
+        label.place(x=x, y=y, width=140, height=31)  # Increased width for visibility
         for i, (value, text) in enumerate(options):
             rb = tk.Radiobutton(self.main_frame, text=text, variable=variable, value=value, 
                                font=FONT_SECONDARY, bg='black', fg='white', selectcolor='black', 
                                activebackground='black', activeforeground='white', 
                                highlightthickness=0, highlightbackground='black', highlightcolor='black')
-            rb.place(x=x+150+(i*100), y=y, width=100, height=31)
+            rb.place(x=x+150+(i*100), y=y, width=100, height=31)  # Increased width for "Non-Veg"
 
     def create_medical_field(self, label_text, x, y, variable, placeholder):
         label = tk.Label(self.main_frame, text=label_text, font=FONT_MAIN, bg='black', fg='white')
-        label.place(x=x, y=y, width=140, height=31)  # Ensured "Blood Pressure" is fully visible
+        label.place(x=x, y=y, width=140, height=31)  # Increased width for "Blood Pressure"
         tk.Radiobutton(self.main_frame, text="Yes", variable=variable, value="Yes", 
                       font=FONT_SECONDARY, bg='black', fg='white', selectcolor='black', 
                       activebackground='black', activeforeground='white', highlightthickness=0).place(x=x+150, y=y, width=60, height=31)
@@ -142,7 +127,7 @@ class mainWindow:
                       activebackground='black', activeforeground='white', highlightthickness=0).place(x=x+220, y=y, width=60, height=31)
         entry = tk.Entry(self.main_frame, font=FONT_SECONDARY, bg='#334155', fg='#94a3b8', 
                         insertbackground='white', bd=0, highlightthickness=1, highlightcolor='#42A5F5')
-        entry.place(x=x+290, y=y, width=190, height=31)
+        entry.place(x=x+290, y=y, width=190, height=31)  # Adjusted x position
         entry.insert(0, placeholder)
         entry.bind('<FocusIn>', lambda e: self.on_entry_focus_in(entry, placeholder))
         entry.bind('<FocusOut>', lambda e: self.on_entry_focus_out(entry, placeholder))
@@ -230,12 +215,12 @@ class mainWindow:
     def update_current_patient_info(self):
         currentPatientInfo.Name = f"{self.get_entry_value('1st', '_name_entry')} {self.get_entry_value('mid', '_name_entry')} {self.get_entry_value('surname', '_entry')}"
         currentPatientInfo.Age = self.get_entry_value('dob', '_entry')
-        currentPatientInfo.Eye = self.eye_side_var.get()
+        currentPatientInfo.eye = self.eye_side_var.get()
         currentPatientInfo.Gender = "M" if self.gender_var.get() == "Male" else "F"
         currentPatientInfo.Nationality = self.get_entry_value('nationality', '_entry')
         currentPatientInfo.Aadhaar = self.get_entry_value('aadhaar', '_entry')
         currentPatientInfo.Mobile = self.get_entry_value('mobile', '_entry')
-        currentPatientInfo.Alcohol = self.alcohol_var.get() == "Yes"
+        currentPatientInfo.Alchohol = self.alcohol_var.get() == "Yes"
         currentPatientInfo.Smoking = self.smoking_var.get() == "Yes"
         currentPatientInfo.FoodHabit = self.food_var.get()
         currentPatientInfo.BP = {"has_bp": self.bp_var.get() == "Yes", "value": self.get_entry_value("blood_pressure", "_entry")}
@@ -281,5 +266,6 @@ class mainWindow:
         if not self.eye_side_var.get(): valid = False
         if not self.gender_var.get(): valid = False
         if valid:
+            
             self.loadValues()
         return valid
