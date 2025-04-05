@@ -138,7 +138,7 @@ class mainWindow:
         entry = tk.Entry(self.main_frame, font=FONT_SECONDARY, bg='#334155', fg='#94a3b8',
                         insertbackground='white', bd=0, highlightthickness=1, highlightcolor='#42A5F5')
         entry.place(x=x+290, y=y, width=200, height=31)  # Increased width and adjusted position
-        entry.insert(0, placeholder)
+        entry.insert(0, placeholder) 
         entry.bind('<FocusIn>', lambda e: self.on_entry_focus_in(entry, placeholder))
         entry.bind('<FocusOut>', lambda e: self.on_entry_focus_out(entry, placeholder))
         setattr(self, f"{label_text.lower().replace(' ', '_')}_entry", entry)
@@ -218,7 +218,7 @@ class mainWindow:
         if entry_widget is None:
             return ""
         value = entry_widget.get()
-        if value in ["first name", "Middle Name", "Surname", "Date of Birth", "Aadhaar No", "+91XXXXXXXXXX", "80/120", "97", "Enter Nationality"]:
+        if value in ["first name", "Middle Name", "Surname", "dd-mm-yyy", "Aadhaar No", "+91XXXXXXXXXX", "80/120", "97", "Enter Nationality"]:
             return ""
         return value
 
