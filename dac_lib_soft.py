@@ -4,7 +4,6 @@ from smbus2 import SMBus
 # from BRK_FOVEA_1 import BrkFovea_1 as BrkFovea_1
 # from BRK_FOVEA_2 import BrkparaFovea as BrkparaFovea
 import time
-
 import math
 # GPIO Pin Details
 print_en = 0
@@ -23,12 +22,10 @@ flik_pin = 18
 # DAC ADD-194
 b_volt_val = [159,170,183,199,219,243,274,312,358,417,493,591,720,889,1111,1413,1817,2376,3161,3918] # 0 to 19 
 # g_freq_val = int(80*x+2000) # 0 to 15
-# red_led_val = int(4.80519*x-0.4329) # 0 da 20
+# red_led_val = int(4.80519*x-0.4329) # 0 to 20
 # inner_ring_val = int(13.1948*x-0.329004) # 0 to 20
 # DAC ADD-192
-# Actuator_val = [0,142,1100,3680]  #0,1,2,3
 Actuator_val = [0,142,1100,3680]  #0,1,2,3
-
 # g_volt_val = int(85.4*x+0.380952,) # 0 to 20
 # outer_ring_val= int(59.4*x-0.38095) # 0 to 20
 #b_freq_val & b_frq_f_val 0 to 250
@@ -38,7 +35,7 @@ b_freq_val = [0,0,11,12,12,12,12,13,13,13,14,14,14,15,15,15,16,16,17,17,17,18,18
 # b_null_set_addon = round( 0.123457*x-0.148366 ,2) # (1  to 18) lv 0,19 
 #b_freq_val & b_frq_f_val 0 to 250
 # Frq value
-b_frq_f_val = [8.06,8.218,12.74,13.45,13.45,13.45,13.45,14.21,14.21,14.21,14.93,14.93,14.93,15.64,15.64,15.64,16.4,16.4,17.15,17.15,17.15,17.89,17.89,18.62,18.62,19.63,19.36,20.1,20.1,20.1,20.83,21.59,21.59,22.36,22.36,23.09,23.09,23.82,24.56,24.58,25.28,25.28,26.02,26.77,27.51,27.51,28.28,28.99,29.75,29.75,30.5,31.24,31.97,33.71,33.45,34.18,34.18,34.95,35.67,36.42,37.16,37.93,39.42,40.18,40.88,41.6,42.38,43.13,44.52,45.31,46.04,46.78,48.27,49.7,50.5,51.16,52.09,53.66,54.49,56.16,57.78,58.62,60.32,61.86,63.42,64.32,65.98,67.6,69.26,70.82,72.49,74.06,75.86,78.19,79.92,81.56,83.05,85.72,87.26,89.76,91.49,93.84,96.3,97.94,100.4,102.8,105.4,107.7,110.1,112.5,115.6,118.1,120.5,123.6,126,129.1,132.4,134.7,137.8,141,144.2,148,151.3,154.5,158.7,162,166.1,170.2,174.4,178.5,182.7,186.8,190.9,196,200.1,205.1,210,214.8,219.5,225.1,229.8,235.4,240.2,245.7,251.3,257.6,263.5,270,275.8,282.5,289.1,296.6,303.2,310.7,318,325.2,332.3,340.2,348.2,356.2,364.2,372.8,382.2,391.7,401.2,411.6,421.7,431.3,441.1,450.5,460.9,472.3,483.1,494.9,506.6,518.4,530.8,542.7,555.6,568.5,581.6,595.4,609.4,623.2,637.7,652,667.2,682.6,698,714.3,730.6,747.2,764.6,782,800.8,820.5,840,859.2,879.3,899.8,921.4,942.8,964.2,986.3,1009,1033,1057,1081,1106,1133,1159,1185,1213,1242,1271,1300,1331,1363,1394,1427,1461,1494,1529,1566,1601,1639,1678,1716,1756,1797,1838,1884,1924,1968,2014,2061,2110,2157,2208,2259,2312,2365,2420,2477,2535,2594,2653,2717,2781,2847,2915] 
+b_frq_f_val = [8.06,8.218,12.74,13.45,13.45,13.45,13.45,14.21,14.21,14.21,14.93,14.93,14.93,15.64,15.64,15.64,16.4,16.4,17.15,17.15,17.15,17.89,17.89,18.62,18.62,19.63,19.36,20.1,20.1,20.1,20.83,21.59,21.59,22.36,22.36,23.09,23.09,23.82,24.56,24.58,25.28,25.28,26.02,26.77,27.51,27.51,28.28,28.99,29.75,29.75,30.5,31.24,31.97,33.71,33.45,34.18,34.18,34.95,35.67,36.42,37.16,37.93,39.42,40.18,40.88,41.6,42.38,43.13,44.52,45.31,46.04,46.78,48.27,49.7,50.5,51.16,52.09,53.66,54.49,56.16,57.78,58.62,60.32,61.86,63.42,64.32,65.98,67.6,69.26,70.82,72.49,74.06,75.86,78.19,79.92,81.56,83.05,85.72,87.26,89.76,91.49,93.84,96.3,97.94,100.4,102.8,105.4,107.7,110.1,112.5,115.6,118.1,120.5,123.6,126,129.1,132.4,134.7,137.8,141,144.2,148,151.3,154.5,158.7,162,166.1,170.2,174.4,178.5,182.7,186.8,190.9,196,200.1,205.1,210,214.8,219.5,225.1,229.8,235.4,240.2,245.7,251.3,257.6,263.5,270,275.8,282.5,289.1,296.6,303.2,310.7,318,325.2,332.3,340.2,348.2,356.2,364.2,372.8,382.2,391.7,401.2,411.6,421.7,431.3,441.1,450.5,460.9,472.3,483.1,494.9,506.6,518.4,530.8,542.7,555.6,568.5,581.6,595.4,609.4,623.2,637.7,652,667.2,682.6,698,714.3,730.6,747.2,764.6,782,800.8,820.5,840,859.2,879.3,899.8,921.4,942.8,964.2,986.3,1009,1033,1057,1081,1106,1133,1159,1185,1213,1242,1271,1300,1331,1363,1394,1427,1461,1494,1529,1566,1601,1639,1678,1716,1756,1797,1838,1884,1924,1968,2014,2061,2110,2157,2208,2259,2312,2365,2420,2477,2535,2594,2653,2717,2781,2847,2915]
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
 
 flicker_delay =  0.043
@@ -103,9 +100,7 @@ class mup4728:
             GPIO.setup(Disp,GPIO.OUT)#D7 Disp Enable
             GPIO.setup(flik_pin,GPIO.OUT)
             GPIO.setup(DAC_lat,GPIO.OUT)# DAC Latch
-            self.last_inner_value = None  # Track last set value
-            self.last_inner_time = 0  # Track last update time
-            self.dac_lock = False  # Prevent concurrent DAC writes
+            
             GPIO.output(DAC_lat,GPIO.HIGH) # DAC Latch
             GPIO.output(B_E,GPIO.LOW)#D1 Blue Enable
             GPIO.output(G_E,GPIO.LOW)#D3 Green Enable
@@ -236,10 +231,8 @@ class mup4728:
             GPIO.output(DAC_lat,GPIO.LOW)
             str_data = 'GREEN_Volt_data = ' + str(in_data)
             self.get_print(str_data) 
-            in_data = in_data/1.6
-            print(in_data)      
-            data = [ int(in_data / 256), int(in_data % 256)]   
-            print(data)                    
+            in_data = in_data/1.6      
+            data = [ int(in_data / 256), int(in_data % 256)]                       
             self.DAC.write_i2c_block_data(self.dac_addr, self.dac_ch[4], data)
             GPIO.output(DAC_lat,GPIO.HIGH)
             
@@ -247,13 +240,10 @@ class mup4728:
             GPIO.output(DAC_lat,GPIO.LOW)
             str_data = 'INNER_LED_data = ' + str(in_data)
             self.get_print(str_data)    
-            in_data = in_data   
-            # data = [ int(in_data / 256), int(in_data % 256)]
-            data = [ 1, 1]
-            print(data)
+            in_data = in_data/1.6     
+            data = [ int(in_data / 256)+128, int(in_data % 256)]
             self.DAC.write_i2c_block_data(self.dac_addr, self.dac_ch[5], data)
             GPIO.output(DAC_lat,GPIO.HIGH)
-            time.sleep(0.3)
             
         def RED_LED(self,in_data):
             GPIO.output(DAC_lat,GPIO.LOW)
@@ -321,7 +311,7 @@ class mup4728:
 #-----------------------------------------------------------------------------------
         def green_volt_control(self,data_in):
             if(0<=data_in<=20):
-                dac_val=int(600*data_in+0.380952) # 0 to 20
+                dac_val=int(85.4*data_in+0.380952) # 0 to 20
                 str_data = 'GREEN_Volt_DAC = ' + str(dac_val)
                 self.get_print(str_data)
                 self.GREEN_Volt(dac_val)              
@@ -331,7 +321,7 @@ class mup4728:
 
         def green_freq_control(self,data_in):
             if(0<=data_in<=15):
-                dac_val=int(80*data_in+4000) # 0 to 15
+                dac_val=int(80*data_in+4000) # 0 to 15 #2000
                 str_data = 'GREEN_FREQ_DAC = ' + str(dac_val)
                 self.get_print(str_data)
                 self.GREEN_FREQ(dac_val) 
@@ -390,12 +380,8 @@ class mup4728:
                 self.get_print('Blue Volt Beyond range')
 #-----------------------------------------------------------------------------------
         def inner_led_control(self,data_in):
-            print("called")
-            # if data_in == 0:
-            #     dac_val = 0
-            #     self.INNER_LED(dac_val)
             if(0<=data_in<=20):
-                dac_val = 257
+                dac_val=int(13.1948*data_in-0.329004)
                 str_data = 'INNER_LED_DAC = ' + str(dac_val)
                 self.get_print(str_data)
                 self.INNER_LED(dac_val)
@@ -403,17 +389,9 @@ class mup4728:
                 str_data = 'INNER_LED_DAC must be 0 to 20 ' + str(dac_val)
                 self.get_print(str_data)
 
-        def reset_inner_led(self):
-                """Reset Inner LED to a known state."""
-                self.get_print("Resetting Inner LED")
-                self.INNER_LED(0)  # Turn off completely
-                time.sleep(0.1)    # Wait for stability
-                self.last_inner_value = None  # Clear last value
-
-
         def outer_led_control(self,data_in):
             if(0<=data_in<=20):
-                dac_val=int(110.4*data_in-0.38095) # 0 to 20
+                dac_val=int(59.4*data_in-0.38095) # 0 to 20
                 str_data = 'OUTER_LED_DAC = ' + str(dac_val)
                 self.get_print(str_data)
                 self.OUTER_LED(dac_val)
@@ -423,12 +401,11 @@ class mup4728:
 
         def red_led_control(self,data_in):
             if(0<=data_in<=20):
-                    #dac_val=int(4.80519*data_in-0.4329) # 0 to 20
-                    dac_val = int(204.75 * data_in)  # For data_in=20, dac_val=4095
-                    str_data = 'RED_LED_DAC = ' + str(dac_val)
-                    self.get_print(str_data)
-                    self.RED_LED(dac_val)
-            else:
+                dac_val=int(4.80519*data_in-0.4329) # 0 to 20
+                str_data = 'RED_LED_DAC = ' + str(dac_val)
+                self.get_print(str_data)
+                self.RED_LED(dac_val)
+            else :
                 str_data = 'RED_LED_DAC must be 0 to 20 ' + str(dac_val)
                 self.get_print(str_data)
 
@@ -438,7 +415,7 @@ class mup4728:
             GPIO.output(G_E,GPIO.HIGH)#D3 Green Enable
             GPIO.output(B_E,GPIO.LOW)#D3 Blue Enable
             if (not self.pwm_run):                
-                self.p.start(80.4)
+                self.p.start(80.0)#50.4
                 self.pwm_run = 1
                 self.get_print('fliker_start_g')                
                 
@@ -755,7 +732,6 @@ class mup4728:
 #         def patient_switch_desable(self) :
 #             self.get_print('GPIO relese interrupt')
 #             GPIO.remove_event_detect(switch)
-
         def all_led_off (self):
             self.get_print('all_led_off-----------')      
             self.fan_on()
@@ -808,7 +784,7 @@ class mup4728:
                 self.blue_led_volt_control(3,0) #0(0 to 19), 1(1 to 20), 2(1 to 20), 3(0 to 20)
                 self.green_freq_control (16) # Flicker null value (0 to 15) and 16 = 0
                 self.green_volt_control(20) #0 to 20
-                self.inner_led_control(13) #0 to 20
+                self.inner_led_control(20) #0 to 20
                 self.outer_led_control(20) #0 to 20
                 self.actuator_control(1)    
                 time.sleep(.5)
@@ -818,7 +794,7 @@ class mup4728:
                 self.blue_led_volt_control(3,0) #0(0 to 19), 1(1 to 20), 2(1 to 20), 3(0 to 20)
                 self.green_freq_control (0) # Flicker null value (0 to 15) and other 0
                 self.green_volt_control(20) #0 to 20
-                self.inner_led_control(13) #0 to 20
+                self.inner_led_control(20) #0 to 20
                 self.outer_led_control(20) #0 to 20
                 self.get_print('main_Prepair+++++++++++++')  
                 self.green_led_on()  #check onec  
@@ -833,29 +809,10 @@ class mup4728:
                 self.blue_led_volt_control(3,0) #0(0 to 19), 1(1 to 20), 2(1 to 20), 3(0 to 20)
                 self.green_freq_control (0) # Flicker null value (0 to 15) and other 0
                 self.green_volt_control(20) #0 to 20
-                self.inner_led_control(13) #0 to 20
+                self.inner_led_control(20) #0 to 20
                 self.outer_led_control(20) #0 to 20
                 self.red_led_control(0) #0 to 20
             self.get_print('flicker_Prepair++++++++++++++++++') 
-
-
-        def led_control(self, data_in):
-            """
-            Common LED control function for both inner and outer LEDs
-            to ensure same brightness
-            """
-            if 0 <= data_in <= 20:
-                dac_val = int(59.4 * data_in - 0.38095)
-                # Control both LEDs with the same DAC value
-                self.INNER_LED(dac_val)
-                self.OUTER_LED(dac_val)
-                str_data = f'LED_DAC = {dac_val} (Both Inner and Outer)'
-                self.get_print(str_data)
-            else:
-                str_data = f'LED_DAC must be 0 to 20, invalid value: {data_in}'
-                self.get_print(str_data)
-
-
 
 
         # def flicker_Prepair (self):
@@ -864,7 +821,7 @@ class mup4728:
         #             time.sleep(1)
         #             self.all_led_off()
         #             self.outer_led_control(20) #0 to 20
-        #             self.inner_led_control(13) #0 to 20            
+        #             self.inner_led_control(20) #0 to 20            
         #             self.green_freq_control (0) # Flicker null value (0 to 15) and other 0
         #             self.green_volt_control(20) #0 to 20
         #             time.sleep(0.3)
@@ -886,7 +843,7 @@ class mup4728:
                 self.blue_led_volt_control(3,0) #0(0 to 19), 1(1 to 20), 2(1 to 20), 3(0 to 20)
                 self.green_freq_control (0) # Flicker null value (0 to 15) and other 0
                 self.green_volt_control(20) #0 to 20
-                self.inner_led_control(13) #0 to 20
+                self.inner_led_control(20) #0 to 20
                 self.outer_led_control(20) #0 to 20
                 self.red_led_control(0) #0 to 20
                 time.sleep(1)
@@ -909,7 +866,7 @@ class mup4728:
                 time.sleep(1)
                 self.green_freq_control(0) # Flicker null value (0 to 15) and other 0
                 self.green_volt_control(20) #0 to 20
-                self.inner_led_control(13) #0 to 20
+                self.inner_led_control(20) #0 to 20
                 self.outer_led_control(20) #0 to 20
                 self.red_led_control(0) #0 to 20
                 time.sleep(0.021)
@@ -919,7 +876,6 @@ class mup4728:
                 self.fliker_start_b()
                 self.fliker_Freq(self.get_cff_f_avg_cal())
             self.get_print('brk_Fovea_Prepair+++++++++++++') 
-
 
         def cff_Para_Fovea_Prepair (self):            
             self.get_print('cff_Para_Fovea_Prepair-----------') 
@@ -935,14 +891,14 @@ class mup4728:
                 self.all_led_off()
 #                 time.sleep(1.5)
                 self.actuator_control(3) 
-                time.sleep(5)
+                time.sleep(3)
                 self.actuator_control(2)                
                 self.red_led_control(20) #0 to 20
                 self.blue_led_Freq_control(11) #0 to 250
                 self.blue_led_volt_control(3,0) #0(0 to 19), 1(1 to 20), 2(1 to 20), 3(0 to 20)
                 self.green_freq_control(0) # Flicker null value (0 to 15) and other 0
                 self.green_volt_control(20) #0 to 20
-                self.inner_led_control(13) #0 to 20
+                self.inner_led_control(20) #0 to 20
                 self.outer_led_control(20) #0 to 20
                 self.fliker_start_b()
                 time.sleep(4.5)
@@ -965,7 +921,7 @@ class mup4728:
                 time.sleep(4)
                 self.green_freq_control(0) # Flicker null value (0 to 15) and other 0
                 self.green_volt_control(20) #0 to 20
-                self.inner_led_control(13) #0 to 20
+                self.inner_led_control(20) #0 to 20
                 self.outer_led_control(20) #0 to 20
                 self.red_led_control(20) #0 to 20
                 self.blue_led_volt_control(3,20) #0(0 to 19), 1(1 to 20), 2(1 to 20), 3(0 to 20)
@@ -994,4 +950,175 @@ class mup4728:
                 time.sleep(3)
             self.get_print('end_process++++++++') 
                 
+#         def black_screen_ialize(self):
+#             self.fan_on()
+#             self.display_on()
+#             self.MOTOR(motor_possition_1) # motor locatin (DAC VAL)
+#             time.sleep(1)
+#             self.all_led_off()            
+#             time.sleep(1)
+#             self.get_print('black_screen_ialize done')
 
+#         def main_screen_ialize(self):
+#             self.all_led_off()
+#             time.sleep(1)
+#             self.MOTOR(motor_possition_1) # motor locatin (DAC VAL)
+#             time.sleep(1)
+#             self.BLUE_FREQ(blue_led_freq_off)# set blue freq (between 1 to 255)
+#             self.BLUE_Volt(blue_led_volt_off)# set blue led (between 0 to 19)
+#             self.GREEN_FREQ(green_led_freq_on) #set green led freq (DAC VAL)
+#             self.GREEN_Volt(green_led_volt_on) #set green led Volt (DAC VAL)
+#             self.INNER_LED(inner_led_on) #set Inner ring led Volt (DAC VAL)
+#             self.OUTER_LED(outer_led_on) #set Outer ring led Volt (DAC VAL)
+#             self.RED_LED(red_led_off) #set edge Red led Volt (DAC VAL)
+#             self.green_led_on()
+#             self.blue_led_off()
+#             time.sleep(0.5)
+#             self.get_print('main_screen_ialize done')
+#             self.buzzer_1()
+
+#         def flicker_screen_ialize(self):
+#             self.all_led_off()
+#             self.MOTOR(motor_possition_1) # motor locatin (DAC VAL)
+#             time.sleep(1)
+#             self.BLUE_FREQ(blue_led_freq_off)# set blue freq (between 1 to 255)
+#             self.BLUE_Volt(blue_led_volt_off)# set blue led (between 0 to 19)
+#             self.GREEN_FREQ(green_led_freq_on) #set green led freq (DAC VAL)
+#             self.GREEN_Volt(green_led_volt_on) #set green led Volt (DAC VAL)
+#             self.INNER_LED(inner_led_on) #set Inner ring led Volt (DAC VAL)
+#             self.OUTER_LED(outer_led_on) #set Outer ring led Volt (DAC VAL)
+#             self.RED_LED(red_led_off) #set edge Red led Volt (DAC VAL)
+#             self.green_led_on()
+#             self.blue_led_off()
+#             time.sleep(0.3)
+#             self.get_print('flicker_screen_ialize done')
+
+#         def cff_fovea_screen_ialize(self):
+#             self.all_led_off()
+#             self.MOTOR(motor_possition_1) # motor locatin (DAC VAL)
+#             time.sleep(1)
+#             self.BLUE_FREQ(blue_led_freq_off)# set blue freq (between 1 to 255)
+#             self.BLUE_Volt(blue_led_volt_off)# set blue led (between 0 to 19)
+#             self.GREEN_FREQ(green_led_freq_on) #set green led freq (DAC VAL)
+#             self.GREEN_Volt(green_led_volt_on) #set green led Volt (DAC VAL)
+#             self.INNER_LED(inner_led_on) #set Inner ring led Volt (DAC VAL)
+#             self.OUTER_LED(outer_led_on) #set Outer ring led Volt (DAC VAL)
+#             self.RED_LED(red_led_off) #set edge Red led Volt (DAC VAL)
+#             self.fliker_start_g()
+#             self.fliker_Freq(35)
+#             time.sleep(0.3)
+#             self.get_print('cff_fovea_screen_ialize done')
+
+#         def brk_fovea_1_screen_ialize(self):
+#             self.all_led_off()
+#             self.MOTOR(motor_possition_1) # motor locatin (DAC VAL)
+#             time.sleep(1)            
+#             self.fliker_Freq(self.cff_fovea_frq)
+#             self.blue_led_Freq(self.brk_fovea_frq)# set blue freq (between 1 to 255) innitially 160
+#             self.blue_led_Volt(self.blue_volt_nul)# set blue led nul (between 0 to 19) from previous blue_volt_nul
+#             self.fliker_start_b()
+#             self.fliker_Freq(self.cff_fovea_frq)
+#             self.GREEN_FREQ(green_led_freq_on) #set green led freq (DAC VAL)
+#             self.GREEN_Volt(green_led_volt_on) #set green led Volt (DAC VAL)
+#             self.INNER_LED(inner_led_on) #set Inner ring led Volt (DAC VAL)
+#             self.OUTER_LED(outer_led_on) #set Outer ring led Volt (DAC VAL)
+#             self.RED_LED(red_led_off) #set edge Red led Volt (DAC VAL)
+#             time.sleep(0.5)
+#             self.get_print('brk_fovea_1_screen_ialize done')
+
+#         def brk_fovea_2_screen_ialize(self):       
+#             self.brk_fovea_1_screen_ialize()
+# #              self.MOTOR(motor_possition_1) # motor locatin (DAC VAL)
+#             time.sleep(1)
+#             # self.MOTOR(motor_possition_1) # motor locatin (DAC VAL)
+#             # self.blue_led_Freq(self.brk_fovea_frq)# set blue freq (between 1 to 255) innitially 160
+#             # self.blue_led_Volt(self.blue_volt_nul)# set blue led nul (between 0 to 19) from previous blue_volt_nul
+#             # self.GREEN_FREQ(green_led_freq_on) #set green led freq (DAC VAL)
+#             # self.GREEN_Volt(green_led_volt_on) #set green led Volt (DAC VAL)
+#             # self.INNER_LED(inner_led_on) #set Inner ring led Volt (DAC VAL)
+#             # self.OUTER_LED(outer_led_on) #set Outer ring led Volt (DAC VAL)
+#             # self.RED_LED(red_led_off) #set edge Red led Volt (DAC VAL)
+#             # self.fliker_start_b()
+#             # self.fliker_Freq(self.cff_fovea_frq)            
+#             self.get_print('brk_fovea_2_screen_ialize done')
+
+#         def brk_fovea_3_screen_ialize(self):
+#             self.all_led_off()
+#             self.MOTOR(motor_possition_1) # motor locatin (DAC VAL)
+#             time.sleep(1)
+#             self.blue_led_Freq(self.brk_fovea_frq)# set blue freq (between 1 to 255) from previous brk_fovea_frq
+#             self.blue_led_Volt(self.blue_volt_nul)# set blue led nul (between 0 to 19) from previous blue_volt_nul
+#             self.GREEN_FREQ(green_led_freq_on) #set green led freq (DAC VAL)
+#             self.GREEN_Volt(green_led_volt_on) #set green led Volt (DAC VAL)
+#             self.INNER_LED(inner_led_on) #set Inner ring led Volt (DAC VAL)
+#             self.OUTER_LED(outer_led_on) #set Outer ring led Volt (DAC VAL)
+#             self.RED_LED(red_led_off) #set edge Red led Volt (DAC VAL)
+#             self.fliker_start_b()
+#             self.fliker_Freq(self.cff_fovea_frq)
+#             time.sleep(0.3)
+#             self.get_print('brk_fovea_3_screen_ialize done')
+
+#         def cff_para_fovea_screen_ialize(self):
+#             self.all_led_off()            
+#             self.MOTOR(motor_possition_2) # motor locatin (DAC VAL)
+#             time.sleep(2)
+#             self.BLUE_FREQ(blue_led_freq_off)# set blue freq (between 1 to 255)
+#             self.BLUE_Volt(blue_led_volt_off)# set blue led (between 0 to 19)
+#             self.GREEN_FREQ(green_led_freq_on) #set green led freq (DAC VAL)
+#             self.GREEN_Volt(green_led_volt_on) #set green led Volt (DAC VAL)
+#             self.INNER_LED(inner_led_on) #set Inner ring led Volt (DAC VAL)
+#             self.OUTER_LED(outer_led_on) #set Outer ring led Volt (DAC VAL)
+#             self.RED_LED(red_led_on) #set edge Red led Volt (DAC VAL)
+#             self.fliker_start_g()
+#             self.fliker_Freq(35)
+#             time.sleep(0.3)
+#             self.get_print('cff_para_fovea_screen_ialize done')
+
+#         def brk_para_fovea_1_screen_ialize(self):
+#             self.brk_para_fovea_frq = 11
+#             self.all_led_off()   
+#             self.MOTOR(motor_possition_2) # motor locatin (DAC VAL)
+#             time.sleep(1)
+#             self.blue_led_Freq(self.brk_para_fovea_frq)# set blue freq (between 1 to 255) from previous brk_fovea_frq
+#             self.blue_led_Volt(self.blue_volt_nul)# set blue led nul (between 0 to 19) from previous blue_volt_nul
+#             self.GREEN_FREQ(green_led_freq_on) #set green led freq (DAC VAL)
+#             self.GREEN_Volt(green_led_volt_on) #set green led Volt (DAC VAL)
+#             self.INNER_LED(inner_led_on) #set Inner ring led Volt (DAC VAL)
+#             self.OUTER_LED(outer_led_on) #set Outer ring led Volt (DAC VAL)
+#             self.RED_LED(red_led_on) #set edge Red led Volt (DAC VAL)
+#             self.fliker_start_b()
+#             self.fliker_Freq(self.cff_para_fovea_frq)
+#             time.sleep(0.3)
+#             self.get_print('brk_para_fovea_1_screen_ialize done')
+
+#         def brk_para_fovea_2_screen_ialize(self):
+#             self.all_led_off()
+#             self.MOTOR(motor_possition_2) # motor locatin (DAC VAL)
+#             time.sleep(1)
+#             self.blue_led_Freq(self.brk_para_fovea_frq)# set blue freq (between 1 to 255) from previous brk_fovea_frq
+#             self.blue_led_Volt(self.blue_volt_nul)# set blue led nul (between 0 to 19) from previous blue_volt_nul
+#             self.GREEN_FREQ(green_led_freq_on) #set green led freq (DAC VAL)
+#             self.GREEN_Volt(green_led_volt_on) #set green led Volt (DAC VAL)
+#             self.INNER_LED(inner_led_on) #set Inner ring led Volt (DAC VAL)
+#             self.OUTER_LED(outer_led_on) #set Outer ring led Volt (DAC VAL)
+#             self.RED_LED(red_led_on) #set edge Red led Volt (DAC VAL)
+#             self.fliker_start_b()
+#             self.fliker_Freq(self.cff_para_fovea_frq)
+#             time.sleep(0.3)
+#             self.get_print('brk_para_fovea_2_screen_ialize done')
+
+#         def brk_para_fovea_3_screen_ialize(self):
+#             self.all_led_off()
+#             self.MOTOR(motor_possition_2) # motor locatin (DAC VAL)
+#             time.sleep(1)
+#             self.blue_led_Freq(self.brk_para_fovea_frq)# set blue freq (between 1 to 255) from previous brk_fovea_frq
+#             self.blue_led_Volt(self.blue_volt_nul)# set blue led nul (between 0 to 19) from previous blue_volt_nul
+#             self.GREEN_FREQ(green_led_freq_on) #set green led freq (DAC VAL)
+#             self.GREEN_Volt(green_led_volt_on) #set green led Volt (DAC VAL)
+#             self.INNER_LED(inner_led_on) #set Inner ring led Volt (DAC VAL)
+#             self.OUTER_LED(outer_led_on) #set Outer ring led Volt (DAC VAL)
+#             self.RED_LED(red_led_on) #set edge Red led Volt (DAC VAL)
+#             self.fliker_start_b()
+#             self.fliker_Freq(self.cff_para_fovea_frq)
+#             time.sleep(0.3)
+#             self.get_print('brk_para_fovea_3_screen_ialize done')
