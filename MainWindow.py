@@ -22,7 +22,7 @@ FONT_TIME = ("Helvetica Neue", 18, "bold")  # Larger for time display
 class mainWindow:
     def __init__(self, frame):
         self.frame = frame
-        self.frame.configure(bg='black')
+        self.frame.configure(bg='black')  # Modern black background
         self.selectedGen = "M"
         self.selectedEye = "R"
         self.kb = KeyBoard()
@@ -37,12 +37,12 @@ class mainWindow:
         self.diabetes_var = tk.StringVar(value="No")
 
     def Load(self):
-        # Time label - centered at the top below header
+        # Time label - left-aligned at the top
         self.timelabel = tk.Label(self.frame, font=FONT_TIME, bg="black", fg="white")
         self.updateDateTime()
-        # self.timelabel.place(x=412, y=60, width=200, height=30)  # Centered within 1024 width
+        self.timelabel.place(x=20, y=20)  # Left-aligned
 
-        # Header
+        # Header - left-aligned
         self.header = HeaderComponent(
             self.frame,
             "Macular Densitometer                                                                   Patient Info"
@@ -51,10 +51,10 @@ class mainWindow:
         # Setup modern UI
         self.setup_ui()
 
-        # Navigation buttons - bottom center
+        # Navigation buttons - left-aligned at the bottom
         def onfw():
             if self.ValidateUserInput():
-                self.save_patient_data()
+                self.save_patient_data()  # Save data before moving forward
                 pageDisctonary['MainScreen'].hide()
                 pageDisctonary['CffFovea'].show()
 
@@ -68,38 +68,39 @@ class mainWindow:
         bwButton = tk.Button(self.frame, text="<<", font=FONT_SECONDARY, 
                             command=onbw, bg='#28a745', fg='white', bd=0, 
                             activebackground="#218838", width=10)
-        # bwButton.place(x=412, y=540, width=100, height=40)  # Left of center
-        # fwButton.place(x=512, y=540, width=100, height=40)  # Right of center
+        bwButton.place(x=20, y=500)  # Left-aligned
+        fwButton.place(x=160, y=500)  # Next to back button
 
     def setup_ui(self):
         self.main_frame = tk.Frame(self.frame, bg='black')
-        self.main_frame.place(x=20, y=100, width=984, height=420)  # Adjusted to fit within 1024x600
+        self.main_frame.place(x=20, y=100, width=981, height=460)
 
-        # Create form fields - aligned in two columns
-        # Left column
-        self.create_text_field("1st Name", 0, 0, "first name")
-        self.create_text_field("DOB", 0, 60, "Date of Birth")
-        self.create_text_field("Aadhaar", 0, 120, "Aadhaar No")
-        self.create_radio_group("Gender", 0, 180, self.gender_var, [("Male", "Male"), ("Female", "Female")])
-        self.create_radio_group("Alcohol", 0, 240, self.alcohol_var, [("Yes", "Yes"), ("No", "No")])
-        self.create_radio_group("Smoking", 0, 300, self.smoking_var, [("Yes", "Yes"), ("No", "No")])
-        self.create_radio_group("Food Habit", 0, 360, self.food_var, [("Veg", "Veg"), ("Non-Veg", "Non-Veg")])
+        # Create form fields - left-aligned
+        self.create_text_field("1st Name", 0, 20, "first name")
+        self.create_text_field("Mid. Name", 0, 80, "Middle Name")
+        self.create_text_field("Surname", 0, 140, "Surname")
+        self.create_text_field("DOB", 0, 200, "Date of Birth")
+        self.create_text_field("Aadhaar", 0, 260, "Aadhaar No")
+        self.create_text_field("Mobile", 0, 320, "+91XXXXXXXXXX")
+        self.create_text_field("Nationality", 0, 380, "Enter Nationality")
 
-        # Right column
-        self.create_text_field("Mid. Name", 492, 0, "Middle Name")
-        self.create_text_field("Surname", 492, 60, "Surname")
-        self.create_text_field("Mobile", 492, 120, "+91XXXXXXXXXX")
-        self.create_text_field("Nationality", 492, 180, "Enter Nationality")
-        self.create_radio_group("Eye Side", 492, 240, self.eye_side_var, [("R", "R"), ("L", "L")])
-        self.create_medical_field("Blood Pressure", 492, 300, self.bp_var, "80/120")
-        self.create_medical_field("Diabetes", 492, 360, self.diabetes_var, "97")
+        # Radio button groups - left-aligned
+        self.create_radio_group("Gender", 346, 20, self.gender_var, [("Male", "Male"), ("Female", "Female")])
+        self.create_radio_group("Eye Side", 346, 80, self.eye_side_var, [("R", "R"), ("L", "L")])
+        self.create_radio_group("Alcohol", 346, 140, self.alcohol_var, [("Yes", "Yes"), ("No", "No")])
+        self.create_radio_group("Smoking", 346, 200, self.smoking_var, [("Yes", "Yes"), ("No", "No")])
+        self.create_radio_group("Food Habit", 346, 260, self.food_var, [("Veg", "Veg"), ("Non-Veg", "Non-Veg")])
+
+        # Medical fields - left-aligned
+        self.create_medical_field("Blood Pressure", 346, 320, self.bp_var, "80/120")
+        self.create_medical_field("Diabetes", 346, 380, self.diabetes_var, "97")
 
     def create_text_field(self, label_text, x, y, placeholder):
         label = tk.Label(self.main_frame, text=label_text, font=FONT_MAIN, bg='black', fg='white')
-        label.place(x=x, y=y, width=140, height=30)
+        label.place(x=x, y=y, width=140, height=31)  # Fixed width for consistency
         entry = tk.Entry(self.main_frame, font=FONT_SECONDARY, bg='#334155', fg='#94a3b8', 
                         insertbackground='white', bd=0, highlightthickness=1, highlightcolor='#42A5F5')
-        entry.place(x=x+140, y=y, width=352, height=30)  # Wider entries for consistency
+        entry.place(x=x+150, y=y, width=190, height=31)
         entry.insert(0, placeholder)
         entry.bind('<FocusIn>', lambda e: self.on_entry_focus_in(entry, placeholder))
         entry.bind('<FocusOut>', lambda e: self.on_entry_focus_out(entry, placeholder))
@@ -107,26 +108,26 @@ class mainWindow:
 
     def create_radio_group(self, label_text, x, y, variable, options):
         label = tk.Label(self.main_frame, text=label_text, font=FONT_MAIN, bg='black', fg='white')
-        label.place(x=x, y=y, width=140, height=30)
+        label.place(x=x, y=y, width=140, height=31)  # Increased width for visibility
         for i, (value, text) in enumerate(options):
             rb = tk.Radiobutton(self.main_frame, text=text, variable=variable, value=value, 
                                font=FONT_SECONDARY, bg='black', fg='white', selectcolor='black', 
                                activebackground='black', activeforeground='white', 
                                highlightthickness=0, highlightbackground='black', highlightcolor='black')
-            rb.place(x=x+140+(i*100), y=y, width=80, height=30)
+            rb.place(x=x+150+(i*100), y=y, width=100, height=31)  # Increased width for "Non-Veg"
 
     def create_medical_field(self, label_text, x, y, variable, placeholder):
         label = tk.Label(self.main_frame, text=label_text, font=FONT_MAIN, bg='black', fg='white')
-        label.place(x=x, y=y, width=140, height=30)
+        label.place(x=x, y=y, width=140, height=31)  # Increased width for "Blood Pressure"
         tk.Radiobutton(self.main_frame, text="Yes", variable=variable, value="Yes", 
                       font=FONT_SECONDARY, bg='black', fg='white', selectcolor='black', 
-                      activebackground='black', activeforeground='white', highlightthickness=0).place(x=x+140, y=y, width=60, height=30)
+                      activebackground='black', activeforeground='white', highlightthickness=0).place(x=x+150, y=y, width=60, height=31)
         tk.Radiobutton(self.main_frame, text="No", variable=variable, value="No", 
                       font=FONT_SECONDARY, bg='black', fg='white', selectcolor='black', 
-                      activebackground='black', activeforeground='white', highlightthickness=0).place(x=x+200, y=y, width=60, height=30)
+                      activebackground='black', activeforeground='white', highlightthickness=0).place(x=x+220, y=y, width=60, height=31)
         entry = tk.Entry(self.main_frame, font=FONT_SECONDARY, bg='#334155', fg='#94a3b8', 
                         insertbackground='white', bd=0, highlightthickness=1, highlightcolor='#42A5F5')
-        entry.place(x=x+260, y=y, width=232, height=30)  # Adjusted width to fit right column
+        entry.place(x=x+290, y=y, width=190, height=31)  # Adjusted x position
         entry.insert(0, placeholder)
         entry.bind('<FocusIn>', lambda e: self.on_entry_focus_in(entry, placeholder))
         entry.bind('<FocusOut>', lambda e: self.on_entry_focus_out(entry, placeholder))
@@ -190,7 +191,7 @@ class mainWindow:
                 user_data = json.load(f)
             patient_data['handler_id'] = user_data['user_id']
             filename = "patient_latest.json"
-            filepath = os.path.join(os.path.dirname(filepath), "patient_data", filename)
+            filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "patient_data", filename)
             os.makedirs(os.path.dirname(filepath), exist_ok=True)
             with open(filepath, 'w') as f:
                 json.dump(patient_data, f, indent=4)
@@ -214,12 +215,12 @@ class mainWindow:
     def update_current_patient_info(self):
         currentPatientInfo.Name = f"{self.get_entry_value('1st', '_name_entry')} {self.get_entry_value('mid', '_name_entry')} {self.get_entry_value('surname', '_entry')}"
         currentPatientInfo.Age = self.get_entry_value('dob', '_entry')
-        currentPatientInfo.Eye = self.eye_side_var.get()
+        currentPatientInfo.eye = self.eye_side_var.get()
         currentPatientInfo.Gender = "M" if self.gender_var.get() == "Male" else "F"
         currentPatientInfo.Nationality = self.get_entry_value('nationality', '_entry')
         currentPatientInfo.Aadhaar = self.get_entry_value('aadhaar', '_entry')
         currentPatientInfo.Mobile = self.get_entry_value('mobile', '_entry')
-        currentPatientInfo.Alcohol = self.alcohol_var.get() == "Yes"
+        currentPatientInfo.Alchohol = self.alcohol_var.get() == "Yes"
         currentPatientInfo.Smoking = self.smoking_var.get() == "Yes"
         currentPatientInfo.FoodHabit = self.food_var.get()
         currentPatientInfo.BP = {"has_bp": self.bp_var.get() == "Yes", "value": self.get_entry_value("blood_pressure", "_entry")}
@@ -253,7 +254,7 @@ class mainWindow:
 
     def loadValues(self):
         currentPatientInfo.Name = f"{self.get_entry_value('1st', '_name_entry')} {self.get_entry_value('mid', '_name_entry')} {self.get_entry_value('surname', '_entry')}"
-        currentPatientInfo.Age = self.get_entry_value('dob', '_entry')
+        currentPatientInfo.Age = self.get_entry_value('dob', '_entry')  # Using DOB as age
         currentPatientInfo.eye = self.eye_side_var.get()
         currentPatientInfo.Gender = "M" if self.gender_var.get() == "Male" else "F"
         currentPatientInfo.date = self.timelabel.cget("text")
