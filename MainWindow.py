@@ -122,7 +122,7 @@ class mainWindow:
 
     def create_medical_field(self, label_text, x, y, variable, placeholder):
         label = tk.Label(self.main_frame, text=label_text, font=FONT_MAIN, bg='black', fg='white', anchor='e')
-        label.place(x=x, y=y, width=150, height=31)
+        label.place(x=x, y=y, width=180, height=31)
         
         # Position radio buttons with proper spacing
         tk.Radiobutton(self.main_frame, text="Yes", variable=variable, value="Yes",
