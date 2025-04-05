@@ -8,11 +8,12 @@ import os
 from Keyboard import KeyBoard  # Import KeyBoard from keyboard.py
 from globalvar import globaladc  # Assuming this is available
 
-class WifiConnectionWindow:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Vekaria Healthcare - WiFi Connection")
-        self.root.configure(bg="#1F2937")
+class WifiConnectionWindow(tk.Toplevel):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.title("Vekaria Healthcare - WiFi Connection")
+        self.configure(bg="#1F2937")
+        self.parent = parent  # Store parent for reference
         
         # Colors for dark theme
         self.bg_color = "#1F2937"
@@ -41,10 +42,18 @@ class WifiConnectionWindow:
         
         # Start periodic scanning
         self.scan_networks_periodically()
-    
+        self.transient(parent)  # Make it modal if desired
+        self.grab_set()  # Focus on this window
+        self.protocol("WM_DELETE_WINDOW", self.on_close)  # Handle window close
+
+    def on_close(self):
+        """Handle window close event"""
+        self.grab_release()
+        self.destroy()
+
     def create_header(self):
         """Create the header with logo, company name, version, and title"""
-        self.header_frame = tk.Frame(self.root, bg='#1f2836', height=41)
+        self.header_frame = tk.Frame(self, bg='#1f2836', height=41)
         self.header_frame.pack(fill='x')
         
         # Keep reference of the image to prevent garbage collection
@@ -89,17 +98,17 @@ class WifiConnectionWindow:
         
         # Page title
         self.title_label = tk.Label(
-            self.root,
+            self,
             text="WiFi Page",
             font=("Arial", 18),
             bg='#1f2836',
             fg='white'
         )
         self.title_label.place(x=10, y=41)
-    
+
     def create_content(self):
         """Create the main content area"""
-        self.content_frame = tk.Frame(self.root, bg=self.bg_color)
+        self.content_frame = tk.Frame(self, bg=self.bg_color)
         self.content_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=(70, 20))
         
         self.network_frame = tk.Frame(self.content_frame, bg=self.bg_color)
@@ -159,7 +168,7 @@ class WifiConnectionWindow:
         self.password_entry.pack(side=tk.LEFT, fill=tk.X, expand=True)
         
         # Bind click to open keyboard and focus out to clean up
-        self.password_entry.bind("<FocusIn>", self.show_keyboard)  # Changed to FocusIn for better reliability
+        self.password_entry.bind("<FocusIn>", self.show_keyboard)
         self.password_entry.bind("<FocusOut>", lambda event: self.keyboard.cleanup_keyboard())
         
         self.show_password = False
@@ -187,7 +196,7 @@ class WifiConnectionWindow:
         
         self.disconnect_button.config(state=tk.DISABLED)
         self.forget_button.config(state=tk.DISABLED)
-    
+
     def create_button(self, parent, text, command):
         """Helper function to create styled buttons"""
         return tk.Button(parent,
@@ -203,12 +212,12 @@ class WifiConnectionWindow:
                         highlightbackground=self.border_color,
                         padx=10,
                         pady=5)
-    
+
     def show_keyboard(self, event):
         """Show the on-screen keyboard for the password entry"""
-        if self.password_entry['state'] == tk.NORMAL:  # Only show if entry is editable
-            self.keyboard.createAlphaKey(self.root, self.password_entry)
-    
+        if self.password_entry['state'] == tk.NORMAL:
+            self.keyboard.createAlphaKey(self, self.password_entry)  # Changed to self instead of root
+
     def scan_wifi_networks(self):
         """Scan for available WiFi networks using iwlist"""
         try:
@@ -252,18 +261,18 @@ class WifiConnectionWindow:
         except Exception as e:
             print(f"Unexpected error: {e}")
             return []
-    
+
     def refresh_networks(self):
         """Populate the network listbox with available networks"""
         self.network_listbox.delete(0, tk.END)
         for network in self.wifi_networks:
             security = "[S] " if network["secured"] else "[O] "
             self.network_listbox.insert(tk.END, f"{security}{network['name']} ({network['signal']})")
-    
+
     def scan_networks(self):
         """Scan for networks and update listbox"""
         self.status_label.config(text="Scanning for networks...")
-        self.root.update()
+        self.update()
         time.sleep(1)
         
         self.wifi_networks = self.scan_wifi_networks()
@@ -276,12 +285,12 @@ class WifiConnectionWindow:
         self.previous_networks = current_networks
         self.refresh_networks()
         self.status_label.config(text="Select a network to connect")
-    
+
     def scan_networks_periodically(self):
         """Periodically scan for networks"""
         self.scan_networks()
-        self.root.after(10000, self.scan_networks_periodically)
-    
+        self.after(10000, self.scan_networks_periodically)
+
     def on_network_select(self, event):
         """Handle network selection"""
         if self.network_listbox.curselection():
@@ -295,7 +304,7 @@ class WifiConnectionWindow:
                 self.password_entry.delete(0, tk.END)
                 self.password_entry.config(state=tk.DISABLED)
                 self.password_label.config(text="No password required")
-    
+
     def toggle_password_visibility(self):
         """Show or hide password"""
         self.show_password = not self.show_password
@@ -305,7 +314,7 @@ class WifiConnectionWindow:
         else:
             self.password_entry.config(show="*")
             self.show_password_button.config(text="Show")
-    
+
     def connect_wifi(self):
         """Connect to selected WiFi network (simulated)"""
         if not self.network_listbox.curselection():
@@ -320,13 +329,13 @@ class WifiConnectionWindow:
             return
         
         self.status_label.config(text=f"Connecting to {network['name']}...")
-        self.root.update()
+        self.update()
         time.sleep(1.5)
         
         self.status_label.config(text=f"Connected to {network['name']}", fg="#4CAF50")
         self.disconnect_button.config(state=tk.NORMAL)
         self.forget_button.config(state=tk.NORMAL)
-    
+
     def disconnect_wifi(self):
         """Disconnect from current network (simulated)"""
         if not self.network_listbox.curselection():
@@ -337,13 +346,13 @@ class WifiConnectionWindow:
         network = self.wifi_networks[index]
         
         self.status_label.config(text=f"Disconnecting from {network['name']}...")
-        self.root.update()
+        self.update()
         time.sleep(1)
         
         self.status_label.config(text="Not connected", fg="#FF6B6B")
         self.disconnect_button.config(state=tk.DISABLED)
         self.forget_button.config(state=tk.DISABLED)
-    
+
     def forget_network(self):
         """Forget the selected network (simulated)"""
         if not self.network_listbox.curselection():
@@ -358,7 +367,7 @@ class WifiConnectionWindow:
             return
         
         self.status_label.config(text=f"Forgetting {network['name']}...")
-        self.root.update()
+        self.update()
         time.sleep(1)
         
         self.wifi_networks.pop(index)
