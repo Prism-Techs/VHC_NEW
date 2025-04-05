@@ -176,27 +176,34 @@ class WifiConnectionWindow:
             for line in output.splitlines():
                 line = line.strip()
                 if "ESSID:" in line:
-                    ssid = re.search(r'ESSID:"(.+)"', line).group(1)
+                    match = re.search(r'ESSID:"(.+)"', line)
+                    if match:  # Only proceed if there's a match
+                        ssid = match.group(1)
                 elif "Signal level" in line:
-                    signal = int(re.search(r'Signal level=(-?\d+)', line).group(1))
+                    match = re.search(r'Signal level=(-?\d+)', line)
+                    if match:
+                        signal = int(match.group(1))
                 elif "Encryption key:on" in line:
                     secured = True
                 elif "Cell" in line and ssid:  # Start of a new network
-                    if ssid:
+                    if ssid and signal is not None:  # Ensure we have both SSID and signal
                         signal_str = "Strong" if signal > -50 else "Medium" if signal > -70 else "Weak"
                         networks.append({"name": ssid, "signal": signal_str, "secured": secured})
                     ssid = None
                     signal = None
                     secured = False
             
-            # Add the last network
-            if ssid:
+            # Add the last network if it exists
+            if ssid and signal is not None:
                 signal_str = "Strong" if signal > -50 else "Medium" if signal > -70 else "Weak"
                 networks.append({"name": ssid, "signal": signal_str, "secured": secured})
             
             return networks
         except subprocess.CalledProcessError as e:
             print(f"Error scanning networks: {e}")
+            return []
+        except Exception as e:
+            print(f"Unexpected error: {e}")
             return []
     
     def refresh_networks(self):
