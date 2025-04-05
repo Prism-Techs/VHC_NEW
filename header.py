@@ -90,7 +90,7 @@ class HeaderComponent:
     def _on_click(self, event):
         """Handle click events on labels"""
         globaladc.buzzer_1()
-        from wifconnector import WifiConnectionWindow  # Import your WifiConnectionWindow class
+        from wificonnector import WifiConnectionWindow  # Import your WifiConnectionWindow class
         self.wifconnector_window = WifiConnectionWindow(self.header_frame.master)  # Create Toplevel window
         # No need to call .show() since Toplevel is visible by default
 
