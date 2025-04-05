@@ -155,7 +155,8 @@ class WifiConnectionWindow:
                                       highlightbackground=self.border_color)
         self.password_entry.pack(side=tk.LEFT, fill=tk.X, expand=True)
 
-        self.password_entry.bind("<Button-1>", self.show_keyboard)
+        self.keyboard.createAlphaKey(self.password_frame, self.password_entry)
+        # self.password_entry.bind("<Button-1>", self.keyboard.createAlphaKey)
         
         self.show_password = False
         self.show_password_button = self.create_button(self.password_frame, "Show", self.toggle_password_visibility)
