@@ -3,17 +3,17 @@ from tkinter import ttk, messagebox
 import subprocess
 import time
 import re
-from header import HeaderComponent
 from PIL import Image, ImageTk
 import os
-from Keyboard import KeyBoard
+from Keyboard import KeyBoard  # Import KeyBoard from keyboard.py
+from globalvar import globaladc  # Assuming this is available
 
 class WifiConnectionWindow:
     def __init__(self, root):
         self.root = root
         self.root.title("Vekaria Healthcare - WiFi Connection")
         self.root.configure(bg="#1F2937")
-        self.keyboard = KeyBoard()
+        
         # Colors for dark theme
         self.bg_color = "#1F2937"
         self.text_color = "#FFFFFF"
@@ -28,6 +28,9 @@ class WifiConnectionWindow:
         self.title_font = ("Arial", 16, "bold")
         self.normal_font = ("Arial", 12)
         self.button_font = ("Arial", 12)
+        
+        # Initialize the keyboard
+        self.keyboard = KeyBoard()
         
         self.create_header()
         self.create_content()
@@ -61,7 +64,7 @@ class WifiConnectionWindow:
                 image=self.images['logo'],
                 bg='#1f2836'
             )
-            self.logo_label.place(x=10, y=9)  # Adjusted for left alignment
+            self.logo_label.place(x=10, y=9)
         except Exception as e:
             print(f"Logo image not found: {e}")
             print(f"Attempted path: {logo_path}")
@@ -70,34 +73,34 @@ class WifiConnectionWindow:
         tk.Label(
             self.header_frame,
             text="Vekaria Healthcare",
-            font=('Helvetica Neue', 14, 'bold'),  # Slightly smaller font for fit
+            font=('Helvetica Neue', 14, 'bold'),
             bg='#1f2836',
             fg='white'
         ).place(x=60, y=10)
         
-        # Version label (aligned to the right within 500px width)
+        # Version label
         tk.Label(
             self.header_frame,
             text="V1.0",
-            font=('Helvetica Neue', 12, 'bold'),  # Slightly smaller font
+            font=('Helvetica Neue', 12, 'bold'),
             bg='#1f2836',
             fg='white'
-        ).place(x=450, y=12)  # Adjusted to fit within 500px width
+        ).place(x=450, y=12)
         
-        # Page title (below header, full width)
+        # Page title
         self.title_label = tk.Label(
             self.root,
             text="WiFi Page",
-            font=("Arial", 18),  # Slightly smaller font for better fit
-            bg='#1f2836',  # Match header background
+            font=("Arial", 18),
+            bg='#1f2836',
             fg='white'
         )
-        self.title_label.place(x=10, y=41)  # Positioned just below header
+        self.title_label.place(x=10, y=41)
     
     def create_content(self):
         """Create the main content area"""
         self.content_frame = tk.Frame(self.root, bg=self.bg_color)
-        self.content_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=(70, 20))  # Adjusted pady to fit header
+        self.content_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=(70, 20))
         
         self.network_frame = tk.Frame(self.content_frame, bg=self.bg_color)
         self.network_frame.pack(fill=tk.X, pady=10)
@@ -118,7 +121,7 @@ class WifiConnectionWindow:
                                         selectbackground="#4B5563",
                                         selectforeground="white",
                                         font=self.normal_font,
-                                        height=8,  # Increased height for better visibility
+                                        height=8,
                                         bd=1,
                                         highlightthickness=1,
                                         highlightbackground=self.border_color)
@@ -154,9 +157,10 @@ class WifiConnectionWindow:
                                       highlightthickness=1,
                                       highlightbackground=self.border_color)
         self.password_entry.pack(side=tk.LEFT, fill=tk.X, expand=True)
-
-        self.keyboard.createAlphaKey(self.password_frame, self.password_entry)
-        # self.password_entry.bind("<Button-1>", self.keyboard.createAlphaKey)
+        
+        # Bind click to open keyboard and focus out to clean up
+        self.password_entry.bind("<FocusIn>", self.show_keyboard)  # Changed to FocusIn for better reliability
+        self.password_entry.bind("<FocusOut>", lambda event: self.keyboard.cleanup_keyboard())
         
         self.show_password = False
         self.show_password_button = self.create_button(self.password_frame, "Show", self.toggle_password_visibility)
@@ -199,6 +203,11 @@ class WifiConnectionWindow:
                         highlightbackground=self.border_color,
                         padx=10,
                         pady=5)
+    
+    def show_keyboard(self, event):
+        """Show the on-screen keyboard for the password entry"""
+        if self.password_entry['state'] == tk.NORMAL:  # Only show if entry is editable
+            self.keyboard.createAlphaKey(self.root, self.password_entry)
     
     def scan_wifi_networks(self):
         """Scan for available WiFi networks using iwlist"""
@@ -360,6 +369,6 @@ class WifiConnectionWindow:
 
 if __name__ == "__main__":
     root = tk.Tk()
-    root.geometry("500x600")  # Fixed size as requested
+    root.geometry("500x600")
     app = WifiConnectionWindow(root)
     root.mainloop()
