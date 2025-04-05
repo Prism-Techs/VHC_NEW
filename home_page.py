@@ -17,7 +17,7 @@ class HomePage:
         self.frame.configure(bg=self.colors['bg_black'])
 
     def Load(self):  # Renamed from load_ui to match convention
-        self.header = HeaderComponent(self.frame, "                                                    Home Page")
+        self.header = HeaderComponent(self.frame, "Macular Densitometer                                                     Home Page")
         self.user_info_label = tk.Label(self.frame, text="Welcome", font=self.fonts['welcome'], fg=self.colors['fg_white'],
                                       bg=self.colors['bg_black'], anchor='w')
         self.button_configs = [
