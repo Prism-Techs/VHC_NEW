@@ -48,6 +48,7 @@ class WifiConnectionWindow(tk.Toplevel):
 
     def on_close(self):
         """Handle window close event"""
+        self.keyboard.cleanup_keyboard()  # Clean up keyboard on close
         self.grab_release()
         self.destroy()
 
@@ -216,7 +217,21 @@ class WifiConnectionWindow(tk.Toplevel):
     def show_keyboard(self, event):
         """Show the on-screen keyboard for the password entry"""
         if self.password_entry['state'] == tk.NORMAL:
-            self.keyboard.createAlphaKey(self, self.password_entry)
+            print("Attempting to show keyboard")  # Debug print
+            try:
+                # Try creating keyboard with the Toplevel first
+                self.keyboard.createAlphaKey(self, self.password_entry)
+                print("Keyboard created successfully with Toplevel")  # Debug print
+                self.password_entry.focus_set()  # Ensure focus is on the entry
+            except Exception as e:
+                print(f"Error creating keyboard with Toplevel: {e}")  # Debug error
+                try:
+                    # Fallback: Try creating keyboard with the parent (root) window
+                    self.keyboard.createAlphaKey(self.parent, self.password_entry)
+                    print("Keyboard created successfully with parent")  # Debug print
+                    self.password_entry.focus_set()
+                except Exception as e:
+                    print(f"Error creating keyboard with parent: {e}")  # Debug error
 
     def scan_wifi_networks(self):
         """Scan for available WiFi networks using iwlist"""
