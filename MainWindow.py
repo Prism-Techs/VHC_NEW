@@ -62,14 +62,14 @@ class mainWindow:
             pageDisctonary['MainScreen'].hide()
             pageDisctonary['BrkparaFovea'].show()
 
-        fwButton = tk.Button(self.frame, text=">>", font=FONT_SECONDARY,
-                            command=onfw, bg='#28a745', fg='white', bd=0,
-                            activebackground="#218838", width=10)
-        bwButton = tk.Button(self.frame, text="<<", font=FONT_SECONDARY,
-                            command=onbw, bg='#28a745', fg='white', bd=0,
-                            activebackground="#218838", width=10)
-        bwButton.place(x=20, y=500)
-        fwButton.place(x=160, y=500)
+        # fwButton = tk.Button(self.frame, text=">>", font=FONT_SECONDARY,
+        #                     command=onfw, bg='#28a745', fg='white', bd=0,
+        #                     activebackground="#218838", width=10)
+        # bwButton = tk.Button(self.frame, text="<<", font=FONT_SECONDARY,
+        #                     command=onbw, bg='#28a745', fg='white', bd=0,
+        #                     activebackground="#218838", width=10)
+        # bwButton.place(x=20, y=500)
+        # fwButton.place(x=160, y=500)
 
     def setup_ui(self):
         self.main_frame = tk.Frame(self.frame, bg='black')
