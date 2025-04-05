@@ -3,6 +3,9 @@ from tkinter import ttk, messagebox
 import subprocess
 import time
 import re
+from header import HeaderComponent
+from PIL import Image, ImageTk
+import os
 
 class WifiConnectionWindow:
     def __init__(self, root):
@@ -36,30 +39,64 @@ class WifiConnectionWindow:
         self.scan_networks_periodically()
     
     def create_header(self):
-        """Create the header with logo and title"""
-        self.header_frame = tk.Frame(self.root, bg="#000000", height=40)
-        self.header_frame.pack(fill=tk.X)
+        """Create the header with logo, company name, version, and title"""
+        self.header_frame = tk.Frame(self.root, bg='#1f2836', height=41)
+        self.header_frame.pack(fill='x')
         
-        self.logo_label = tk.Label(self.header_frame, text="Vekaria Healthcare", 
-                                  font=("Arial", 14, "bold"), fg="#FFFFFF", bg="#000000")
-        self.logo_label.pack(side=tk.LEFT, padx=10)
+        # Keep reference of the image to prevent garbage collection
+        self.images = {}
         
-        self.version_label = tk.Label(self.header_frame, text="V1.0", 
-                                     font=("Arial", 12), fg="#FFFFFF", bg="#000000")
-        self.version_label.pack(side=tk.RIGHT, padx=10)
+        # Get current directory and construct absolute paths
+        current_dir = os.path.dirname(os.path.realpath(__file__))
+        logo_path = os.path.join(current_dir, "logo.png")
         
-        self.wifi_icon = tk.Label(self.header_frame, text="WiFi", 
-                                 font=("Arial", 12), fg="#FFFFFF", bg="#000000")
-        self.wifi_icon.pack(side=tk.RIGHT, padx=5)
+        # Setup company logo
+        try:
+            logo = Image.open(logo_path)
+            logo = logo.resize((44, 23))
+            self.images['logo'] = ImageTk.PhotoImage(logo)
+            self.logo_label = tk.Label(
+                self.header_frame, 
+                image=self.images['logo'],
+                bg='#1f2836'
+            )
+            self.logo_label.place(x=10, y=9)  # Adjusted for left alignment
+        except Exception as e:
+            print(f"Logo image not found: {e}")
+            print(f"Attempted path: {logo_path}")
+        
+        # Company name label
+        tk.Label(
+            self.header_frame,
+            text="Vekaria Healthcare",
+            font=('Helvetica Neue', 14, 'bold'),  # Slightly smaller font for fit
+            bg='#1f2836',
+            fg='white'
+        ).place(x=60, y=10)
+        
+        # Version label (aligned to the right within 500px width)
+        tk.Label(
+            self.header_frame,
+            text="V1.0",
+            font=('Helvetica Neue', 12, 'bold'),  # Slightly smaller font
+            bg='#1f2836',
+            fg='white'
+        ).place(x=450, y=12)  # Adjusted to fit within 500px width
+        
+        # Page title (below header, full width)
+        self.title_label = tk.Label(
+            self.root,
+            text="WiFi Page",
+            font=("Arial", 18),  # Slightly smaller font for better fit
+            bg='#1f2836',  # Match header background
+            fg='white'
+        )
+        self.title_label.place(x=10, y=41)  # Positioned just below header
     
     def create_content(self):
         """Create the main content area"""
         self.content_frame = tk.Frame(self.root, bg=self.bg_color)
-        self.content_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
-        
-        self.title_label = tk.Label(self.content_frame, text="WiFi Connection", 
-                                   font=self.title_font, bg=self.bg_color, fg=self.text_color)
-        self.title_label.pack(pady=(0, 20))
+        self.content_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=(70, 20))  # Adjusted pady to fit header
         
         self.network_frame = tk.Frame(self.content_frame, bg=self.bg_color)
         self.network_frame.pack(fill=tk.X, pady=10)
@@ -80,7 +117,7 @@ class WifiConnectionWindow:
                                         selectbackground="#4B5563",
                                         selectforeground="white",
                                         font=self.normal_font,
-                                        height=6,
+                                        height=8,  # Increased height for better visibility
                                         bd=1,
                                         highlightthickness=1,
                                         highlightbackground=self.border_color)
@@ -162,12 +199,10 @@ class WifiConnectionWindow:
     def scan_wifi_networks(self):
         """Scan for available WiFi networks using iwlist"""
         try:
-            # Run iwlist command to scan WiFi networks (requires sudo on Raspberry Pi)
             result = subprocess.run(['sudo', 'iwlist', 'wlan0', 'scan'], 
                                   capture_output=True, text=True, check=True)
             output = result.stdout
             
-            # Parse the output to extract SSID and signal strength
             networks = []
             ssid = None
             signal = None
@@ -177,7 +212,7 @@ class WifiConnectionWindow:
                 line = line.strip()
                 if "ESSID:" in line:
                     match = re.search(r'ESSID:"(.+)"', line)
-                    if match:  # Only proceed if there's a match
+                    if match:
                         ssid = match.group(1)
                 elif "Signal level" in line:
                     match = re.search(r'Signal level=(-?\d+)', line)
@@ -185,15 +220,14 @@ class WifiConnectionWindow:
                         signal = int(match.group(1))
                 elif "Encryption key:on" in line:
                     secured = True
-                elif "Cell" in line and ssid:  # Start of a new network
-                    if ssid and signal is not None:  # Ensure we have both SSID and signal
+                elif "Cell" in line and ssid:
+                    if ssid and signal is not None:
                         signal_str = "Strong" if signal > -50 else "Medium" if signal > -70 else "Weak"
                         networks.append({"name": ssid, "signal": signal_str, "secured": secured})
                     ssid = None
                     signal = None
                     secured = False
             
-            # Add the last network if it exists
             if ssid and signal is not None:
                 signal_str = "Strong" if signal > -50 else "Medium" if signal > -70 else "Weak"
                 networks.append({"name": ssid, "signal": signal_str, "secured": secured})
@@ -217,12 +251,11 @@ class WifiConnectionWindow:
         """Scan for networks and update listbox"""
         self.status_label.config(text="Scanning for networks...")
         self.root.update()
-        time.sleep(1)  # Simulate scanning delay (can be removed if scan is fast)
+        time.sleep(1)
         
         self.wifi_networks = self.scan_wifi_networks()
         current_networks = {n["name"] for n in self.wifi_networks}
         
-        # Check for new networks
         new_networks = current_networks - self.previous_networks
         if new_networks:
             messagebox.showinfo("Network Available", f"New network(s) detected: {', '.join(new_networks)}")
@@ -234,7 +267,7 @@ class WifiConnectionWindow:
     def scan_networks_periodically(self):
         """Periodically scan for networks"""
         self.scan_networks()
-        self.root.after(10000, self.scan_networks_periodically)  # Scan every 10 seconds
+        self.root.after(10000, self.scan_networks_periodically)
     
     def on_network_select(self, event):
         """Handle network selection"""
@@ -275,7 +308,7 @@ class WifiConnectionWindow:
         
         self.status_label.config(text=f"Connecting to {network['name']}...")
         self.root.update()
-        time.sleep(1.5)  # Simulate connection delay
+        time.sleep(1.5)
         
         self.status_label.config(text=f"Connected to {network['name']}", fg="#4CAF50")
         self.disconnect_button.config(state=tk.NORMAL)
@@ -323,6 +356,6 @@ class WifiConnectionWindow:
 
 if __name__ == "__main__":
     root = tk.Tk()
-    root.geometry("500x600")
+    root.geometry("500x600")  # Fixed size as requested
     app = WifiConnectionWindow(root)
     root.mainloop()
