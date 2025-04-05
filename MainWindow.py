@@ -40,7 +40,7 @@ class mainWindow:
         # Time label - centered at the top below header
         self.timelabel = tk.Label(self.frame, font=FONT_TIME, bg="black", fg="white")
         self.updateDateTime()
-        self.timelabel.place(x=412, y=60, width=200, height=30)  # Centered within 1024 width
+        # self.timelabel.place(x=412, y=60, width=200, height=30)  # Centered within 1024 width
 
         # Header
         self.header = HeaderComponent(
@@ -68,8 +68,8 @@ class mainWindow:
         bwButton = tk.Button(self.frame, text="<<", font=FONT_SECONDARY, 
                             command=onbw, bg='#28a745', fg='white', bd=0, 
                             activebackground="#218838", width=10)
-        bwButton.place(x=412, y=540, width=100, height=40)  # Left of center
-        fwButton.place(x=512, y=540, width=100, height=40)  # Right of center
+        # bwButton.place(x=412, y=540, width=100, height=40)  # Left of center
+        # fwButton.place(x=512, y=540, width=100, height=40)  # Right of center
 
     def setup_ui(self):
         self.main_frame = tk.Frame(self.frame, bg='black')
