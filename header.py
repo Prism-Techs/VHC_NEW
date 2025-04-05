@@ -2,6 +2,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 from tkinter import font
 import os
+from globalvar import globaladc
 
 class HeaderComponent:
     def __init__(self, parent_frame, page_title=""):
@@ -92,6 +93,7 @@ class HeaderComponent:
     def _on_click(self, event):
         """Handle click events on labels"""
         if hasattr(event.widget, 'callback') and event.widget.callback:
+            globaladc.buzzer_1()
             event.widget.callback()
 
     def set_wifi_callback(self, callback):
