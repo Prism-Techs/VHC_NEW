@@ -18,6 +18,11 @@ class PatientInfo :
          self.CFF_P = 0.00
          self.f_mpod = 0.00
          self.f_sd = 0.00
+         self.Nationality = "Indian"
+         self.Aadhaar = None
+         self.Mobile = None
+         self.FoodHabit = None
+        
          self.valueArray = [0]*2
          self.valueArray[0] = "0x20"
          self.valueArray[1] = "0x30"
