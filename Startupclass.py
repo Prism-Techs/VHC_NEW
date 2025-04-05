@@ -164,11 +164,11 @@ class StatrupClass:
         self.brkf_1.hide()
         self.brkf_2.hide()
         self.admin.hide()
-        self.ShowStartButton()
+        self.HideStartButton()
         # self.ShowAdminButton()
         self.HideAdminButton()
 
-        self.ShowFlikerButton()
+        self.HideFlikerButton()
         self.HideHomeButton()
         currentPatientInfo.log_update("Enter_to_Home_screen")
 
