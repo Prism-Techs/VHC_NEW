@@ -46,8 +46,8 @@ class LoginApp:
             self.radio_buttons[mode] = rb
         self.login_btn = tk.Button(self.content_frame, text="LOGIN", font=('Arial', 24, 'bold'), bg='#1f2836', fg='white', bd=1,
                                  relief='solid', command=self.handle_login)
-        self.time_label = tk.Label(self.frame, font=('Helvetica Neue', 10), bg='black', fg='white')
-        self.date_label = tk.Label(self.frame, font=('Helvetica Neue', 10), bg='black', fg='white')
+        # self.time_label = tk.Label(self.frame, font=('Helvetica Neue', 10), bg='black', fg='white')
+        # self.date_label = tk.Label(self.frame, font=('Helvetica Neue', 10), bg='black', fg='white')
 
     def show(self):  # Renamed from show_ui to match convention
         self.header.set_wifi_callback(self.open_wifi_page)
@@ -76,8 +76,8 @@ class LoginApp:
         self.login_btn.place(x=230, y=350, width=161, height=51)
         self.login_btn.bind('<Enter>', self.on_login_hover)
         self.login_btn.bind('<Leave>', self.on_login_leave)
-        self.time_label.place(x=960, y=550)
-        self.date_label.place(x=934, y=570)
+        # self.time_label.place(x=960, y=550)
+        # self.date_label.place(x=934, y=570)
         self.update_datetime()
 
     def hide(self):

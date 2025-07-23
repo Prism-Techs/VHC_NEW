@@ -31,8 +31,8 @@ class HomePage:
             button = tk.Button(self.frame, text=text, command=command, font=self.fonts['button'], bg=self.colors['button_normal'],
                              fg=self.colors['fg_white'], bd=1, relief='solid', width=15, height=1)
             self.buttons.append(button)
-        self.time_label = tk.Label(self.frame, font=self.fonts['datetime'], fg=self.colors['fg_white'], bg=self.colors['bg_black'])
-        self.date_label = tk.Label(self.frame, font=self.fonts['datetime'], fg=self.colors['fg_white'], bg=self.colors['bg_black'])
+        # self.time_label = tk.Label(self.frame, font=self.fonts['datetime'], fg=self.colors['fg_white'], bg=self.colors['bg_black'])
+        # self.date_label = tk.Label(self.frame, font=self.fonts['datetime'], fg=self.colors['fg_white'], bg=self.colors['bg_black'])
 
     def show(self):  # Renamed from show_ui to match convention
         self.frame.place(width=1024, height=600)  # Full screen placement
@@ -43,8 +43,8 @@ class HomePage:
             button.place(x=382, y=y_positions[i])
             button.bind('<Enter>', lambda e, b=button: b.config(bg=self.colors['button_hover'], fg=self.colors['button_hover_fg'], bd=2))
             button.bind('<Leave>', lambda e, b=button: b.config(bg=self.colors['button_normal'], fg=self.colors['fg_white'], bd=1))
-        self.time_label.place(x=900, y=560)
-        self.date_label.place(x=900, y=580)
+        # self.time_label.place(x=900, y=560)
+        # self.date_label.place(x=900, y=580)
         self.update_datetime()
         self.check_user_role()
 
@@ -53,9 +53,9 @@ class HomePage:
 
     def update_datetime(self):
         current = datetime.now()
-        self.time_label.config(text=current.strftime('%H:%M'))
-        self.date_label.config(text=current.strftime('%d-%m-%Y'))
-        self.frame.after(self.time_update_interval, self.update_datetime)
+        # self.time_label.config(text=current.strftime('%H:%M'))
+        # self.date_label.config(text=current.strftime('%d-%m-%Y'))
+        # self.frame.after(self.time_update_interval, self.update_datetime)
 
     def switch_to_wifi(self):
         # Placeholder for WiFi settings (uncomment and implement if needed)
