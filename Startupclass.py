@@ -206,7 +206,7 @@ class StatrupClass:
         self.HideStartButton()
         self.HideFlikerButton()
         # self.ShowHomeButton()
-        self.HomeScreenButton.place(x=700, y=520)
+        # self.HomeScreenButton.place(x=700, y=520)
         currentPatientInfo.log_update("Enter_to_Flicker_screen")
 
     def ShowTestRunScreen(self):
