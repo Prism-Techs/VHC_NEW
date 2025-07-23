@@ -18,7 +18,7 @@ Font2 = ("Arial",20)
 defaultdepth = 1
 maxdepth_1 = 19
 maxdepth_2 = 2.00
-resume_spot_x = 450
+resume_spot_x = 300
 resume_spot_y = 240
 
 class BrkFovea_1 :
@@ -332,10 +332,11 @@ class BrkFovea_1 :
         #self.saveButton['state'] = tk.enable
                    
 
-        self.resumeButton = tk.Button(self.frame,
-                                 text="Resume",
-                                 command=self.handleResume, font=Font, bg='Orange',
-                                 width=10)
+        self.resumeButton = tk.Button(self.content_frame,
+                                text="RESUME",
+                                command=self.handleResume, font=Font,
+                                width=10, bg='#28a745', fg='white',
+                                relief='solid', bd=2)
 
         self.resumeButton.place(x=resume_spot_x,y=resume_spot_y)
 

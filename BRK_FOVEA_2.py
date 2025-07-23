@@ -18,7 +18,7 @@ defaultdepth = 11
 maxdepth_1 = 225
 maxdepth_2 = 2.00
 intervel = globaladc.get_brk_delay()   #0.128
-resume_spot_x = 250
+resume_spot_x = 300
 resume_spot_y = 240
 
 class BrkparaFovea :
@@ -338,9 +338,10 @@ class BrkparaFovea :
             self.patient_switch_enable()
 
         self.resumeButton = tk.Button(self.content_frame,
-                                 text="Resume",
-                                 command=handleResume, font=Font, bg='Orange',
-                                 width=10)
+                                text="RESUME",
+                                command=handleResume, font=Font,
+                                width=10, bg='#28a745', fg='white',
+                                relief='solid', bd=2)
 
         self.resumeButton.place(x=resume_spot_x,y=resume_spot_y)
 
