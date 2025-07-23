@@ -62,82 +62,80 @@ class mainWindow:
             pageDisctonary['MainScreen'].hide()
             pageDisctonary['BrkparaFovea'].show()
 
-        # fwButton = tk.Button(self.frame, text=">>", font=FONT_SECONDARY,
-        #                     command=onfw, bg='#28a745', fg='white', bd=0,
-        #                     activebackground="#218838", width=10)
-        # bwButton = tk.Button(self.frame, text="<<", font=FONT_SECONDARY,
-        #                     command=onbw, bg='#28a745', fg='white', bd=0,
-        #                     activebackground="#218838", width=10)
-        # bwButton.place(x=20, y=500)
-        # fwButton.place(x=160, y=500)
-
     def setup_ui(self):
         self.main_frame = tk.Frame(self.frame, bg='black')
-        self.main_frame.place(x=20, y=100, width=1000, height=460)  # Increased width to use full screen (1024px - margin)
+        self.main_frame.place(x=20, y=100, width=1000, height=460)
 
-        # Create form fields - with proper spacing
+        # Create form fields - left column with better spacing
         self.create_text_field("1st Name", 0, 20, "first name")
-        self.create_text_field("Mid. Name", 0, 80, "Middle Name")
-        self.create_text_field("Surname", 0, 140, "Surname")
-        self.create_text_field("DOB", 0, 200, "Date of Birth")
-        self.create_text_field("Aadhaar", 0, 260, "Aadhaar No")
-        self.create_text_field("Mobile", 0, 320, "+91XXXXXXXXXX")
-        self.create_text_field("Nationality", 0, 380, "Enter Nationality")
+        self.create_text_field("Mid. Name", 0, 70, "Middle Name")
+        self.create_text_field("Surname", 0, 120, "Surname")
+        self.create_text_field("DOB", 0, 170, "dd-mm-yyyy")
+        self.create_text_field("Aadhaar", 0, 220, "Aadhaar No")
+        self.create_text_field("Mobile", 0, 270, "+91XXXXXXXXXX")
+        self.create_text_field("Nationality", 0, 320, "Enter Nationality")
 
-        # Radio button groups - positioned with more space
-        # Increased x position to create more space between the columns
-        self.create_radio_group("Gender", 400, 20, self.gender_var, [("Male", "Male"), ("Female", "Female")])
-        self.create_radio_group("Eye Side", 400, 80, self.eye_side_var, [("R", "R"), ("L", "L")])
-        self.create_radio_group("Alcohol", 400, 140, self.alcohol_var, [("Yes", "Yes"), ("No", "No")])
-        self.create_radio_group("Smoking", 400, 200, self.smoking_var, [("Yes", "Yes"), ("No", "No")])
-        self.create_radio_group("Food Habit", 400, 260, self.food_var, [("Veg", "Veg"), ("Non-Veg", "Non-Veg")])
+        # Radio button groups - right column with proper spacing and alignment
+        self.create_radio_group("Gender", 450, 20, self.gender_var, [("Male", "Male"), ("Female", "Female")])
+        self.create_radio_group("Eye Side", 450, 70, self.eye_side_var, [("R", "R"), ("L", "L")])
+        self.create_radio_group("Alcohol", 450, 120, self.alcohol_var, [("Yes", "Yes"), ("No", "No")])
+        self.create_radio_group("Smoking", 450, 170, self.smoking_var, [("Yes", "Yes"), ("No", "No")])
+        self.create_radio_group("Food Habit", 450, 220, self.food_var, [("Veg", "Veg"), ("Non-Veg", "Non-Veg")])
 
-        # Medical fields - adjusted position and width
-        self.create_medical_field("Blood Pressure", 400, 320, self.bp_var, "80/120")
-        self.create_medical_field("Diabetes", 400, 380, self.diabetes_var, "97")
+        # Medical fields - with proper spacing and wider entry fields
+        self.create_medical_field("Blood Pressure", 450, 270, self.bp_var, "80/120")
+        self.create_medical_field("Diabetes", 450, 320, self.diabetes_var, "97")
 
     def create_text_field(self, label_text, x, y, placeholder):
+        # Create label with consistent width and right alignment
         label = tk.Label(self.main_frame, text=label_text, font=FONT_MAIN, bg='black', fg='white', anchor='e')
-        label.place(x=x, y=y, width=140, height=31)
+        label.place(x=x, y=y, width=120, height=35)
+        
+        # Create entry field with proper spacing
         entry = tk.Entry(self.main_frame, font=FONT_SECONDARY, bg='#334155', fg='#94a3b8',
                         insertbackground='white', bd=0, highlightthickness=1, highlightcolor='#42A5F5')
-        entry.place(x=x+150, y=y, width=200, height=31)  # Increased width
+        entry.place(x=x+130, y=y, width=250, height=35)
         entry.insert(0, placeholder)
         entry.bind('<FocusIn>', lambda e: self.on_entry_focus_in(entry, placeholder))
         entry.bind('<FocusOut>', lambda e: self.on_entry_focus_out(entry, placeholder))
-        setattr(self, f"{label_text.lower().replace(' ', '_')}_entry", entry)
+        setattr(self, f"{label_text.lower().replace(' ', '_').replace('.', '')}_entry", entry)
 
     def create_radio_group(self, label_text, x, y, variable, options):
+        # Create label with consistent width and right alignment
         label = tk.Label(self.main_frame, text=label_text, font=FONT_MAIN, bg='black', fg='white', anchor='e')
-        label.place(x=x, y=y, width=150, height=31)  # Increased width for label
+        label.place(x=x, y=y, width=120, height=35)
         
-        # Calculate proper spacing for radio buttons
-        option_width = 100
+        # Create radio buttons with proper spacing to prevent cutoff
+        option_width = 90  # Increased width for better text display
         for i, (value, text) in enumerate(options):
             rb = tk.Radiobutton(self.main_frame, text=text, variable=variable, value=value,
                             font=FONT_SECONDARY, bg='black', fg='white', selectcolor='black',
                             activebackground='black', activeforeground='white',
-                            highlightthickness=0)
-            rb.place(x=x+160+(i*option_width), y=y, width=option_width, height=31)
+                            highlightthickness=0, anchor='w')  # Left align text
+            rb.place(x=x+130+(i*option_width), y=y, width=option_width, height=35)
 
     def create_medical_field(self, label_text, x, y, variable, placeholder):
+        # Create label with consistent width and right alignment
         label = tk.Label(self.main_frame, text=label_text, font=FONT_MAIN, bg='black', fg='white', anchor='e')
-        label.place(x=x, y=y, width=180, height=31)
+        label.place(x=x, y=y, width=120, height=35)
         
-        # Position radio buttons with proper spacing
-        tk.Radiobutton(self.main_frame, text="Yes", variable=variable, value="Yes",
+        # Create radio buttons with proper spacing
+        yes_rb = tk.Radiobutton(self.main_frame, text="Yes", variable=variable, value="Yes",
                     font=FONT_SECONDARY, bg='black', fg='white', selectcolor='black',
-                    activebackground='black', activeforeground='white', highlightthickness=0
-                    ).place(x=x+160, y=y, width=60, height=31)
+                    activebackground='black', activeforeground='white', highlightthickness=0,
+                    anchor='w')
+        yes_rb.place(x=x+130, y=y, width=60, height=35)
                     
-        tk.Radiobutton(self.main_frame, text="No", variable=variable, value="No",
+        no_rb = tk.Radiobutton(self.main_frame, text="No", variable=variable, value="No",
                     font=FONT_SECONDARY, bg='black', fg='white', selectcolor='black',
-                    activebackground='black', activeforeground='white', highlightthickness=0
-                    ).place(x=x+220, y=y, width=60, height=31)
+                    activebackground='black', activeforeground='white', highlightthickness=0,
+                    anchor='w')
+        no_rb.place(x=x+200, y=y, width=60, height=35)
                     
+        # Create entry field with adequate width and spacing
         entry = tk.Entry(self.main_frame, font=FONT_SECONDARY, bg='#334155', fg='#94a3b8',
                         insertbackground='white', bd=0, highlightthickness=1, highlightcolor='#42A5F5')
-        entry.place(x=x+290, y=y, width=200, height=31)  # Increased width and adjusted position
+        entry.place(x=x+270, y=y, width=150, height=35)  # Adequate width for text
         entry.insert(0, placeholder) 
         entry.bind('<FocusIn>', lambda e: self.on_entry_focus_in(entry, placeholder))
         entry.bind('<FocusOut>', lambda e: self.on_entry_focus_out(entry, placeholder))
@@ -218,7 +216,7 @@ class mainWindow:
         if entry_widget is None:
             return ""
         value = entry_widget.get()
-        if value in ["first name", "Middle Name", "Surname", "dd-mm-yyy", "Aadhaar No", "+91XXXXXXXXXX", "80/120", "97", "Enter Nationality"]:
+        if value in ["first name", "Middle Name", "Surname", "dd-mm-yyyy", "Aadhaar No", "+91XXXXXXXXXX", "80/120", "97", "Enter Nationality"]:
             return ""
         return value
 
