@@ -199,7 +199,7 @@ class StatrupClass:
         self.home.hide()
         self.mw.hide()
         self.cff.show()
-        self.cffP.show()
+        self.cffP.hide()
         self.brkf_1.hide()
         self.brkf_2.hide()
         self.admin.hide()
