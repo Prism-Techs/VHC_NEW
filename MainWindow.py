@@ -86,11 +86,11 @@ class mainWindow:
 
         # Radio button groups - positioned with more space
         # Increased x position to create more space between the columns
-        self.create_radio_group("Gender", 350, 20, self.gender_var, [("Male", "Male"), ("Female", "Female")])
-        self.create_radio_group("Eye Side", 350, 80, self.eye_side_var, [("R", "R"), ("L", "L")])
-        self.create_radio_group("Alcohol", 350, 140, self.alcohol_var, [("Yes", "Yes"), ("No", "No")])
-        self.create_radio_group("Smoking", 350, 200, self.smoking_var, [("Yes", "Yes"), ("No", "No")])
-        self.create_radio_group("Food Habit", 350, 260, self.food_var, [("Veg", "Veg"), ("Non-Veg", "Non-Veg")])
+        self.create_radio_group("Gender", 380, 20, self.gender_var, [("Male", "Male"), ("Female", "Female")])
+        self.create_radio_group("Eye Side", 380, 80, self.eye_side_var, [("R", "R"), ("L", "L")])
+        self.create_radio_group("Alcohol", 380, 140, self.alcohol_var, [("Yes", "Yes"), ("No", "No")])
+        self.create_radio_group("Smoking", 380, 200, self.smoking_var, [("Yes", "Yes"), ("No", "No")])
+        self.create_radio_group("Food Habit", 380, 260, self.food_var, [("Veg", "Veg"), ("Non-Veg", "Non-Veg")])
 
         # Medical fields - adjusted position and width
         self.create_medical_field("B.P", 350, 320, self.bp_var, "80/120")
