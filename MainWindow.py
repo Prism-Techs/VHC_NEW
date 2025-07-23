@@ -112,7 +112,7 @@ class mainWindow:
         label.place(x=x, y=y, width=150, height=31)  # Increased width for label
         
         # Calculate proper spacing for radio buttons
-        option_width = 150
+        option_width = 100
         for i, (value, text) in enumerate(options):
             rb = tk.Radiobutton(self.main_frame, text=text, variable=variable, value=value,
                             font=FONT_SECONDARY, bg='black', fg='white', selectcolor='black',
