@@ -109,7 +109,7 @@ class mainWindow:
 
     def create_radio_group(self, label_text, x, y, variable, options):
         label = tk.Label(self.main_frame, text=label_text, font=FONT_MAIN, bg='black', fg='white', anchor='e')
-        label.place(x=x, y=y, width=200, height=31)  # Increased width for label
+        label.place(x=x, y=y, width=100, height=31)  # Increased width for label
         
         # Calculate proper spacing for radio buttons
         option_width = 100
