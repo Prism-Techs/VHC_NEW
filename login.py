@@ -100,8 +100,8 @@ class LoginApp:
     def update_datetime(self):
         current_time = datetime.now().strftime('%H:%M')
         current_date = datetime.now().strftime('%d-%m-%Y')
-        self.time_label.config(text=current_time)
-        self.date_label.config(text=current_date)
+        # self.time_label.config(text=current_time)
+        # self.date_label.config(text=current_date)
         self.frame.after(1000, self.update_datetime)
 
     def on_entry_click(self, entry, default_text):
