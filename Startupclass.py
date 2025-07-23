@@ -210,12 +210,12 @@ class StatrupClass:
         currentPatientInfo.log_update("Enter_to_Flicker_screen")
 
     def ShowTestRunScreen(self):
-        self.cff.show()
+        self.cff.hide()
         self.hm.hide()
         self.home.hide()
         self.mw.hide()
         self.fw.hide()
-        self.cffP.hide()
+        self.cffP.show()
         self.brkf_1.hide()
         self.brkf_2.hide()
         self.admin.hide()
