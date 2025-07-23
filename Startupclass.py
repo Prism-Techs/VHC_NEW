@@ -122,11 +122,11 @@ class StatrupClass:
 
     def ShowLoginScreen(self):
         self.hm.hide()
-        self.home.hide()
+        self.home.show()
         self.mw.hide()
         self.fw.hide()
         self.cff.hide()
-        self.cffP.show()
+        self.cffP.hide()
         self.brkf_1.hide()
         self.brkf_2.hide()
         self.admin.hide()

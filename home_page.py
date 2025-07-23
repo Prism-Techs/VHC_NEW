@@ -55,7 +55,7 @@ class HomePage:
         current = datetime.now()
         # self.time_label.config(text=current.strftime('%H:%M'))
         # self.date_label.config(text=current.strftime('%d-%m-%Y'))
-        # self.frame.after(self.time_update_interval, self.update_datetime)
+        self.frame.after(self.time_update_interval, self.update_datetime)
 
     def switch_to_wifi(self):
         # Placeholder for WiFi settings (uncomment and implement if needed)
