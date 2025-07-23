@@ -43,8 +43,8 @@ class StatrupClass:
         self.FlikerDemoButton.place(x=x+420, y=520)
 
     def ShowHomeButton(self):
-        # self.HomeScreenButton.place(x=700, y=520)
-        pass
+        self.HomeScreenButton.place(x=100, y=520)
+        # pass
 
     def HideHomeButton(self):
         self.HomeScreenButton.place_forget()
@@ -206,7 +206,7 @@ class StatrupClass:
         self.HideAdminButton()
         self.HideStartButton()
         self.HideFlikerButton()
-        # self.ShowHomeButton()
+        self.ShowHomeButton()
         # self.HomeScreenButton.place(x=700, y=520)
         currentPatientInfo.log_update("Enter_to_Flicker_screen")
 
@@ -223,7 +223,7 @@ class StatrupClass:
         self.HideAdminButton()
         self.HideFlikerButton()
         self.HideStartButton()
-        # self.ShowHomeButton()
+        self.ShowHomeButton()
         currentPatientInfo.log_update_pashent()
         currentPatientInfo.log_update("Enter_to_CFF_screen")
 
@@ -240,7 +240,7 @@ class StatrupClass:
         self.HideAdminButton()
         self.HideFlikerButton()
         self.HideStartButton()
-        # self.ShowHomeButton()
+        self.ShowHomeButton()
         currentPatientInfo.log_update("Enter_to_CFFP_screen")
 
     def handleAdmin(self):
