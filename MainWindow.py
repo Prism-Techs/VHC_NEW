@@ -93,9 +93,8 @@ class mainWindow:
         self.create_radio_group("Food Habit", 400, 260, self.food_var, [("Veg", "Veg"), ("Non-Veg", "Non-Veg")])
 
         # Medical fields - adjusted position and width
-        self.create_medical_field("B.P", 350, 320, self.bp_var, "80/120")
-        self.create_medical_field("Diabetes", 380, 380, self.diabetes_var, "97")
-
+        self.create_medical_field("B.P", 300, 320, self.bp_var, "80/120")
+        self.create_medical_field("Diabetes", 300, 380, self.diabetes_var, "97")
     def create_text_field(self, label_text, x, y, placeholder):
         label = tk.Label(self.main_frame, text=label_text, font=FONT_MAIN, bg='black', fg='white', anchor='e')
         label.place(x=x, y=y, width=140, height=31)
@@ -123,22 +122,22 @@ class mainWindow:
 
     def create_medical_field(self, label_text, x, y, variable, placeholder):
         label = tk.Label(self.main_frame, text=label_text, font=FONT_MAIN, bg='black', fg='white', anchor='e')
-        label.place(x=x, y=y, width=180, height=31)
+        label.place(x=x, y=y, width=200, height=31)  # Increased width from 180 to 200
         
-        # Position radio buttons with proper spacing
+        # Position radio buttons with proper spacing - increased width for better visibility
         tk.Radiobutton(self.main_frame, text="Yes", variable=variable, value="Yes",
                     font=FONT_SECONDARY, bg='black', fg='white', selectcolor='black',
                     activebackground='black', activeforeground='white', highlightthickness=0
-                    ).place(x=x+160, y=y, width=60, height=31)
+                    ).place(x=x+210, y=y, width=80, height=31)  # Adjusted x position
                     
         tk.Radiobutton(self.main_frame, text="No", variable=variable, value="No",
                     font=FONT_SECONDARY, bg='black', fg='white', selectcolor='black',
                     activebackground='black', activeforeground='white', highlightthickness=0
-                    ).place(x=x+220, y=y, width=60, height=31)
+                    ).place(x=x+290, y=y, width=80, height=31)  # Adjusted x position
                     
         entry = tk.Entry(self.main_frame, font=FONT_SECONDARY, bg='#334155', fg='#94a3b8',
                         insertbackground='white', bd=0, highlightthickness=1, highlightcolor='#42A5F5')
-        entry.place(x=x+290, y=y, width=200, height=31)  # Increased width and adjusted position
+        entry.place(x=x+380, y=y, width=200, height=31)  # Adjusted x position
         entry.insert(0, placeholder) 
         entry.bind('<FocusIn>', lambda e: self.on_entry_focus_in(entry, placeholder))
         entry.bind('<FocusOut>', lambda e: self.on_entry_focus_out(entry, placeholder))
