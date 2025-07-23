@@ -93,8 +93,8 @@ class mainWindow:
         self.create_radio_group("Food Habit", 400, 260, self.food_var, [("Veg", "Veg"), ("Non-Veg", "Non-Veg")])
 
         # Medical fields - adjusted position and width
-        self.create_medical_field("B.P", 400, 320, self.bp_var, "80/120")
-        self.create_medical_field("Diabetes", 400, 380, self.diabetes_var, "97")
+        self.create_medical_field("B.P", 350, 320, self.bp_var, "80/120")
+        self.create_medical_field("Diabetes", 380, 380, self.diabetes_var, "97")
 
     def create_text_field(self, label_text, x, y, placeholder):
         label = tk.Label(self.main_frame, text=label_text, font=FONT_MAIN, bg='black', fg='white', anchor='e')
