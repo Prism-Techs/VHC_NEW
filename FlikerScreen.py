@@ -20,8 +20,8 @@ BORDER_COLOR = "#555555"  # Gray border
 
 Font = ("Arial",20)
 
-Text_Fliker_OFF = "Fliker is Off Press to Change"
-Text_Fliker_ON = "Fliker is On Press to Change"
+Text_Fliker_OFF = "Flicker is OFF, Press to Change"
+Text_Fliker_ON = "Flicker is ON, Press to Change"
 flikerOn = False
 defaultdepth = 7
 maxdepth = 15
