@@ -87,15 +87,15 @@ class mainWindow:
 
         # Radio button groups - right column with better spacing
         # Moved right column further right and increased label widths
-        self.create_radio_group("Gender", 480, 20, self.gender_var, [("Male", "Male"), ("Female", "Female")])
-        self.create_radio_group("Eye Side", 480, 80, self.eye_side_var, [("R", "R"), ("L", "L")])
-        self.create_radio_group("Alcohol", 480, 140, self.alcohol_var, [("Yes", "Yes"), ("No", "No")])
-        self.create_radio_group("Smoking", 480, 200, self.smoking_var, [("Yes", "Yes"), ("No", "No")])
-        self.create_radio_group("Food Habit", 480, 260, self.food_var, [("Veg", "Veg"), ("Non-Veg", "Non-Veg")])
+        self.create_radio_group("Gender", 500, 20, self.gender_var, [("Male", "Male"), ("Female", "Female")])
+        self.create_radio_group("Eye Side", 500, 80, self.eye_side_var, [("R", "R"), ("L", "L")])
+        self.create_radio_group("Alcohol", 500, 140, self.alcohol_var, [("Yes", "Yes"), ("No", "No")])
+        self.create_radio_group("Smoking", 500, 200, self.smoking_var, [("Yes", "Yes"), ("No", "No")])
+        self.create_radio_group("Food Habit", 500, 260, self.food_var, [("Veg", "Veg"), ("Non-Veg", "Non-Veg")])
 
         # Medical fields - right column with proper alignment
-        self.create_medical_field("Blood Pressure", 480, 320, self.bp_var, "80/120")
-        self.create_medical_field("Diabetes", 480, 380, self.diabetes_var, "97")
+        self.create_medical_field("Blood Pressure", 500, 320, self.bp_var, "80/120")
+        self.create_medical_field("Diabetes", 500, 380, self.diabetes_var, "97")
 
     def create_text_field(self, label_text, x, y, placeholder):
         # Increased label width to prevent cutting
@@ -114,37 +114,37 @@ class mainWindow:
     def create_radio_group(self, label_text, x, y, variable, options):
         # Increased label width and used left alignment
         label = tk.Label(self.main_frame, text=label_text, font=FONT_MAIN, bg='black', fg='white', anchor='w')
-        label.place(x=x, y=y, width=120, height=31)  # Consistent width with text fields
+        label.place(x=x, y=y, width=100, height=31)  # Reduced width to fit properly
         
         # Calculate proper spacing for radio buttons with better positioning
-        option_width = 80  # Reduced to fit better
+        option_width = 90  # Increased to give more space
         for i, (value, text) in enumerate(options):
             rb = tk.Radiobutton(self.main_frame, text=text, variable=variable, value=value,
                             font=FONT_SECONDARY, bg='black', fg='white', selectcolor='black',
                             activebackground='black', activeforeground='white',
                             highlightthickness=0)
-            rb.place(x=x+130+(i*option_width), y=y, width=option_width, height=31)
+            rb.place(x=x+110+(i*option_width), y=y, width=option_width, height=31)
 
     def create_medical_field(self, label_text, x, y, variable, placeholder):
         # Consistent label width and alignment
         label = tk.Label(self.main_frame, text=label_text, font=FONT_MAIN, bg='black', fg='white', anchor='w')
-        label.place(x=x, y=y, width=120, height=31)  # Consistent with other labels
+        label.place(x=x, y=y, width=100, height=31)  # Reduced width to match radio groups
         
         # Position radio buttons with proper spacing
         tk.Radiobutton(self.main_frame, text="Yes", variable=variable, value="Yes",
                     font=FONT_SECONDARY, bg='black', fg='white', selectcolor='black',
                     activebackground='black', activeforeground='white', highlightthickness=0
-                    ).place(x=x+130, y=y, width=50, height=31)  # Adjusted positioning
+                    ).place(x=x+110, y=y, width=50, height=31)  # Adjusted positioning
                     
         tk.Radiobutton(self.main_frame, text="No", variable=variable, value="No",
                     font=FONT_SECONDARY, bg='black', fg='white', selectcolor='black',
                     activebackground='black', activeforeground='white', highlightthickness=0
-                    ).place(x=x+180, y=y, width=50, height=31)  # Adjusted positioning
+                    ).place(x=x+170, y=y, width=50, height=31)  # Adjusted positioning
                     
         # Entry field positioned after radio buttons
         entry = tk.Entry(self.main_frame, font=FONT_SECONDARY, bg='#334155', fg='#94a3b8',
                         insertbackground='white', bd=0, highlightthickness=1, highlightcolor='#42A5F5')
-        entry.place(x=x+240, y=y, width=150, height=31)  # Adjusted position and width
+        entry.place(x=x+230, y=y, width=120, height=31)  # Adjusted position and width
         entry.insert(0, placeholder) 
         entry.bind('<FocusIn>', lambda e: self.on_entry_focus_in(entry, placeholder))
         entry.bind('<FocusOut>', lambda e: self.on_entry_focus_out(entry, placeholder))
