@@ -121,8 +121,8 @@ class StatrupClass:
         globaladc.buzzer_1()
 
     def ShowLoginScreen(self):
-        self.hm.hide()
-        self.home.show()
+        self.hm.show()
+        self.home.hide()
         self.mw.hide()
         self.fw.hide()
         self.cff.hide()
