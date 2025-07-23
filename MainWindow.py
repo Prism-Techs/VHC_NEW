@@ -90,7 +90,7 @@ class mainWindow:
         self.create_radio_group("Eye Side", 400, 80, self.eye_side_var, [("R", "R"), ("L", "L")])
         self.create_radio_group("Alcohol", 400, 140, self.alcohol_var, [("Yes", "Yes"), ("No", "No")])
         self.create_radio_group("Smoking", 400, 200, self.smoking_var, [("Yes", "Yes"), ("No", "No")])
-        self.create_radio_group("Food Habit", 400, 300, self.food_var, [("Veg", "Veg"), ("Non-Veg", "Non-Veg")])
+        self.create_radio_group("Food Habit", 400, 260, self.food_var, [("Veg", "Veg"), ("Non-Veg", "Non-Veg")])
 
         # Medical fields - adjusted position and width
         self.create_medical_field("Blood Pressure", 400, 320, self.bp_var, "80/120")
@@ -112,7 +112,7 @@ class mainWindow:
         label.place(x=x, y=y, width=150, height=31)  # Increased width for label
         
         # Calculate proper spacing for radio buttons
-        option_width = 100
+        option_width = 150
         for i, (value, text) in enumerate(options):
             rb = tk.Radiobutton(self.main_frame, text=text, variable=variable, value=value,
                             font=FONT_SECONDARY, bg='black', fg='white', selectcolor='black',
