@@ -205,7 +205,8 @@ class StatrupClass:
         self.HideAdminButton()
         self.HideStartButton()
         self.HideFlikerButton()
-        self.ShowHomeButton()
+        self.HomeScreenButton.place(x=700, y=560)
+        # self.ShowHomeButton()
         currentPatientInfo.log_update("Enter_to_Flicker_screen")
 
     def ShowTestRunScreen(self):
@@ -221,7 +222,9 @@ class StatrupClass:
         self.HideAdminButton()
         self.HideFlikerButton()
         self.HideStartButton()
-        self.ShowHomeButton()
+        self.HomeScreenButton.place(x=700, y=560)
+
+        # self.ShowHomeButton()
         currentPatientInfo.log_update_pashent()
         currentPatientInfo.log_update("Enter_to_CFF_screen")
 
@@ -238,7 +241,9 @@ class StatrupClass:
         self.HideAdminButton()
         self.HideFlikerButton()
         self.HideStartButton()
-        self.ShowHomeButton()
+        # self.ShowHomeButton()
+        self.HomeScreenButton.place(x=700, y=560)
+
         currentPatientInfo.log_update("Enter_to_CFFP_screen")
 
     def handleAdmin(self):

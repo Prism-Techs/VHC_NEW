@@ -187,6 +187,7 @@ class flikerWindow:
         flikerOn = False
         self.UPButton.config(state='disabled')
         self.DownButton.config(state='disabled')
+        # self.HomeScreenButton.place(x=700, y=520)
         
     # def StopScheduler():
     #     
