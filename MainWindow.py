@@ -93,7 +93,7 @@ class mainWindow:
         self.create_radio_group("Food Habit", 400, 260, self.food_var, [("Veg", "Veg"), ("Non-Veg", "Non-Veg")])
 
         # Medical fields - adjusted position and width
-        self.create_medical_field("Blood Pressure", 400, 320, self.bp_var, "80/120")
+        self.create_medical_field("B.P", 400, 320, self.bp_var, "80/120")
         self.create_medical_field("Diabetes", 400, 380, self.diabetes_var, "97")
 
     def create_text_field(self, label_text, x, y, placeholder):
