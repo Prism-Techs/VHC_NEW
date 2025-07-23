@@ -18,8 +18,8 @@ Font2 = ("Arial",20)
 defaultdepth = 1
 maxdepth_1 = 19
 maxdepth_2 = 2.00
-resume_spot_x = 300
-resume_spot_y = 240
+resume_spot_x = 320
+resume_spot_y = 400
 
 class BrkFovea_1 :
     def __init__(self, frame):  

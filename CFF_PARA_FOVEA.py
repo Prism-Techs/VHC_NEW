@@ -333,7 +333,7 @@ class CffParaFovea :
                                 width=10, bg='#28a745', fg='white',
                                 relief='solid', bd=2)
 
-        self.reStartButton.place(x=300, y=240)
+        self.reStartButton.place(x=300, y=400)
 
 
         def onfw():
@@ -379,7 +379,7 @@ class CffParaFovea :
         self.patentActionflabel.place(x=380, y=200)
 
         self.run_therad()
-        self.reStartButton.place (x=300, y=400)
+        self.reStartButton.place (x=320, y=400)
         globaladc.cff_Para_Fovea_Prepair()    # run this while loding cff Fovea screen 
     
     def hide(self): 
