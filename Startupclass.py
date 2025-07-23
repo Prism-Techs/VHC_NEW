@@ -194,11 +194,11 @@ class StatrupClass:
             messagebox.showerror("USB Error", "Please enter User information")
             return
         globaladc.buzzer_1()
-        self.fw.hide()
+        self.fw.show()
         self.hm.hide()
         self.home.hide()
         self.mw.hide()
-        self.cff.show()
+        self.cff.hide()
         self.cffP.hide()
         self.brkf_1.hide()
         self.brkf_2.hide()
