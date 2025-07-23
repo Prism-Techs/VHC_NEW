@@ -107,12 +107,13 @@ class mainWindow:
         entry.bind('<FocusOut>', lambda e: self.on_entry_focus_out(entry, placeholder))
         setattr(self, f"{label_text.lower().replace(' ', '_')}_entry", entry)
 
+
     def create_radio_group(self, label_text, x, y, variable, options):
         label = tk.Label(self.main_frame, text=label_text, font=FONT_MAIN, bg='black', fg='white', anchor='e')
         label.place(x=x, y=y, width=150, height=31)  # Increased width for label
         
-        # Calculate proper spacing for radio buttons
-        option_width = 100
+        # Calculate proper spacing for radio buttons - increased width for longer text
+        option_width = 120  # Increased from 100 to 120
         for i, (value, text) in enumerate(options):
             rb = tk.Radiobutton(self.main_frame, text=text, variable=variable, value=value,
                             font=FONT_SECONDARY, bg='black', fg='white', selectcolor='black',
