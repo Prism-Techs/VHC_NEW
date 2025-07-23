@@ -43,7 +43,7 @@ class StatrupClass:
         self.FlikerDemoButton.place(x=x+420, y=520)
 
     def ShowHomeButton(self):
-        self.HomeScreenButton.place(x=100, y=520)
+        self.HomeScreenButton.place(x=80, y=520)
         # pass
 
     def HideHomeButton(self):
