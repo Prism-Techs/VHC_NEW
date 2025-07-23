@@ -73,7 +73,7 @@ class mainWindow:
 
     def setup_ui(self):
         self.main_frame = tk.Frame(self.frame, bg='black')
-        self.main_frame.place(x=20, y=100, width=980, height=500)  # Increased width to use full screen (1024px - margin)
+        self.main_frame.place(x=20, y=100, width=1000, height=460)  # Increased width to use full screen (1024px - margin)
 
         # Create form fields - with proper spacing
         self.create_text_field("1st Name", 0, 20, "first name")
@@ -90,7 +90,7 @@ class mainWindow:
         self.create_radio_group("Eye Side", 400, 80, self.eye_side_var, [("R", "R"), ("L", "L")])
         self.create_radio_group("Alcohol", 400, 140, self.alcohol_var, [("Yes", "Yes"), ("No", "No")])
         self.create_radio_group("Smoking", 400, 200, self.smoking_var, [("Yes", "Yes"), ("No", "No")])
-        self.create_radio_group("Food Habit", 400, 300, self.food_var, [("Veg", "Veg"), ("Non-Veg", "Non-Veg")])
+        self.create_radio_group("Food Habit", 400, 260, self.food_var, [("Veg", "Veg"), ("Non-Veg", "Non-Veg")])
 
         # Medical fields - adjusted position and width
         self.create_medical_field("Blood Pressure", 400, 320, self.bp_var, "80/120")
