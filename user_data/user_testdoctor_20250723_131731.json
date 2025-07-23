@@ -1,0 +1,11 @@
+{
+    "username": "testdoctor",
+    "first_name": "John",
+    "last_name": "Doe",
+    "title": "Dr.",
+    "login_time": "2025-07-23 13:17:31",
+    "is_doctor": 1,
+    "is_operator": 0,
+    "user_id": 1,
+    "operation_mode": "Clinic"
+}

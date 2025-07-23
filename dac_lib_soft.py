@@ -311,7 +311,7 @@ class mup4728:
 #-----------------------------------------------------------------------------------
         def green_volt_control(self,data_in):
             if(0<=data_in<=20):
-                dac_val=int(int(85.4*data_in+0.380952)) # 0 to 20
+                dac_val=int(85.4*data_in+0.380952) # 0 to 20
                 str_data = 'GREEN_Volt_DAC = ' + str(dac_val)
                 self.get_print(str_data)
                 self.GREEN_Volt(dac_val)              
@@ -381,7 +381,7 @@ class mup4728:
 #-----------------------------------------------------------------------------------
         def inner_led_control(self,data_in):
             if(0<=data_in<=20):
-                dac_val=int(int(13.1948*data_in-0.329004)*0.4)
+                dac_val=int(int(13.1948*data_in-0.329004)*0.3)
                 str_data = 'INNER_LED_DAC = ' + str(dac_val)
                 self.get_print(str_data)
                 self.INNER_LED(dac_val)
@@ -401,7 +401,7 @@ class mup4728:
 
         def red_led_control(self,data_in):
             if(0<=data_in<=20):
-                dac_val=int(4.80519*data_in-0.4329) # 0 to 20
+                dac_val=int(204.4*data_in) # 0 to 20
                 str_data = 'RED_LED_DAC = ' + str(dac_val)
                 self.get_print(str_data)
                 self.RED_LED(dac_val)
@@ -1122,3 +1122,4 @@ class mup4728:
 #             self.fliker_Freq(self.cff_para_fovea_frq)
 #             time.sleep(0.3)
 #             self.get_print('brk_para_fovea_3_screen_ialize done')
+

@@ -73,7 +73,7 @@ class mainWindow:
 
     def setup_ui(self):
         self.main_frame = tk.Frame(self.frame, bg='black')
-        self.main_frame.place(x=20, y=100, width=980, height=460)  # Increased width to use full screen (1024px - margin)
+        self.main_frame.place(x=20, y=100, width=980, height=480)  # Increased width to use full screen (1024px - margin)
 
         # Create form fields - with proper spacing
         self.create_text_field("1st Name", 0, 20, "first name")

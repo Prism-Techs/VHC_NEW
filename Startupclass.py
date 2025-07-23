@@ -121,8 +121,8 @@ class StatrupClass:
         globaladc.buzzer_1()
 
     def ShowLoginScreen(self):
-        self.hm.show()
-        self.home.hide()
+        self.hm.hide()
+        self.home.show()
         self.mw.hide()
         self.fw.hide()
         self.cff.hide()
@@ -193,14 +193,14 @@ class StatrupClass:
             messagebox.showerror("USB Error", "Please enter User information")
             return
         globaladc.buzzer_1()
-        self.fw.show()
+        self.fw.hide()
         self.hm.hide()
         self.home.hide()
         self.mw.hide()
         self.cff.hide()
         self.cffP.hide()
         self.brkf_1.hide()
-        self.brkf_2.hide()
+        self.brkf_2.show()
         self.admin.hide()
         self.HideAdminButton()
         self.HideStartButton()
